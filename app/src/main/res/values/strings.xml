@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">PMS</string>
+    <string name="sign_in">Sign-In</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="remember_password">Remember me?</string>
+    <string name="sign_up">Sign-Up</string>
+    <string name="welcome">Welcome !</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="reset_password">reset password</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
