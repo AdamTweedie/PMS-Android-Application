@@ -9,6 +9,8 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class SignIn extends Fragment {
 
@@ -27,18 +29,27 @@ public class SignIn extends Fragment {
         Button signUp = (Button) view.findViewById(R.id.btnSignUp);
         Button resetPassword = (Button) view.findViewById(R.id.btnResetPassword);
 
+
         // On click, push SignUp onto fragment back-stack and pop SignIn fragment off back stack
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println("Click Success!!");
+
+                final FragmentTransaction fragmentTransaction;
+                final FragmentManager fragmentManager = getParentFragmentManager();
 
                 // TODO - OnClick fragment changes to sign up fragment.
+                final Fragment fragment = getParentFragmentManager()
+                        .findFragmentById(R.id.placeholder_main);
 
-                //getParentFragmentManager().popBackStack();
-                // Add new fragment to stack
-                //getParentFragmentManager().beginTransaction()
-                //        .add(R.id.placeholder_main, new SignUp())
-                //        .commit();
+                if (fragment!=null) {
+                    fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.remove(fragment);
+                    //fragmentTransaction.commit();
+                    fragmentTransaction.add(R.id.placeholder_main, new SignUp());
+                    fragmentTransaction.commit();
+                }
             }
         });
 

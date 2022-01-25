@@ -8,18 +8,20 @@
     android:background="#DEC9E9"
     tools:context=".MainActivity">
 
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_marginHorizontal="40dp"
+        android:id="@+id/welcome"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
         android:text="@string/welcome"
+        android:textColor="@color/black"
         android:textSize="45sp"
         android:textStyle="bold"
-        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="127dp" />
-
+        android:layout_marginTop="50dp"
+        />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/placeholder_main"
