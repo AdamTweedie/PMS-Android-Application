@@ -26,12 +26,19 @@ public class SignIn extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Button signUp = (Button) view.findViewById(R.id.btnSignUp);
-        Button resetPassword = (Button) view.findViewById(R.id.btnResetPassword);
+        Button btnSignUp = (Button) view.findViewById(R.id.btnSignUp);
+        Button btnSignIn = (Button) view.findViewById(R.id.btnSignIn);
+        Button btnResetPassword = (Button) view.findViewById(R.id.btnResetPassword);
 
 
-        // On click, push SignUp onto fragment back-stack and pop SignIn fragment off back stack
-        signUp.setOnClickListener(new View.OnClickListener() {
+        btnSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO - add functionality
+            }
+        });
+
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 System.out.println("Click Success!!");
@@ -39,7 +46,6 @@ public class SignIn extends Fragment {
                 final FragmentTransaction fragmentTransaction;
                 final FragmentManager fragmentManager = getParentFragmentManager();
 
-                // TODO - OnClick fragment changes to sign up fragment.
                 final Fragment fragment = getParentFragmentManager()
                         .findFragmentById(R.id.placeholder_main);
 
@@ -53,11 +59,12 @@ public class SignIn extends Fragment {
             }
         });
 
-        resetPassword.setOnClickListener(new View.OnClickListener() {
+        btnResetPassword.setOnClickListener(new View.OnClickListener() {
+            // TODO - add functionality to this
             @Override
             public void onClick(View view) {
                 // Change button color onclick
-                ButtonFunctions.textButtonColorChange(resetPassword);
+                ButtonUtils.textButtonColorChange(btnResetPassword);
             }
         });
     }

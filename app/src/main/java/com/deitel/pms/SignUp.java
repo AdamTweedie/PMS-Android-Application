@@ -49,7 +49,7 @@ public class SignUp extends Fragment {
             @Override
             public void onClick(View view) {
                 // Change button color onClick
-                ButtonFunctions.textButtonColorChange(btnAlreadyMember);
+                ButtonUtils.textButtonColorChange(btnAlreadyMember);
                 replaceFragment(new SignIn());
             }
         });

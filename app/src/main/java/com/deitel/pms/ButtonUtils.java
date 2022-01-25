@@ -6,7 +6,7 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 
-public class ButtonFunctions {
+public class ButtonUtils {
 
     /***
      * For buttons which are text only, change color onClick for 0.1 second.
