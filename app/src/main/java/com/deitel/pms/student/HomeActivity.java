@@ -15,7 +15,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_home_navbar);
 
         final Button btnWorkspace = findViewById(R.id.btnNavWorkspace);
         final Button btnNotifications = findViewById(R.id.btnNavNotifications);

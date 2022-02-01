@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "669110218092",
+    "project_id": "pms-project-300122",
+    "storage_bucket": "pms-project-300122.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:669110218092:android:5a46829d98cd5d40a81749",
+        "android_client_info": {
+          "package_name": "com.android.application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "669110218092-28fjpemdp79un5qukem7s4ouudoqn1sg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmTydmIsoPemWvlRhuGak6od1MszSFGHU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "669110218092-28fjpemdp79un5qukem7s4ouudoqn1sg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:669110218092:android:80920dd70ea7ce0ca81749",
+        "android_client_info": {
+          "package_name": "com.deitel.pms"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "669110218092-28fjpemdp79un5qukem7s4ouudoqn1sg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmTydmIsoPemWvlRhuGak6od1MszSFGHU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "669110218092-28fjpemdp79un5qukem7s4ouudoqn1sg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
