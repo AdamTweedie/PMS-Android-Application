@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 public class HomeActivity extends AppCompatActivity {
@@ -22,7 +23,12 @@ public class HomeActivity extends AppCompatActivity {
         final Button btnSupervisor = findViewById(R.id.btnNavSupervisor);
         final Button btnProfile = findViewById(R.id.btnNavProfile);
 
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        if (fm.getFragments().isEmpty()) {
+            fragmentTransaction.add(R.id.nav_bar_fragment, new Workspace()).commit();
+        }
+
 
         btnWorkspace.setOnClickListener(new View.OnClickListener() {
             @Override

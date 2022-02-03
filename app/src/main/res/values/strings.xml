@@ -26,5 +26,16 @@
     <string name="nav_bar_notifications">Notifications</string>
     <string name="nav_bar_supervisor">Supervisor</string>
     <string name="nav_bar_profile">Profile</string>
+    <string name="kanban_boards">Kanban boards</string>
+    <string name="new_board_btn">New board</string>
+    <string name="first_kanban_board">Main board</string>
+    <string name="calendar">Calendar</string>
+    <string name="referencing_guide_title">A guide to referencing</string>
+    <string name="select_referencing_style">Select Referencing Style</string>
+    <string name="aqa">AQA</string>
+    <string name="oxford">Oxford</string>
+    <string name="acm">ACM</string>
+    <string name="harvard">Harvard</string>
+    <string name="selected_style">Style</string>
 
 </resources>
