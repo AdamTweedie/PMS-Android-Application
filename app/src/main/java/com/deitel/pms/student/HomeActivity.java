@@ -33,14 +33,22 @@ public class HomeActivity extends AppCompatActivity {
         btnWorkspace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                fm.popBackStack();
+                fm.beginTransaction()
+                        .add(R.id.nav_bar_fragment, new Workspace())
+                        .addToBackStack("workspace")
+                        .commit();
             }
         });
 
         btnNotifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                fm.popBackStack();
+                fm.beginTransaction()
+                        .add(R.id.nav_bar_fragment, new Notifications())
+                        .addToBackStack("notifications")
+                        .commit();
             }
         });
 
@@ -54,9 +62,12 @@ public class HomeActivity extends AppCompatActivity {
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                fm.popBackStack();
+                fm.beginTransaction()
+                        .add(R.id.nav_bar_fragment, new Profile())
+                        .addToBackStack("profile")
+                        .commit();
             }
         });
-
     }
 }

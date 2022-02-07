@@ -48,10 +48,11 @@ public class References extends Fragment {
                 styleACM.setChecked(false);
                 styleHarvard.setChecked(false);
 
-                referenceStyle.setText(R.string.aqa);
+                referenceStyle.setText(R.string.APA);
 
+                fm.popBackStack();
                 fm.beginTransaction()
-                        .add(R.id.refStyleFragment, new subReferences("AQA"))
+                        .add(R.id.refStyleFragment, new subReferences("APA"))
                         .addToBackStack(null).commit();
 
             }
@@ -63,6 +64,8 @@ public class References extends Fragment {
                 styleAPA.setChecked(false);
                 styleACM.setChecked(false);
                 styleHarvard.setChecked(false);
+
+                referenceStyle.setText(R.string.oxford);
 
                 fm.popBackStack();
                 fm.beginTransaction()
@@ -79,6 +82,8 @@ public class References extends Fragment {
                 styleAPA.setChecked(false);
                 styleHarvard.setChecked(false);
 
+                referenceStyle.setText(R.string.acm);
+
                 fm.popBackStack();
                 fm.beginTransaction()
                         .add(R.id.refStyleFragment, new subReferences("ACM"))
@@ -92,6 +97,8 @@ public class References extends Fragment {
                 styleOxford.setChecked(false);
                 styleACM.setChecked(false);
                 styleAPA.setChecked(false);
+
+                referenceStyle.setText(R.string.harvard);
 
                 fm.popBackStack();
                 fm.beginTransaction()

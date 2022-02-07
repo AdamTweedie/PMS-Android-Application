@@ -58,7 +58,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:buttonTint="#6247AA"
-                android:text="@string/aqa" >
+                android:text="@string/APA" >
             </CheckBox>
 
             <CheckBox
@@ -142,6 +142,7 @@
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/refStyleFragment"
                 android:layout_width="match_parent"
+                android:layout_marginHorizontal="10dp"
                 android:layout_height="0dp"
                 app:layout_constraintTop_toBottomOf="@id/tvGeneralInstructions"
                 app:layout_constraintBottom_toBottomOf="parent">

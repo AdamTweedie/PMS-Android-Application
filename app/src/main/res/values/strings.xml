@@ -32,10 +32,14 @@
     <string name="calendar">Calendar</string>
     <string name="referencing_guide_title">A guide to referencing</string>
     <string name="select_referencing_style">Select Referencing Style</string>
-    <string name="aqa">AQA</string>
     <string name="oxford">Oxford</string>
     <string name="acm">ACM</string>
     <string name="harvard">Harvard</string>
     <string name="selected_style">Style</string>
+    <string name="ACMinfo">[1] Name(s) of author(s) and/or editor(s). Year of publication. Title of the article/name of book. Bibliographic information (e.g. name of publisher, city of publication and page number.)</string>
+    <string name="OxfordInfo">"[1] Authors given name or initial before the last name. Title. Place of publication. Publisher. Date of publication. The page reference. "</string>
+    <string name="HarvardInfo">[1] Author, Year. Title. Edition. Place: Publisher</string>
+    <string name="APAInfo">Author, A.A (year of publication). Title of work/article. Page range. Location: Publisher/doi/web link</string>
+    <string name="APA">APA</string>
 
 </resources>

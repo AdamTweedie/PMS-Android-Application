@@ -1,6 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#E9ECEF"
+    >
+
+    <TextView
+        android:id="@+id/tvProfile"
+        android:paddingHorizontal="7dp"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:paddingHorizontal="15dp"
+        android:id="@+id/clProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvProfile"
+        android:background="@color/white"
+        >
+
+        <TextView
+            android:id="@+id/tvProfileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:paddingVertical="5dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tvProfileEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:paddingVertical="5dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvProfileName"
+            app:layout_constraintStart_toStartOf="parent"/>
+        <TextView
+            android:id="@+id/tvProfileSupervisor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Supervisor"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:paddingVertical="5dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvProfileEmail"
+            app:layout_constraintStart_toStartOf="parent"/>
+        <TextView
+            android:id="@+id/tvProfileProjName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My project"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:paddingVertical="5dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvProfileSupervisor"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tvHelp"
+        android:paddingHorizontal="7dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Help"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/clProfile"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:paddingHorizontal="15dp"
+        android:id="@+id/clHelp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tvHelp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/tvHelpMaintenance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Maintenance"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:paddingVertical="5dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+        <TextView
+            android:id="@+id/tvHelpWelfare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welfare"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:paddingVertical="5dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvHelpMaintenance"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tvAccount"
+        android:paddingHorizontal="7dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Account"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/clHelp"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clAccount"
+        android:paddingHorizontal="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tvAccount"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_weight="0.5"
+        android:background="@color/white">
+
+        <Button
+            android:id="@+id/tvAccountSignOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign-Out"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            android:textStyle="normal"
+            app:backgroundTint="#6247AA"
+            app:cornerRadius="60dp"
+            app:iconPadding="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+        <Button
+            android:id="@+id/tvAccountDeleteAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete account"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            android:textStyle="normal"
+            app:cornerRadius="60dp"
+            android:backgroundTint="#FF6961"
+            app:iconPadding="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvAccountSignOut"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
