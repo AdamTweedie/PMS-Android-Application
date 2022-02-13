@@ -41,5 +41,14 @@
     <string name="HarvardInfo">[1] Author, Year. Title. Edition. Place: Publisher</string>
     <string name="APAInfo">Author, A.A (year of publication). Title of work/article. Page range. Location: Publisher/doi/web link</string>
     <string name="APA">APA</string>
+    <string name="delete_btn_cont_desc">Delete button</string>
+    <string name="color_btn_cont_desc">Open/close color palette</string>
+    <string name="drag_btn_cont_desc">Hold and drag task button</string>
+    <string name="task_edit_text_hint">Enter your task here</string>
+    <string name="move_btn_cont_desc">Send task to next tasklist button</string>
+    <string name="blue_btn_cont_desc">Blue color button</string>
+    <string name="green_btn_cont_desc">Green color button</string>
+    <string name="yellow_btn_cont_desc">Yelow color button</string>
+    <string name="pink_btn_cont_desc">Pink color button</string>
 
 </resources>

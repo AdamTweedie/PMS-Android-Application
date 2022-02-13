@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.deitel.pms"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 31
         versionCode 1
         versionName "1.0"
@@ -47,7 +47,10 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.3.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
+    implementation 'androidx.fragment:fragment-ktx:1.3.1'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation 'com.android.support:multidex:1.0.3'
+    implementation "androidx.security:security-crypto:1.1.0-alpha03"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

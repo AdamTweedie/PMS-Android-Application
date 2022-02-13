@@ -65,7 +65,7 @@
                     android:text="@string/first_kanban_board"
                     android:textAllCaps="false"
                     app:cornerRadius="40dp"
-                    app:iconPadding="8dp"/>
+                    app:iconPadding="8dp" />
 
             </LinearLayout>
         </HorizontalScrollView>

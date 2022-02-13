@@ -37,6 +37,7 @@ public class References extends Fragment {
         CheckBox styleACM = (CheckBox) view.findViewById(R.id.refACM);
         CheckBox styleHarvard = (CheckBox) view.findViewById(R.id.refHarvard);
         TextView referenceStyle = (TextView) view.findViewById(R.id.tvRefStyle);
+        Button btnGoBack = (Button) view.findViewById(R.id.btnGoBack);
 
         FragmentManager fm = getChildFragmentManager();
 
@@ -108,7 +109,6 @@ public class References extends Fragment {
         });
 
 
-        Button btnGoBack = (Button) view.findViewById(R.id.btnGoBack);
         btnGoBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

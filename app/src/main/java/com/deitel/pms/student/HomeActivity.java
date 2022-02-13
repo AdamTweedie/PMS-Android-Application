@@ -1,6 +1,7 @@
 package com.deitel.pms.student;
 import com.deitel.pms.R;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -29,11 +30,10 @@ public class HomeActivity extends AppCompatActivity {
             fragmentTransaction.add(R.id.nav_bar_fragment, new Workspace()).commit();
         }
 
-
         btnWorkspace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fm.popBackStack();
+                clearBackStack(fm.getBackStackEntryCount());
                 fm.beginTransaction()
                         .add(R.id.nav_bar_fragment, new Workspace())
                         .addToBackStack("workspace")
@@ -44,7 +44,7 @@ public class HomeActivity extends AppCompatActivity {
         btnNotifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fm.popBackStack();
+                clearBackStack(fm.getBackStackEntryCount());
                 fm.beginTransaction()
                         .add(R.id.nav_bar_fragment, new Notifications())
                         .addToBackStack("notifications")
@@ -62,12 +62,18 @@ public class HomeActivity extends AppCompatActivity {
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fm.popBackStack();
+                clearBackStack(fm.getBackStackEntryCount());
                 fm.beginTransaction()
                         .add(R.id.nav_bar_fragment, new Profile())
                         .addToBackStack("profile")
                         .commit();
             }
         });
+    }
+
+    public void clearBackStack(int stackCount) {
+        for (int i = 0; i < stackCount; ++i) {
+            getSupportFragmentManager().popBackStack();
+        }
     }
 }

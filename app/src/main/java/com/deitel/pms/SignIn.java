@@ -2,19 +2,23 @@ package com.deitel.pms;
 
 import com.deitel.pms.student.HomeActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.security.crypto.MasterKey;
 
 import com.deitel.pms.student.HomeActivity;
 import com.google.android.gms.tasks.Task;
@@ -49,35 +53,27 @@ public class SignIn extends Fragment {
         btnResetPassword = (Button) view.findViewById(R.id.btnResetPassword);
         email = (EditText) view.findViewById(R.id.etUserEmail);
         password = (EditText) view.findViewById(R.id.etUserPassword);
+        Context context = getContext();
 
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                // todo - lots to do here
-//                final String userEmail = email.getText().toString();
-//                final String userPassword = password.getText().toString();
-
-//                FirestoreUtils firestoreUtils = new FirestoreUtils();
-//                FirebaseFirestore db = firestoreUtils.getDb();
-//                // Create a reference to the cities collection
-//                CollectionReference users = db.collection("Users");
-//                // Create a query against the collection
-//                Query query = users.whereEqualTo("email", userEmail);
-//                // retrieve query results asynchronously using query.get()
-//                Task<QuerySnapshot> querySnapshot = query.get();
-//
-//                for (DocumentSnapshot document : querySnapshot.getResult().getDocuments()) {
-//                    System.out.println(document.getId());
-//                }
-
-                // if credentials okay ---
-                Intent in = new Intent(getActivity(), HomeActivity.class);
-                getActivity().finish();
-                startActivity(in);
+                final String userEmail = email.getText().toString();
+                final String userPassword = password.getText().toString();
+                final String errorMsg = "Username or Password is Incorrect";
 
 
+                if (!validDetails(context, userEmail, userPassword, errorMsg)) {
+
+                    Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent homeActivity = new Intent(getActivity(), HomeActivity.class);
+                    getActivity().finish();
+                    startActivity(homeActivity);
+                    Toast.makeText(context, "Welcome back !", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -110,5 +106,31 @@ public class SignIn extends Fragment {
                 ButtonUtils.textButtonColorChange(btnResetPassword);
             }
         });
+
+    }
+
+    private Boolean validDetails(final Context context,
+                                 final String userEmail,
+                                 final String userPassword,
+                                 final String errorMsg) {
+
+        SharedPrefUtils utils = new SharedPrefUtils();
+        MasterKey masterKey = utils.getMasterKey(context);
+        SharedPreferences encryptedPreferences = utils.getEncryptedPreferences(masterKey, context);
+
+        assert encryptedPreferences != null;
+        String userDetails = encryptedPreferences.getString(userEmail + userPassword + "data", errorMsg);
+        SharedPreferences.Editor editor = encryptedPreferences.edit();
+        editor.putString("user_display", userDetails);
+        editor.apply(); // Save shared preference
+
+
+        String display = encryptedPreferences.getString("user_display", "");
+        if (display.equals(errorMsg)) {
+            email.setText("");
+            password.setText("");
+            Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show();
+            return false;
+        } else return true;
     }
 }

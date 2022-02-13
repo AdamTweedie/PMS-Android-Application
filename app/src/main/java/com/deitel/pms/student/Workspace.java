@@ -1,9 +1,7 @@
 package com.deitel.pms.student;
 
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +20,6 @@ import java.time.format.DateTimeFormatter;
 
 public class Workspace extends Fragment {
 
-    private Button btnCalendar;
-    private Button btnReferences;
-    private TextView tvDate;
 
     @Nullable
     @Override
@@ -39,9 +34,10 @@ public class Workspace extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        btnCalendar = (Button) view.findViewById(R.id.btnCalendarView);
-        tvDate = (TextView) view.findViewById(R.id.tvCurrentDate);
-        btnReferences = (Button) view.findViewById(R.id.btnReferencingGuide);
+        Button btnCalendar = (Button) view.findViewById(R.id.btnCalendarView);
+        TextView tvDate = (TextView) view.findViewById(R.id.tvCurrentDate);
+        Button btnReferences = (Button) view.findViewById(R.id.btnReferencingGuide);
+        Button btnKanban1 = (Button) view.findViewById(R.id.btnKanbanBoard1);
 
         try {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
@@ -80,5 +76,20 @@ public class Workspace extends Fragment {
                 }
             }
         });
+
+//        btnKanban1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Fragment fragment = getParentFragmentManager()
+//                        .findFragmentById(R.id.nav_bar_fragment);
+//
+//                if (fragment!=null) {
+//                    getParentFragmentManager().beginTransaction()
+//                            .add(R.id.nav_bar_fragment, new MainKanban())
+//                            .addToBackStack("kanban")
+//                            .commit();
+//                }
+//            }
+//        });
     }
 }
