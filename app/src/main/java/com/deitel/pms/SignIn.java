@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,6 +28,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Objects;
 
 public class SignIn extends Fragment {
 
@@ -48,12 +51,15 @@ public class SignIn extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Context context = getContext();
+        if (detailsSaved()) { loadHomeActivity(context); }
+
         btnSignUp = (Button) view.findViewById(R.id.btnSignUp);
         btnSignIn = (Button) view.findViewById(R.id.btnSignIn);
         btnResetPassword = (Button) view.findViewById(R.id.btnResetPassword);
+        CheckBox rememberCredentials = (CheckBox) view.findViewById(R.id.cbRememberLoginCredentials);
         email = (EditText) view.findViewById(R.id.etUserEmail);
         password = (EditText) view.findViewById(R.id.etUserPassword);
-        Context context = getContext();
 
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
@@ -66,13 +72,12 @@ public class SignIn extends Fragment {
 
 
                 if (!validDetails(context, userEmail, userPassword, errorMsg)) {
-
                     Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent homeActivity = new Intent(getActivity(), HomeActivity.class);
-                    getActivity().finish();
-                    startActivity(homeActivity);
-                    Toast.makeText(context, "Welcome back !", Toast.LENGTH_SHORT).show();
+                    if (rememberCredentials.isChecked()) {
+                        saveUserCredentials();
+                    }
+                    loadHomeActivity(context);
                 }
             }
         });
@@ -107,6 +112,31 @@ public class SignIn extends Fragment {
             }
         });
 
+    }
+
+    private void saveUserCredentials() {
+        SharedPreferences sharedPreferences = (SharedPreferences) requireActivity()
+                .getSharedPreferences("save_creds", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("rememberMe", "yes");
+        editor.apply();
+    }
+
+    private boolean detailsSaved() {
+        // TODO - should probably do this through encrypted credentials
+        SharedPreferences sharedPreferences = (SharedPreferences) requireActivity()
+                .getSharedPreferences("save_creds", Context.MODE_PRIVATE);
+
+        String saved = sharedPreferences.getString("rememberMe", "defaultValue");
+
+        return saved.equals("yes");
+    }
+
+    private void loadHomeActivity(Context context) {
+        Intent homeActivity = new Intent(getActivity(), HomeActivity.class);
+        getActivity().finish();
+        startActivity(homeActivity);
+        Toast.makeText(context, "Welcome back !", Toast.LENGTH_SHORT).show();
     }
 
     private Boolean validDetails(final Context context,

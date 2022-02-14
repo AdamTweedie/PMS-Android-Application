@@ -20,15 +20,21 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.security.crypto.MasterKey;
 
 import com.deitel.pms.student.HomeActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class SignUp extends Fragment {
+
+    // TODO - configure this so it will still run without a connection to the internet.
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -69,9 +75,7 @@ public class SignUp extends Fragment {
                 final String finalPassword = password.getText().toString();
                 final String finalConfirmPassword = confirmPassword.getText().toString();
                 final String finalUniAccessCode = uniAccessCode.getText().toString();
-
-                Map<String, Object> user = new HashMap<>();
-
+                final String TAG = "Sign-Up";
 
                 if (finalEmail.isEmpty() ||
                         finalPassword.isEmpty() ||
@@ -85,53 +89,37 @@ public class SignUp extends Fragment {
                 } else if (!ValidEmail(finalEmail)) {
                     Toast.makeText(getContext(), "Invalid email !", Toast.LENGTH_SHORT).show();
                     email.getText().clear();
-                } else if (ExistingUser(finalEmail)) {
-                    Toast.makeText(getContext(), "Email already in use", Toast.LENGTH_SHORT).show();
-                    email.getText().clear();
                 } else if (!ValidUniAccessCode(finalUniAccessCode)) {
                     Toast.makeText(getContext(), "Incorrect Uni Access Code", Toast.LENGTH_SHORT).show();
                     uniAccessCode.getText().clear();
-                } else {
-
-                    // Create user info
-                    user.put("email", finalEmail);
-                    user.put("uni id", finalUniAccessCode);
-
-                    String TAG = "New User Creation:";
-
-
-                    db.collection("users")
-                            .add(user)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w(TAG, "Error adding document", e);
-                                }
-                            });
-
-                    SharedPrefUtils utils = new SharedPrefUtils();
-
-                    MasterKey masterKeyAlias = utils.getMasterKey(context);
-                    SharedPreferences encryptedPreferences = utils.getEncryptedPreferences(masterKeyAlias, context);
-                    if (masterKeyAlias!=null && encryptedPreferences!=null) {
-                        SharedPreferences.Editor editor = encryptedPreferences.edit();
-                        editor.putString(finalEmail + finalPassword + "data", "Signed in as " + finalEmail);
-                        editor.apply();
-
-                        Intent homeScreen = new Intent(getActivity(), HomeActivity.class);
-                        // Load MainActivity via implicit intent
-                        startActivity(homeScreen);
-                        getActivity().finish();
-                        Toast.makeText(context, "Account created!", Toast.LENGTH_SHORT).show();
-                    }
-
                 }
+
+                // Does user already exist....
+                DocumentReference docRef = db.collection("users").document(finalEmail);
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            // if user does exist
+                            if (document.exists()) {
+                                Log.d(TAG, "DocumentSnapshot data: " + document.getId() + " exists already");
+                                Toast.makeText(context, "Email already exists", Toast.LENGTH_SHORT).show();
+                                email.setText("");
+                                password.setText("");
+                                confirmPassword.setText("");
+                                uniAccessCode.setText("");
+                            } else {
+                                Log.d(TAG, "No such document");
+                                createAccount(finalEmail, finalUniAccessCode, TAG);
+                                saveToPrefs(finalEmail, finalPassword, context);
+                                loadWorkspaceActivity(context);
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
+                    }
+                });
             }
         });
 
@@ -145,20 +133,65 @@ public class SignUp extends Fragment {
         });
     }
 
-
+    // TODO - NEED TO ADD DIFFERENT CREDENTIAL CHECKER FOR SUPERVISORS
     private boolean ValidUniAccessCode(String finalUniAccessCode) {
-        // TODO - add functionality
-        return true;
-    }
-
-    private boolean ExistingUser(String finalEmail) {
-        // TODO - add functionality
+        for (ActiveUnis uni : ActiveUnis.values()) {
+            if (uni.getValue() == Integer.parseInt(finalUniAccessCode)) {
+                return true;
+            }
+        }
         return false;
     }
 
     private boolean ValidEmail(String finalEmail) {
-        // TODO - add functionality
-        return true;
+        String[] parts = finalEmail.split("@");
+        for (ActiveUnis uni : ActiveUnis.values()) {
+            if (uni.getKey().equals(parts[1])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public void createAccount(String email, String uniCode, String TAG) {
+        // Create user info
+        Map<String, Object> user = new HashMap<>();
+        user.put("uni id", uniCode);
+
+        db.collection("users")
+                .document(email) // ID
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot added with ID: " + email);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error adding document", e);
+            }
+        });
+    }
+
+    public void saveToPrefs(String email, String password, Context context) {
+        SharedPrefUtils utils = new SharedPrefUtils();
+        MasterKey masterKeyAlias = utils.getMasterKey(context);
+        SharedPreferences encryptedPreferences = utils.getEncryptedPreferences(masterKeyAlias, context);
+
+        if (masterKeyAlias != null && encryptedPreferences != null) {
+            SharedPreferences.Editor editor = encryptedPreferences.edit();
+            editor.putString(email + password + "data", "Signed in as " + email);
+            editor.apply();
+        }
+    }
+
+    public void loadWorkspaceActivity(Context context) {
+        Intent homeScreen = new Intent(getActivity(), HomeActivity.class);
+        startActivity(homeScreen);
+        getActivity().finish();
+        Toast.makeText(context, "Account created!", Toast.LENGTH_SHORT).show();
     }
 
 
