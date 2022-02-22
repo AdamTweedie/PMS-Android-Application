@@ -10,7 +10,6 @@ from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 
 
-
 def vectorize(text, maxx_features):
     vectorizer = TfidfVectorizer(max_features=maxx_features)
     X = vectorizer.fit_transform(text)
@@ -21,9 +20,17 @@ def get_target_cluster(data_frame, index):
     return data_frame.iloc[index]['cluster']
 
 
-def get_project_suggestions(cluster_num, data_frame):
+def get_project_suggestions_index(cluster_num, data_frame):
     return data_frame.index[data_frame['cluster'] == cluster_num].tolist()
 
+
+def obtain_suggestions(index):
+    file = join(dirname(__file__), "Exe-CompSci-Unclean.csv")
+    df2 = pd.read_csv(file)
+
+    row = df2.iloc[[index]].values.tolist()
+
+    return row
 
 
 def recommender(user_entry): # ideally would take K, dataset, and user entry
@@ -55,14 +62,19 @@ def recommender(user_entry): # ideally would take K, dataset, and user entry
     y_pred = kmeans.fit_predict(X_reduced)
     df['cluster'] = y_pred
 
-
     user_cluster = get_target_cluster(df, index)
-    similar_entries = get_project_suggestions(user_cluster, df)
+    similar_entries_index = get_project_suggestions_index(user_cluster, df)
+    similar_entries_index = similar_entries_index[:-1]
 
     # obtain similar entries
     # thomas mitchell
 
-    return similar_entries
+    return similar_entries_index
+
+
+
+
+
 
 
 

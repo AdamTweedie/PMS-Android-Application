@@ -19,6 +19,7 @@ import com.google.firebase.storage.StorageReference;
 import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RecommenderActivity extends AppCompatActivity {
@@ -71,12 +72,11 @@ public class RecommenderActivity extends AppCompatActivity {
         });
     }
 
-    private class MyTask extends AsyncTask<String, Void, ArrayList<Integer>> {
 
-
+    private class MyTask extends AsyncTask<String, Void, ArrayList<ArrayList<String>>> {
 
         @Override
-        protected ArrayList<Integer> doInBackground(String... params) {
+        protected ArrayList<ArrayList<String>> doInBackground(String... params) {
 
             if (! Python.isStarted()) {
                 Python.start(new AndroidPlatform(getApplicationContext()));
@@ -85,28 +85,40 @@ public class RecommenderActivity extends AppCompatActivity {
             PyObject module = py.getModule("Recommender");
             //int[] project_index = module.callAttr("recommender", params[0]).asList();
 
-            List<PyObject> pyList = module.callAttr("recommender", params[0]).asList();
-            ArrayList<Integer> project_numbers = new ArrayList<>();
-            for (PyObject pyt : pyList) {
-                int i = pyt.hashCode();
-                project_numbers.add(i);
+            List<PyObject> pyIndexList = module.callAttr("recommender", params[0]).asList();
+
+            ArrayList<Integer> indexList = new ArrayList<>();
+            ArrayList<ArrayList<String>> projects = new ArrayList<>();
+
+            for (PyObject pyObj : pyIndexList) {
+                indexList.add(pyObj.hashCode());
             }
 
+            System.out.println(indexList);
 
+            ArrayList<String> project = new ArrayList<>();
+            for (int index : indexList) {
+                List<PyObject> pyProject = module.callAttr("obtain_suggestions", index).asList();
+                for (PyObject item : pyProject) {
+                    project.add(item.toString());
+                }
+                projects.add(project);
+            }
 
-            return project_numbers;
+            System.out.println(projects);
+            System.out.println(projects.size());
+
+            return projects;
 
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Integer> results) {
+        protected void onPostExecute(ArrayList<ArrayList<String>> results) {
             super.onPostExecute(results);
             // do something with result
+
+            // TODO - FILTER SPECIFIC INFORMATION FROM ARRAYLIST AND ADD TO UI
             // show results in UI
-            System.out.println(results);
-            for (Integer x : results) {
-                System.out.println(x);
-            }
         }
     }
 }
