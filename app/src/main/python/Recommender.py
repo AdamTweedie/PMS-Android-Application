@@ -21,7 +21,7 @@ def get_target_cluster(data_frame, index):
 
 
 def get_project_suggestions_index(cluster_num, data_frame):
-    return data_frame.index[data_frame['cluster'] == cluster_num].tolist()
+    return data_frame.index[data_frame['cluster'] == cluster_num]
 
 
 def obtain_suggestions(index):

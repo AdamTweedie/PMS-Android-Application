@@ -1,7 +1,12 @@
 package com.deitel.pms.recommender;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +25,7 @@ import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class RecommenderActivity extends AppCompatActivity {
@@ -67,6 +73,7 @@ public class RecommenderActivity extends AppCompatActivity {
                 });
 
                 new MyTask().execute(result);
+                LoadingSuggestions(true);
 
             }
         });
@@ -83,7 +90,6 @@ public class RecommenderActivity extends AppCompatActivity {
             }
             Python py = Python.getInstance();
             PyObject module = py.getModule("Recommender");
-            //int[] project_index = module.callAttr("recommender", params[0]).asList();
 
             List<PyObject> pyIndexList = module.callAttr("recommender", params[0]).asList();
 
@@ -93,20 +99,30 @@ public class RecommenderActivity extends AppCompatActivity {
             for (PyObject pyObj : pyIndexList) {
                 indexList.add(pyObj.hashCode());
             }
+            Collections.shuffle(indexList);
 
-            System.out.println(indexList);
+            if (indexList.size()>5) {
+                int t1=indexList.get(0), t2=indexList.get(1), t3=indexList.get(2),
+                        t4=indexList.get(3), t5=indexList.get(4);
+
+                indexList.clear();
+                indexList.add(t1);
+                indexList.add(t2);
+                indexList.add(t3);
+                indexList.add(t4);
+                indexList.add(t5);
+            }
 
             ArrayList<String> project = new ArrayList<>();
             for (int index : indexList) {
-                List<PyObject> pyProject = module.callAttr("obtain_suggestions", index).asList();
-                for (PyObject item : pyProject) {
+                List<PyObject> pyArrayOfProjects = module.callAttr("obtain_suggestions", index).asList();
+                List<PyObject> thisProjectList= pyArrayOfProjects.get(0).asList();
+                System.out.println("project " + thisProjectList);
+                for (PyObject item : thisProjectList) {
                     project.add(item.toString());
                 }
                 projects.add(project);
             }
-
-            System.out.println(projects);
-            System.out.println(projects.size());
 
             return projects;
 
@@ -117,8 +133,26 @@ public class RecommenderActivity extends AppCompatActivity {
             super.onPostExecute(results);
             // do something with result
 
+            LoadingSuggestions(false);
+
+            FragmentTransaction signInFragmentTransaction = getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.recommenderContainterView, new ProjectSuggestions()).addToBackStack("suggestions");
+            signInFragmentTransaction.commit();
+
             // TODO - FILTER SPECIFIC INFORMATION FROM ARRAYLIST AND ADD TO UI
-            // show results in UI
+
+
+        }
+    }
+
+    public void LoadingSuggestions(Boolean load) {
+        ProgressBar progress = findViewById(R.id.progressBar_cyclic);
+
+        if (load) {
+            progress.setVisibility(View.VISIBLE);
+        } else {
+            progress.setVisibility(View.GONE);
         }
     }
 }
