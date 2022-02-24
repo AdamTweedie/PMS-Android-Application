@@ -7,64 +7,144 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#DEC9E9">
 
-    <ImageButton
-        android:id = "@+id/suggestion1"
-        android:textSize = "18sp"
-        android:textAlignment = "center"
-        android:background = "@drawable/project_suggestion_circle"
-        android:layout_width = "200dp"
-        android:textColor = "#000"
-        android:layout_height = "200dp"
-        android:backgroundTint="#6247AA"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/suggestion1"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp">
+        <ImageButton
+            android:id="@+id/btnBubble1"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:background="@drawable/project_suggestion_circle"
+            android:backgroundTint="#6247AA"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        <TextView
+            android:id="@+id/tvTitle1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Suggestion 1"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageButton
-        android:id = "@+id/suggestion2"
-        android:textSize = "18sp"
-        android:textAlignment = "center"
-        android:background = "@drawable/project_suggestion_circle"
-        android:layout_width = "195dp"
-        android:textColor = "#000"
-        android:layout_height = "195dp"
-        android:backgroundTint="#815AC0"
-        android:layout_marginTop="-40dp"
-        android:layout_marginStart="-40dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/suggestion2"
+        android:layout_width="195dp"
+        android:layout_height="195dp"
+        android:orientation="vertical"
         app:layout_constraintStart_toEndOf="@id/suggestion1"
         app:layout_constraintTop_toBottomOf="@id/suggestion1"
-        />
+        android:layout_marginTop="-40dp"
+        android:layout_marginStart="-40dp"
+        >
+        <ImageButton
+            android:id="@+id/btnBubble2"
+            android:layout_width="195dp"
+            android:layout_height="195dp"
+            android:layout_gravity="center"
+            android:background="@drawable/project_suggestion_circle"
+            android:backgroundTint="#815AC0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        <TextView
+            android:id="@+id/tvTitle2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Suggestion 2"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageButton
-        android:id = "@+id/suggestion3"
-        android:textSize = "18sp"
-        android:textAlignment = "center"
-        android:background = "@drawable/project_suggestion_circle"
-        android:layout_width = "185dp"
-        android:textColor = "#000"
-        android:layout_height = "185dp"
-        android:backgroundTint="#A06CD5"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/suggestion3"
+        android:layout_width="190dp"
+        android:layout_height="190dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@id/suggestion2"
+        app:layout_constraintTop_toBottomOf="@id/suggestion2"
         android:layout_marginTop="-40dp"
         android:layout_marginEnd="-40dp"
-        app:layout_constraintEnd_toStartOf="@id/suggestion2"
-        app:layout_constraintTop_toBottomOf="@id/suggestion2"/>
+        >
+        <ImageButton
+            android:id="@+id/btnBubble3"
+            android:layout_width="190dp"
+            android:layout_height="190dp"
+            android:layout_gravity="center"
+            android:background="@drawable/project_suggestion_circle"
+            android:backgroundTint="#A06CD5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        <TextView
+            android:id="@+id/tvTitle3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Suggestion 3"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageButton
-        android:id = "@+id/suggestion4"
-        android:textSize = "18sp"
-        android:textAlignment = "center"
-        android:background = "@drawable/project_suggestion_circle"
-        android:layout_width = "180dp"
-        android:textColor = "#000"
-        android:layout_height = "180dp"
-        android:backgroundTint="#B185DB"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/suggestion4"
+        android:layout_width="190dp"
+        android:layout_height="190dp"
+        android:orientation="vertical"
         android:layout_marginTop="-40dp"
         android:layout_marginStart="-40dp"
         app:layout_constraintTop_toBottomOf="@id/suggestion3"
         app:layout_constraintStart_toEndOf="@id/suggestion3"
-
-        />
-
+        >
+        <ImageButton
+            android:id="@+id/btnBubble4"
+            android:layout_width="190dp"
+            android:layout_height="190dp"
+            android:layout_gravity="center"
+            android:background="@drawable/project_suggestion_circle"
+            android:backgroundTint="#B185DB"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        <TextView
+            android:id="@+id/tvTitle4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Suggestion 4"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

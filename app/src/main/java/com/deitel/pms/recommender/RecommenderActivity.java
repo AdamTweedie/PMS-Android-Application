@@ -111,19 +111,22 @@ public class RecommenderActivity extends AppCompatActivity {
                 indexList.add(t3);
                 indexList.add(t4);
                 indexList.add(t5);
-            }
+            } // TODO - if not then add a few more projects from neighboring clusters
 
-            ArrayList<String> project = new ArrayList<>();
+
             for (int index : indexList) {
+                ArrayList<String> project = new ArrayList<>();
                 List<PyObject> pyArrayOfProjects = module.callAttr("obtain_suggestions", index).asList();
                 List<PyObject> thisProjectList= pyArrayOfProjects.get(0).asList();
-                System.out.println("project " + thisProjectList);
+
                 for (PyObject item : thisProjectList) {
                     project.add(item.toString());
                 }
+
                 projects.add(project);
             }
 
+            Collections.shuffle(projects);
             return projects;
 
         }
@@ -135,10 +138,14 @@ public class RecommenderActivity extends AppCompatActivity {
 
             LoadingSuggestions(false);
 
-            FragmentTransaction signInFragmentTransaction = getSupportFragmentManager()
+            FragmentTransaction presentProjectSuggestions = getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.recommenderContainterView, new ProjectSuggestions()).addToBackStack("suggestions");
-            signInFragmentTransaction.commit();
+                    .add(R.id.recommenderContainterView,
+                            new ProjectSuggestions(results.get(0),
+                                    results.get(1),
+                                    results.get(2),
+                                    results.get(3))).addToBackStack("suggestions");
+            presentProjectSuggestions.commit();
 
             // TODO - FILTER SPECIFIC INFORMATION FROM ARRAYLIST AND ADD TO UI
 
