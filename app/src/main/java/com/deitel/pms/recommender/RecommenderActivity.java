@@ -39,38 +39,42 @@ public class RecommenderActivity extends AppCompatActivity {
 
         FragmentTransaction signInFragmentTransaction = getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.recommenderContainterView, new SubjectInterestSpinner()).addToBackStack("pickInterests");
+                .add(R.id.recommenderContainterView, new ProjectSelectionIntro()).addToBackStack("intro");
         signInFragmentTransaction.commit();
 
         getSupportFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
                 // We use a String here, but any type that can be put in a Bundle is supported
+
+//
+//                recommenderSetup = new RecommenderSetup("Exeter", "CompSci", result);
+//                FirebaseStorage storage = recommenderSetup.getStorage();
+//                StorageReference reference = storage.getReferenceFromUrl("gs://pms-project-300122.appspot.com/Project Data/Exeter/CompSci/Exe-CompSci-Unclean.csv");
+//
+//                StorageReference fileRef = storage.getReference()
+//                        .child("Project Data")
+//                        .child("Exeter")
+//                        .child("CompSci")
+//                        .child("ExeCompSciDataClean.csv");
+//
+//                String uri = fileRef.getDownloadUrl().toString();
+//                System.out.println("URL - " + uri);
+//
+//                fileRef.getBytes(1024*1024)
+//                        .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//                    @Override
+//                    public void onSuccess(byte[] bytes) {
+//
+//                        String s = new String(bytes, StandardCharsets.UTF_8);
+//
+//                    }
+//                });
+
                 String result = bundle.getString("bundleKey");
                 System.out.println("this is the result in activity " + result);
 
-                recommenderSetup = new RecommenderSetup("Exeter", "CompSci", result);
-                FirebaseStorage storage = recommenderSetup.getStorage();
-                StorageReference reference = storage.getReferenceFromUrl("gs://pms-project-300122.appspot.com/Project Data/Exeter/CompSci/Exe-CompSci-Unclean.csv");
-
-                StorageReference fileRef = storage.getReference()
-                        .child("Project Data")
-                        .child("Exeter")
-                        .child("CompSci")
-                        .child("ExeCompSciDataClean.csv");
-
-                String uri = fileRef.getDownloadUrl().toString();
-                System.out.println("URL - " + uri);
-
-                fileRef.getBytes(1024*1024)
-                        .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                    @Override
-                    public void onSuccess(byte[] bytes) {
-
-                        String s = new String(bytes, StandardCharsets.UTF_8);
-
-                    }
-                });
+                // String cleanEntry = sortResult(result)
 
                 new MyTask().execute(result);
                 LoadingSuggestions(true);

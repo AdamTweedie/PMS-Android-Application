@@ -21,15 +21,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent recommenderActivity = new Intent(MainActivity.this, RecommenderActivity.class);
-        this.finish();
-        startActivity(recommenderActivity);
-
         // Begin fragment transaction to show Sign-In page
-//        FragmentTransaction signInFragmentTransaction = getSupportFragmentManager()
-//                .beginTransaction()
-//                .add(R.id.placeholder_main, new SignIn());
-//        signInFragmentTransaction.commit();
+        FragmentTransaction signInFragmentTransaction = getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.placeholder_main, new SignIn());
+        signInFragmentTransaction.commit();
 
     }
 }

@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.deitel.pms.R;
 import com.deitel.pms.student.subReferences;
@@ -58,6 +59,7 @@ public class ProjectSuggestions extends Fragment {
         ImageButton btnSelectProject2 = view.findViewById(R.id.btnBubble2);
         ImageButton btnSelectProject3 = view.findViewById(R.id.btnBubble3);
         ImageButton btnSelectProject4 = view.findViewById(R.id.btnBubble4);
+        ImageButton btnRedoInterests = view.findViewById(R.id.btnResetProjectInterests);
 
         TextView title1 = view.findViewById(R.id.tvTitle1);
         TextView title2 = view.findViewById(R.id.tvTitle2);
@@ -68,6 +70,17 @@ public class ProjectSuggestions extends Fragment {
         title2.setText(getProjectTitle(2));
         title3.setText(getProjectTitle(3));
         title4.setText(getProjectTitle(4));
+
+        btnRedoInterests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fm.clearFragmentResult("bundleKey");
+                fm.popBackStack();
+                fm.beginTransaction()
+                        .add(R.id.recommenderContainterView, new SubjectInterestSpinner())
+                        .addToBackStack("redo interests").commit();
+            }
+        });
 
         btnSelectProject1.setOnClickListener(new View.OnClickListener() {
             @Override

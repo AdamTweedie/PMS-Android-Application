@@ -7,19 +7,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#DEC9E9">
 
+    <ImageButton
+        android:id="@+id/btnResetProjectInterests"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/undo"
+        android:scaleX="0.25"
+        android:scaleY="0.25"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/suggestion1"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
         android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnResetProjectInterests"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp">
+        android:layout_marginStart="30dp">
         <ImageButton
             android:id="@+id/btnBubble1"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
             android:layout_gravity="center"
             android:background="@drawable/project_suggestion_circle"
             android:backgroundTint="#6247AA"
@@ -43,8 +52,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/suggestion2"
-        android:layout_width="195dp"
-        android:layout_height="195dp"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
         android:orientation="vertical"
         app:layout_constraintStart_toEndOf="@id/suggestion1"
         app:layout_constraintTop_toBottomOf="@id/suggestion1"
@@ -53,8 +62,8 @@
         >
         <ImageButton
             android:id="@+id/btnBubble2"
-            android:layout_width="195dp"
-            android:layout_height="195dp"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
             android:layout_gravity="center"
             android:background="@drawable/project_suggestion_circle"
             android:backgroundTint="#815AC0"
@@ -79,8 +88,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/suggestion3"
-        android:layout_width="190dp"
-        android:layout_height="190dp"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toStartOf="@id/suggestion2"
         app:layout_constraintTop_toBottomOf="@id/suggestion2"
@@ -89,8 +98,8 @@
         >
         <ImageButton
             android:id="@+id/btnBubble3"
-            android:layout_width="190dp"
-            android:layout_height="190dp"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
             android:layout_gravity="center"
             android:background="@drawable/project_suggestion_circle"
             android:backgroundTint="#A06CD5"
@@ -114,8 +123,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/suggestion4"
-        android:layout_width="190dp"
-        android:layout_height="190dp"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
         android:orientation="vertical"
         android:layout_marginTop="-40dp"
         android:layout_marginStart="-40dp"
@@ -124,8 +133,8 @@
         >
         <ImageButton
             android:id="@+id/btnBubble4"
-            android:layout_width="190dp"
-            android:layout_height="190dp"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
             android:layout_gravity="center"
             android:background="@drawable/project_suggestion_circle"
             android:backgroundTint="#B185DB"

@@ -52,7 +52,9 @@ public class SignIn extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Context context = getContext();
-        if (detailsSaved()) { loadHomeActivity(context); }
+        if (detailsSaved()) {
+            loadHomeActivity(context);
+        }
 
         btnSignUp = (Button) view.findViewById(R.id.btnSignUp);
         btnSignIn = (Button) view.findViewById(R.id.btnSignIn);

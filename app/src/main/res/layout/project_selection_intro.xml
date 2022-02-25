@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#E9ECEF"
+    android:paddingHorizontal="25dp"
+    android:paddingVertical="25dp">
+
+    <TextView
+        android:id="@+id/psiWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:text="Welcome !"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/psiIntro1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="This app reinvents the project selection process for final year projects by using an Artificial Intelligent algorithm that suggests projects that best suit your individual interests. "
+        android:textSize="17sp"
+        app:layout_constraintTop_toBottomOf="@id/psiWelcome" />
+
+    <TextView
+        android:id="@+id/psiIntro2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:layout_marginTop="15dp"
+        android:text="To get the most out of the Recommender system provide as much detail as possible."
+        app:layout_constraintTop_toBottomOf="@id/psiIntro1" />
+
+    <TextView
+        android:id="@+id/psiIntro3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:layout_marginTop="15dp"
+        android:text="To get started click the button below !"
+        app:layout_constraintTop_toBottomOf="@id/psiIntro2" />
+
+    <Button
+        android:id="@+id/psiBtnLoadRecommender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Recommend me projects !"
+        android:textAllCaps="false"
+        android:textSize="17sp"
+        style="?android:attr/borderlessButtonStyle"
+        android:textColor="#6247AA"
+        app:backgroundTint="@android:color/transparent"
+        app:layout_constraintTop_toBottomOf="@id/psiIntro3"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+
+    <TextView
+        android:id="@+id/psiIntro4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="19sp"
+        android:layout_marginTop="20dp"
+        android:text="Or, "
+        app:layout_constraintTop_toBottomOf="@id/psiBtnLoadRecommender" />
+
+    <Button
+        android:id="@+id/psiBtnSuggestOwnProject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Suggest your own project"
+        android:textAllCaps="false"
+        android:textSize="17sp"
+        style="?android:attr/borderlessButtonStyle"
+        android:textColor="#6247AA"
+        app:backgroundTint="@android:color/transparent"
+        app:layout_constraintTop_toBottomOf="@id/psiIntro4"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <Button
+        android:id="@+id/psiBtnSeeFullProjectList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="See full project list"
+        android:textAllCaps="false"
+        android:textSize="17sp"
+        style="?android:attr/borderlessButtonStyle"
+        android:textColor="#6247AA"
+        app:backgroundTint="@android:color/transparent"
+        app:layout_constraintTop_toBottomOf="@id/psiBtnSuggestOwnProject"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/psiIntro5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:layout_marginTop="15dp"
+        android:text="If you want to skip this step all together ( you can come back to it later )"
+        app:layout_constraintTop_toBottomOf="@id/psiBtnSeeFullProjectList" />
+
+
+    <Button
+        android:id="@+id/psiBtnContinueToWorkspace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Continue to workspace"
+        android:textAllCaps="false"
+        android:textSize="17sp"
+        style="?android:attr/borderlessButtonStyle"
+        android:textColor="#6247AA"
+        app:backgroundTint="@android:color/transparent"
+        app:layout_constraintTop_toBottomOf="@id/psiIntro5"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.security.crypto.MasterKey;
 
+import com.deitel.pms.recommender.RecommenderActivity;
 import com.deitel.pms.student.HomeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -27,10 +28,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class SignUp extends Fragment {
 
@@ -113,7 +116,8 @@ public class SignUp extends Fragment {
                                 Log.d(TAG, "No such document");
                                 createAccount(finalEmail, finalUniAccessCode, TAG);
                                 saveToPrefs(finalEmail, finalPassword, context);
-                                loadWorkspaceActivity(context);
+                                loadRecommenderSystem(context);
+                                //loadWorkspaceActivity(context);
                             }
                         } else {
                             Log.d(TAG, "get failed with ", task.getException());
@@ -156,18 +160,23 @@ public class SignUp extends Fragment {
 
     public void createAccount(String email, String uniCode, String TAG) {
         // Create user info
+
+        // TODO - clear shared prefs first
+        User newUser = new User(email);
+        newUser.saveEmailToSharedPref(requireActivity());
+
+
         Map<String, Object> user = new HashMap<>();
         user.put("uni id", uniCode);
 
         db.collection("users")
-                .document(email) // ID
-                .set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + email);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+                .document(email)
+                .set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "DocumentSnapshot added with ID: " + email);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w(TAG, "Error adding document", e);
@@ -187,9 +196,9 @@ public class SignUp extends Fragment {
         }
     }
 
-    public void loadWorkspaceActivity(Context context) {
-        Intent homeScreen = new Intent(getActivity(), HomeActivity.class);
-        startActivity(homeScreen);
+    public void loadRecommenderSystem(Context context) {
+        Intent recommender = new Intent(getActivity(), RecommenderActivity.class);
+        startActivity(recommender);
         getActivity().finish();
         Toast.makeText(context, "Account created!", Toast.LENGTH_SHORT).show();
     }

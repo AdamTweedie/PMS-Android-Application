@@ -1,6 +1,11 @@
 package com.deitel.pms.recommender;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +19,19 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.deitel.pms.R;
+import com.deitel.pms.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
-import org.w3c.dom.Text;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SelectedProject extends Fragment {
+
+    final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     final String projectTitle;
     final String projectDescription;
@@ -63,6 +77,18 @@ public class SelectedProject extends Fragment {
             }
         });
 
+        btnRequestProject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // TODO - add a confirm project request before progressing
+                // TODO - add project to user profile on firestore with an 'approved column' set to False
+                System.out.println("User id - " + getUserId());
+                addToFirestore(getUserId(), getSupervisorEmail(), getSupervisorName(), getProjectTitle(), getProjectDescription());
+
+            }
+        });
+
     }
 
     private String getProjectTitle() {
@@ -79,5 +105,41 @@ public class SelectedProject extends Fragment {
 
     private String getSupervisorEmail() {
         return this.supervisorEmail;
+    }
+
+    private void addToFirestore(String userId,
+                                String supervisorEmail,
+                                String supervisorName,
+                                String projectTitle,
+                                String projectDescription) {
+
+        final String TAG = "Add project";
+
+        Map<String, Object> project = new HashMap<>();
+        project.put("supervisor email", supervisorEmail);
+        project.put("supervisor name", supervisorName);
+        project.put("project title", projectTitle);
+        project.put("project description", projectDescription);
+        project.put("approved project", "false");
+
+        db.collection("users")
+                .document(userId)
+                .set(project, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "DocumentSnapshot added with ID: " + userId);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error adding document", e);
+            }
+        });
+    }
+
+    private String getUserId() {
+        SharedPreferences sharedPreferences = (SharedPreferences) requireActivity()
+                .getSharedPreferences("user_id", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("id", "No User Id");
     }
 }
