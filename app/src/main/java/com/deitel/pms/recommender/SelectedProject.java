@@ -3,6 +3,7 @@ package com.deitel.pms.recommender;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,14 +13,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.deitel.pms.FirestoreUtils;
 import com.deitel.pms.R;
 import com.deitel.pms.User;
+import com.deitel.pms.student.HomeActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -81,10 +85,18 @@ public class SelectedProject extends Fragment {
             @Override
             public void onClick(View view) {
 
-                // TODO - add a confirm project request before progressing
-                // TODO - add project to user profile on firestore with an 'approved column' set to False
-                System.out.println("User id - " + getUserId());
-                addToFirestore(getUserId(), getSupervisorEmail(), getSupervisorName(), getProjectTitle(), getProjectDescription());
+                FirestoreUtils firestoreUtils = new FirestoreUtils();
+                firestoreUtils.addUserProject(requireActivity(),
+                        getSupervisorEmail(),
+                        getSupervisorName(),
+                        getProjectTitle(),
+                        getProjectDescription());
+
+                getParentFragmentManager().popBackStack();
+                Intent homeScreen = new Intent(getActivity(), HomeActivity.class);
+                startActivity(homeScreen);
+                Toast.makeText(getContext(), "Project selected !", Toast.LENGTH_SHORT).show();
+                requireActivity().finish();
 
             }
         });
@@ -107,39 +119,4 @@ public class SelectedProject extends Fragment {
         return this.supervisorEmail;
     }
 
-    private void addToFirestore(String userId,
-                                String supervisorEmail,
-                                String supervisorName,
-                                String projectTitle,
-                                String projectDescription) {
-
-        final String TAG = "Add project";
-
-        Map<String, Object> project = new HashMap<>();
-        project.put("supervisor email", supervisorEmail);
-        project.put("supervisor name", supervisorName);
-        project.put("project title", projectTitle);
-        project.put("project description", projectDescription);
-        project.put("approved project", "false");
-
-        db.collection("users")
-                .document(userId)
-                .set(project, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Log.d(TAG, "DocumentSnapshot added with ID: " + userId);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Error adding document", e);
-            }
-        });
-    }
-
-    private String getUserId() {
-        SharedPreferences sharedPreferences = (SharedPreferences) requireActivity()
-                .getSharedPreferences("user_id", Context.MODE_PRIVATE);
-        return sharedPreferences.getString("id", "No User Id");
-    }
 }

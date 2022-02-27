@@ -71,7 +71,7 @@ public class ProjectSelectionIntro extends Fragment {
                 getParentFragmentManager().popBackStack();
                 Intent homeScreen = new Intent(getActivity(), HomeActivity.class);
                 startActivity(homeScreen);
-                getActivity().finish();
+                requireActivity().finish();
             }
         });
     }

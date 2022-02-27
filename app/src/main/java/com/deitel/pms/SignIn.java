@@ -56,6 +56,7 @@ public class SignIn extends Fragment {
             loadHomeActivity(context);
         }
 
+        User user = new User();
         btnSignUp = (Button) view.findViewById(R.id.btnSignUp);
         btnSignIn = (Button) view.findViewById(R.id.btnSignIn);
         btnResetPassword = (Button) view.findViewById(R.id.btnResetPassword);
@@ -72,13 +73,13 @@ public class SignIn extends Fragment {
                 final String userPassword = password.getText().toString();
                 final String errorMsg = "Username or Password is Incorrect";
 
-
                 if (!validDetails(context, userEmail, userPassword, errorMsg)) {
                     Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show();
                 } else {
                     if (rememberCredentials.isChecked()) {
                         saveUserCredentials();
                     }
+                    System.out.println("Logged in with ID - " + user.getUserId(requireActivity()));
                     loadHomeActivity(context);
                 }
             }

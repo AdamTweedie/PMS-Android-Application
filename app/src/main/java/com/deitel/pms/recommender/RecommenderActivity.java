@@ -30,8 +30,6 @@ import java.util.List;
 
 public class RecommenderActivity extends AppCompatActivity {
 
-    RecommenderSetup recommenderSetup;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,31 +43,6 @@ public class RecommenderActivity extends AppCompatActivity {
         getSupportFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
-                // We use a String here, but any type that can be put in a Bundle is supported
-
-//
-//                recommenderSetup = new RecommenderSetup("Exeter", "CompSci", result);
-//                FirebaseStorage storage = recommenderSetup.getStorage();
-//                StorageReference reference = storage.getReferenceFromUrl("gs://pms-project-300122.appspot.com/Project Data/Exeter/CompSci/Exe-CompSci-Unclean.csv");
-//
-//                StorageReference fileRef = storage.getReference()
-//                        .child("Project Data")
-//                        .child("Exeter")
-//                        .child("CompSci")
-//                        .child("ExeCompSciDataClean.csv");
-//
-//                String uri = fileRef.getDownloadUrl().toString();
-//                System.out.println("URL - " + uri);
-//
-//                fileRef.getBytes(1024*1024)
-//                        .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//                    @Override
-//                    public void onSuccess(byte[] bytes) {
-//
-//                        String s = new String(bytes, StandardCharsets.UTF_8);
-//
-//                    }
-//                });
 
                 String result = bundle.getString("bundleKey");
                 System.out.println("this is the result in activity " + result);
@@ -105,9 +78,9 @@ public class RecommenderActivity extends AppCompatActivity {
             }
             Collections.shuffle(indexList);
 
-            if (indexList.size()>5) {
+            if (indexList.size()>6) {
                 int t1=indexList.get(0), t2=indexList.get(1), t3=indexList.get(2),
-                        t4=indexList.get(3), t5=indexList.get(4);
+                        t4=indexList.get(3), t5=indexList.get(4), t6=indexList.get(5);
 
                 indexList.clear();
                 indexList.add(t1);
@@ -115,6 +88,7 @@ public class RecommenderActivity extends AppCompatActivity {
                 indexList.add(t3);
                 indexList.add(t4);
                 indexList.add(t5);
+                indexList.add(t6);
             } // TODO - if not then add a few more projects from neighboring clusters
 
 
@@ -141,6 +115,12 @@ public class RecommenderActivity extends AppCompatActivity {
             // do something with result
 
             LoadingSuggestions(false);
+            if (results.size() < 6) {
+                for (int i = 0; i <= (6 - results.size()+1); i ++) {
+                    ArrayList<String> arr = new ArrayList<>();
+                    results.add(arr);
+                }
+            }
 
             FragmentTransaction presentProjectSuggestions = getSupportFragmentManager()
                     .beginTransaction()
@@ -148,11 +128,10 @@ public class RecommenderActivity extends AppCompatActivity {
                             new ProjectSuggestions(results.get(0),
                                     results.get(1),
                                     results.get(2),
-                                    results.get(3))).addToBackStack("suggestions");
+                                    results.get(3),
+                                    results.get(4),
+                                    results.get(5))).addToBackStack("suggestions");
             presentProjectSuggestions.commit();
-
-            // TODO - FILTER SPECIFIC INFORMATION FROM ARRAYLIST AND ADD TO UI
-
 
         }
     }

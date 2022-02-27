@@ -95,35 +95,37 @@ public class SignUp extends Fragment {
                 } else if (!ValidUniAccessCode(finalUniAccessCode)) {
                     Toast.makeText(getContext(), "Incorrect Uni Access Code", Toast.LENGTH_SHORT).show();
                     uniAccessCode.getText().clear();
+                } else {
+                    DocumentReference docRef = db.collection("users").document(finalEmail);
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                // if user does exist
+                                if (document.exists()) {
+                                    Log.d(TAG, "DocumentSnapshot data: " + document.getId() + " exists already");
+                                    Toast.makeText(context, "Email already exists", Toast.LENGTH_SHORT).show();
+                                    email.setText("");
+                                    password.setText("");
+                                    confirmPassword.setText("");
+                                    uniAccessCode.setText("");
+                                } else {
+                                    Log.d(TAG, "No such document");
+                                    createAccount(finalEmail, finalUniAccessCode, TAG);
+                                    saveToPrefs(finalEmail, finalPassword, context);
+                                    loadRecommenderSystem(context);
+                                }
+
+                            } else {
+                                Log.d(TAG, "get failed with ", task.getException());
+                            }
+                        }
+                    });
                 }
 
                 // Does user already exist....
-                DocumentReference docRef = db.collection("users").document(finalEmail);
-                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            // if user does exist
-                            if (document.exists()) {
-                                Log.d(TAG, "DocumentSnapshot data: " + document.getId() + " exists already");
-                                Toast.makeText(context, "Email already exists", Toast.LENGTH_SHORT).show();
-                                email.setText("");
-                                password.setText("");
-                                confirmPassword.setText("");
-                                uniAccessCode.setText("");
-                            } else {
-                                Log.d(TAG, "No such document");
-                                createAccount(finalEmail, finalUniAccessCode, TAG);
-                                saveToPrefs(finalEmail, finalPassword, context);
-                                loadRecommenderSystem(context);
-                                //loadWorkspaceActivity(context);
-                            }
-                        } else {
-                            Log.d(TAG, "get failed with ", task.getException());
-                        }
-                    }
-                });
+
             }
         });
 
@@ -140,8 +142,12 @@ public class SignUp extends Fragment {
     // TODO - NEED TO ADD DIFFERENT CREDENTIAL CHECKER FOR SUPERVISORS
     private boolean ValidUniAccessCode(String finalUniAccessCode) {
         for (ActiveUnis uni : ActiveUnis.values()) {
-            if (uni.getValue() == Integer.parseInt(finalUniAccessCode)) {
-                return true;
+            try {
+                if (uni.getValue() == Integer.parseInt(finalUniAccessCode)) {
+                    return true;
+                }
+            } catch (Exception e) {
+                return false;
             }
         }
         return false;
@@ -162,8 +168,8 @@ public class SignUp extends Fragment {
         // Create user info
 
         // TODO - clear shared prefs first
-        User newUser = new User(email);
-        newUser.saveEmailToSharedPref(requireActivity());
+        User newUser = new User();
+        newUser.setUserId(requireActivity(), email);
 
 
         Map<String, Object> user = new HashMap<>();

@@ -6,28 +6,19 @@ import android.content.SharedPreferences;
 
 public class User {
 
-    final String userEmail;
-
-    public User (String email) {
-        this.userEmail = email;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public void saveEmailToSharedPref(Activity activity) {
+    public void setUserId(Activity activity, String id) {
         SharedPreferences sharedPreferences = (SharedPreferences) activity
                 .getSharedPreferences("user_id", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("id", getUserEmail());
+        editor.putString("id", id);
         editor.apply();
     }
 
-    public String retrieveUserEmailFromSharedPrefs(Activity activity) {
+    public String getUserId(Activity activity) {
         SharedPreferences sharedPreferences = (SharedPreferences) activity
                 .getSharedPreferences("user_id", Context.MODE_PRIVATE);
-        final String email = sharedPreferences.getString("id", "No User Id");
-        return email;
-}
+        final String id = sharedPreferences.getString("id", "No User Id");
+        return id;
+    }
+
 }

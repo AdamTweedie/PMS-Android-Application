@@ -86,9 +86,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Any Other Information"
+            android:text="Any other useful information/keywords:"
             android:layout_gravity="start"
-            android:layout_marginStart="7dp"/>
+            android:layout_marginStart="7dp"
+            android:paddingBottom="10dp"/>
 
         <EditText
             android:id="@+id/etOtherInformation"
