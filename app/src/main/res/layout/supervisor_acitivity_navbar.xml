@@ -8,7 +8,7 @@
 
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/nav_bar_fragment"
+        android:id="@+id/supervisor_nav_bar_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="55dp"
@@ -30,7 +30,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <Button
-            android:id="@+id/btnNavWorkspace"
+            android:id="@+id/btnSupervisorWorkspace"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/nav_bar_workspace"
@@ -40,7 +40,7 @@
             />
 
         <Button
-            android:id="@+id/btnNavNotifications"
+            android:id="@+id/btnSupervisorNotifications"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/nav_bar_notifications"
@@ -50,7 +50,7 @@
             />
 
         <Button
-            android:id="@+id/btnNavSupervisor"
+            android:id="@+id/btnSupervisorMessages"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Messages"
@@ -60,7 +60,7 @@
             />
 
         <Button
-            android:id="@+id/btnNavProfile"
+            android:id="@+id/btnSupervisorProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/nav_bar_profile"

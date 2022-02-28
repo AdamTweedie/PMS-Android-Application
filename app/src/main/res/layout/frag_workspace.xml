@@ -99,13 +99,14 @@
             android:textStyle="bold"
             android:textColor="#6247AA" />
 
+        <!--            app:backgroundTint="@android:color/transparent"-->
+
+
         <Button
             android:id="@+id/btnCalendarView"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-<!--            app:backgroundTint="@android:color/transparent"-->
-
 
         <TextView
             android:id="@+id/tvCurrentDate"

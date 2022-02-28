@@ -20,7 +20,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.security.crypto.MasterKey;
 
 import com.deitel.pms.recommender.RecommenderActivity;
-import com.deitel.pms.student.HomeActivity;
+import com.deitel.pms.supervisor.SupervisorActivity;
+import com.deitel.pms.supervisor.SupervisorWorkspace;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -39,7 +40,9 @@ public class SignUp extends Fragment {
 
     // TODO - configure this so it will still run without a connection to the internet.
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    User user = new User();
+    FirestoreUtils u = new FirestoreUtils();
 
     private Button btnAlreadyMember;
     private Button btnSignUp;
@@ -89,13 +92,10 @@ public class SignUp extends Fragment {
                     Toast.makeText(getContext(), "Passwords do not match !", Toast.LENGTH_SHORT).show();
                     password.getText().clear();
                     confirmPassword.getText().clear();
-                } else if (!ValidEmail(finalEmail)) {
-                    Toast.makeText(getContext(), "Invalid email !", Toast.LENGTH_SHORT).show();
-                    email.getText().clear();
-                } else if (!ValidUniAccessCode(finalUniAccessCode)) {
-                    Toast.makeText(getContext(), "Incorrect Uni Access Code", Toast.LENGTH_SHORT).show();
-                    uniAccessCode.getText().clear();
-                } else {
+
+                } else if (validStudentEmailAndAccessCode(finalEmail, finalUniAccessCode)) {
+
+                    // does this user already exist
                     DocumentReference docRef = db.collection("users").document(finalEmail);
                     docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -112,9 +112,10 @@ public class SignUp extends Fragment {
                                     uniAccessCode.setText("");
                                 } else {
                                     Log.d(TAG, "No such document");
-                                    createAccount(finalEmail, finalUniAccessCode, TAG);
+                                    createStudentAccount(finalEmail, finalUniAccessCode, TAG);
                                     saveToPrefs(finalEmail, finalPassword, context);
                                     loadRecommenderSystem(context);
+                                    user.setUserId(requireActivity(), finalEmail);
                                 }
 
                             } else {
@@ -122,10 +123,30 @@ public class SignUp extends Fragment {
                             }
                         }
                     });
+                } else if (validSupervisorEmailAndAccessCode(finalEmail, finalUniAccessCode)) {
+
+                    DocumentReference docRef = db.collection(u.getSUPERVISOR_COLLECTION_PATH()).document(finalEmail);
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot document = task.getResult();
+                            if (Objects.equals(document.get(u.getFIELD_SUPERVISOR_ACCOUNT_CREATED()), false)) {
+                                setAccountCreatedTrue(u.getSUPERVISOR_COLLECTION_PATH(), finalEmail, u.getFIELD_SUPERVISOR_ACCOUNT_CREATED());
+                                saveToPrefs(finalEmail, finalPassword, context);
+                                loadSupervisorWorkspace(context);
+                                user.setUserId(requireActivity(), finalEmail);
+                            } else {
+                                Toast.makeText(context, "Account already exists", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("LOGGER", "get failed with " + e);
+                            Toast.makeText(context, "Account already created", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
-
-                // Does user already exist....
-
             }
         });
 
@@ -139,11 +160,34 @@ public class SignUp extends Fragment {
         });
     }
 
-    // TODO - NEED TO ADD DIFFERENT CREDENTIAL CHECKER FOR SUPERVISORS
-    private boolean ValidUniAccessCode(String finalUniAccessCode) {
-        for (ActiveUnis uni : ActiveUnis.values()) {
+    private void setAccountCreatedTrue(String supervisor_collection_path, String finalEmail, String field_supervisor_account_created) {
+
+        Map<String, Object> project = new HashMap<>();
+        project.put(field_supervisor_account_created, true);
+
+        db.collection(supervisor_collection_path)
+                .document(finalEmail)
+                .set(project, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d("LOGGER", "DocumentSnapshot added with ID: " + finalEmail);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("LOGGER", "Error adding document", e);
+            }
+        });
+    }
+
+    private boolean validStudentEmailAndAccessCode(String email, String accessCode) {
+
+        // TODO - create user account in User, if user.getEmail = activeuni.getkey .....
+
+        String[] parts = email.split("@");
+        for (ActiveUnisStudents uni : ActiveUnisStudents.values()) {
             try {
-                if (uni.getValue() == Integer.parseInt(finalUniAccessCode)) {
+                if (uni.getKey().equals(parts[1]) && uni.getValue().equals(Integer.parseInt(accessCode))) {
                     return true;
                 }
             } catch (Exception e) {
@@ -153,18 +197,21 @@ public class SignUp extends Fragment {
         return false;
     }
 
-    private boolean ValidEmail(String finalEmail) {
-        String[] parts = finalEmail.split("@");
-        for (ActiveUnis uni : ActiveUnis.values()) {
-            if (uni.getKey().equals(parts[1])) {
-                return true;
+    private boolean validSupervisorEmailAndAccessCode(String email, String accessCode) {
+        String[] parts = email.split("@");
+        for (ActiveUnisSupervisors uni : ActiveUnisSupervisors.values()) {
+            try {
+                if (uni.getKey().equals(parts[1]) && uni.getValue().equals(Integer.parseInt(accessCode))) {
+                    return true;
+                }
+            } catch (Exception e) {
+                return false;
             }
         }
         return false;
     }
 
-
-    public void createAccount(String email, String uniCode, String TAG) {
+    public void createStudentAccount(String email, String uniCode, String TAG) {
         // Create user info
 
         // TODO - clear shared prefs first
@@ -209,6 +256,12 @@ public class SignUp extends Fragment {
         Toast.makeText(context, "Account created!", Toast.LENGTH_SHORT).show();
     }
 
+    private void loadSupervisorWorkspace(Context context) {
+        Intent workspace = new Intent(getActivity(), SupervisorActivity.class);
+        startActivity(workspace);
+        getActivity().finish();
+        Toast.makeText(context, "Account created!", Toast.LENGTH_SHORT).show();
+    }
 
     public void replaceFragment(Object object) {
         final FragmentTransaction fragmentTransaction;

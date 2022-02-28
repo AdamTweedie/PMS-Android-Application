@@ -31,6 +31,8 @@ public class FirestoreUtils {
     final String FIELD_PROJECT_TITLE = "project title";
     final String FIELD_PROJECT_DESCRIPTION = "project description";
     final String FIELD_PROJECT_APPROVED = "approved project";
+    final String SUPERVISOR_COLLECTION_PATH = "supervisors";
+    final String FIELD_SUPERVISOR_ACCOUNT_CREATED = "account created";
 
 
     public void addUserProject(Activity activity,
@@ -89,5 +91,13 @@ public class FirestoreUtils {
 
     public String getFIELD_PROJECT_APPROVED() {
         return FIELD_PROJECT_APPROVED;
+    }
+
+    public String getSUPERVISOR_COLLECTION_PATH() {
+        return SUPERVISOR_COLLECTION_PATH;
+    }
+
+    public String getFIELD_SUPERVISOR_ACCOUNT_CREATED() {
+        return FIELD_SUPERVISOR_ACCOUNT_CREATED;
     }
 }

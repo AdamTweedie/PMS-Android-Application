@@ -18,5 +18,6 @@
         </activity>
         <activity android:name=".student.HomeActivity"/>
         <activity android:name=".recommender.RecommenderActivity"/>
+        <activity android:name=".supervisor.SupervisorActivity"/>
     </application>
 </manifest>

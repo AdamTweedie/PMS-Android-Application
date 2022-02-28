@@ -51,6 +51,8 @@ public class SignIn extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // TODO - sort if user account is student or supervisor and add the relevant activity following
+
         Context context = getContext();
         if (detailsSaved()) {
             loadHomeActivity(context);
