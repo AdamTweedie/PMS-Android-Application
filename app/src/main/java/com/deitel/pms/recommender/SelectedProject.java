@@ -1,12 +1,7 @@
 package com.deitel.pms.recommender;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +19,7 @@ import com.deitel.pms.FirestoreUtils;
 import com.deitel.pms.R;
 import com.deitel.pms.User;
 import com.deitel.pms.student.HomeActivity;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class SelectedProject extends Fragment {
 
@@ -85,12 +73,17 @@ public class SelectedProject extends Fragment {
             @Override
             public void onClick(View view) {
 
+                User user = new User();
+                String userId = user.getUserId(requireActivity());
+
                 FirestoreUtils firestoreUtils = new FirestoreUtils();
                 firestoreUtils.addUserProject(requireActivity(),
                         getSupervisorEmail(),
                         getSupervisorName(),
                         getProjectTitle(),
                         getProjectDescription());
+
+                firestoreUtils.standardProjectRequest(userId, getSupervisorEmail(), getProjectTitle(), getProjectDescription());
 
                 getParentFragmentManager().popBackStack();
                 Intent homeScreen = new Intent(getActivity(), HomeActivity.class);

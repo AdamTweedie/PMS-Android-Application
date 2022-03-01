@@ -21,20 +21,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.security.crypto.MasterKey;
 
-import com.deitel.pms.student.HomeActivity;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.Objects;
+import com.deitel.pms.supervisor.SupervisorActivity;
 
 public class SignIn extends Fragment {
 
-    private Button btnSignUp;
-    private Button btnSignIn;
     private Button btnResetPassword;
     private EditText email;
     private EditText password;
@@ -59,8 +49,8 @@ public class SignIn extends Fragment {
         }
 
         User user = new User();
-        btnSignUp = (Button) view.findViewById(R.id.btnSignUp);
-        btnSignIn = (Button) view.findViewById(R.id.btnSignIn);
+        Button btnSignUp = (Button) view.findViewById(R.id.btnSignUp);
+        Button btnSignIn = (Button) view.findViewById(R.id.btnSignIn);
         btnResetPassword = (Button) view.findViewById(R.id.btnResetPassword);
         CheckBox rememberCredentials = (CheckBox) view.findViewById(R.id.cbRememberLoginCredentials);
         email = (EditText) view.findViewById(R.id.etUserEmail);
@@ -71,13 +61,28 @@ public class SignIn extends Fragment {
             @Override
             public void onClick(View view) {
 
+                // TODO - clear credentials for user id so it doesnt get over-logged
+
                 final String userEmail = email.getText().toString();
                 final String userPassword = password.getText().toString();
                 final String errorMsg = "Username or Password is Incorrect";
 
                 if (!validDetails(context, userEmail, userPassword, errorMsg)) {
                     Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show();
+
+                } else if (validDetails(context, userEmail, userPassword, errorMsg)) {
+                    user.clearIdPreferences(requireActivity());
+                    user.setUserId(requireActivity(), userEmail);
+                    if (user.getUserId(requireActivity()).contains("supervisor")) {
+                        if (rememberCredentials.isChecked()) {
+                            saveUserCredentials();
+                        }
+                        System.out.println("Logged in with ID - " + user.getUserId(requireActivity()));
+                        loadSupervisorActivity(context);
+                    }
                 } else {
+                    user.clearIdPreferences(requireActivity());
+                    user.setUserId(requireActivity(), userEmail);
                     if (rememberCredentials.isChecked()) {
                         saveUserCredentials();
                     }
@@ -116,7 +121,6 @@ public class SignIn extends Fragment {
                 ButtonUtils.textButtonColorChange(btnResetPassword);
             }
         });
-
     }
 
     private void saveUserCredentials() {
@@ -135,6 +139,13 @@ public class SignIn extends Fragment {
         String saved = sharedPreferences.getString("rememberMe", "defaultValue");
 
         return saved.equals("yes");
+    }
+
+    private void loadSupervisorActivity(Context context) {
+        Intent supervisorHomeActivity = new Intent(getActivity(), SupervisorActivity.class);
+        getActivity().finish();
+        startActivity(supervisorHomeActivity);
+        Toast.makeText(context, "Welcome back !", Toast.LENGTH_SHORT).show();
     }
 
     private void loadHomeActivity(Context context) {

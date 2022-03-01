@@ -1,5 +1,7 @@
 package com.deitel.pms;
 
+import static java.util.Objects.requireNonNull;
+
 import android.app.Activity;
 import android.util.Log;
 
@@ -18,21 +20,30 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class FirestoreUtils {
 
     final FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
     final User user = new User();
     final String TAG = "FireStore Process: ";
+
+    // student paths
     final String USER_COLLECTION_PATH = "users";
     final String FIELD_SUPERVISOR_EMAIL = "supervisor email";
     final String FIELD_PROJECT_TITLE = "project title";
     final String FIELD_PROJECT_DESCRIPTION = "project description";
     final String FIELD_PROJECT_APPROVED = "approved project";
+
+    // supervisor paths
     final String SUPERVISOR_COLLECTION_PATH = "supervisors";
     final String FIELD_SUPERVISOR_ACCOUNT_CREATED = "account created";
+    final String SUPERVISOR_REQUESTS_COLLECTION_PATH = "project requests";
+    final String SUPERVISOR_REQUESTS_PROJECT_TITLE_FIELD = "project title";
+    final String SUPERVISOR_REQUESTS_PROJECT_DESCRIPTION_FIELD = "project description";
 
 
     public void addUserProject(Activity activity,
@@ -65,12 +76,35 @@ public class FirestoreUtils {
         });
     }
 
-    public void createAccount() {
+    public void standardProjectRequest(String userId, String supervisorId,
+                                       String projectTitle, String projectDescription) {
 
+        Map<String, Object> projectRequestInfo = new HashMap<>();
+        projectRequestInfo.put("project title", projectTitle);
+        projectRequestInfo.put("project description", projectDescription);
+
+        dbInstance.collection(SUPERVISOR_COLLECTION_PATH)
+                .document(supervisorId)
+                .collection(SUPERVISOR_REQUESTS_COLLECTION_PATH)
+                .document(userId)
+                .set(projectRequestInfo)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.w(TAG, "Successfully requested project");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Failed to request project");
+            }
+        });
+    }
+
+    public void createAccount() {
     }
 
     public void setProjectApproval() {
-
     }
 
     public String getUSER_COLLECTION_PATH() {
@@ -99,5 +133,17 @@ public class FirestoreUtils {
 
     public String getFIELD_SUPERVISOR_ACCOUNT_CREATED() {
         return FIELD_SUPERVISOR_ACCOUNT_CREATED;
+    }
+
+    public String getSUPERVISOR_REQUESTS_COLLECTION_PATH() {
+        return SUPERVISOR_REQUESTS_COLLECTION_PATH;
+    }
+
+    public String getSUPERVISOR_REQUESTS_PROJECT_TITLE_FIELD() {
+        return SUPERVISOR_REQUESTS_PROJECT_TITLE_FIELD;
+    }
+
+    public String getSUPERVISOR_REQUESTS_PROJECT_DESCRIPTION_FIELD() {
+        return SUPERVISOR_REQUESTS_PROJECT_DESCRIPTION_FIELD;
     }
 }

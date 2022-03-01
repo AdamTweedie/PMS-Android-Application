@@ -13,14 +13,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.deitel.pms.MyRecyclerViewAdapter;
 import com.deitel.pms.R;
 
 import java.util.ArrayList;
 
-public class Notifications extends Fragment implements MyRecyclerViewAdapter.ItemClickListener {
+public class Notifications extends Fragment implements NotificationRecyclerViewAdapter.ItemClickListener {
 
-    MyRecyclerViewAdapter adapter;
+    NotificationRecyclerViewAdapter adapter;
 
     @Nullable
     @Override
@@ -54,7 +53,7 @@ public class Notifications extends Fragment implements MyRecyclerViewAdapter.Ite
         // set up the RecyclerView
         RecyclerView recyclerView = view.findViewById(R.id.rvNotifications);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new MyRecyclerViewAdapter(context, animalNames);
+        adapter = new NotificationRecyclerViewAdapter(context, animalNames);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
     }
