@@ -59,7 +59,7 @@ public class FirestoreUtils {
         project.put("supervisor name", supervisorName);
         project.put("project title", projectTitle);
         project.put("project description", projectDescription);
-        project.put("approved project", "false");
+        project.put("approved project", false);
 
         dbInstance.collection(USER_COLLECTION_PATH)
                 .document(userId)

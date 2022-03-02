@@ -214,10 +214,9 @@ public class SignUp extends Fragment {
     public void createStudentAccount(String email, String uniCode, String TAG) {
         // Create user info
 
-        // TODO - clear shared prefs first
         User newUser = new User();
+        newUser.clearIdPreferences(requireActivity());
         newUser.setUserId(requireActivity(), email);
-
 
         Map<String, Object> user = new HashMap<>();
         user.put("uni id", uniCode);

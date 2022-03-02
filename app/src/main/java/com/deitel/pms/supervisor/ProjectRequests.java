@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -52,6 +53,13 @@ public class ProjectRequests extends Fragment implements ProjectRequestsRecycler
     @Override
     public void onItemClick(View view, int position) {
         Toast.makeText(getContext(), "You clicked on row number " + position, Toast.LENGTH_SHORT).show();
+        ArrayList<String> projectRequestData = adapter.getItem(position);
+
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .add(R.id.supervisor_nav_bar_fragment,
+                        new ExpandedProjectRequest(projectRequestData))
+                .addToBackStack("workspace")
+                .commit();
     }
 
     private ArrayList<ArrayList<String>> getProjectRequests() {

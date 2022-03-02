@@ -37,7 +37,7 @@ public class Profile extends Fragment {
     FirestoreUtils u = new FirestoreUtils();
     final FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
 
-    @Nullable
+        @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             return inflater.inflate(R.layout.frag_profile, container, false);
@@ -66,10 +66,14 @@ public class Profile extends Fragment {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot document = task.getResult();
-                projectTitle.setText(document.getString(u.getFIELD_PROJECT_TITLE()));
-                projectDescription.setText(document.getString(u.getFIELD_PROJECT_DESCRIPTION()));
-                projectApprovalStatus.setText("Approved: " + document.getString(u.getFIELD_PROJECT_APPROVED()));
-                userSupervisor.setText(document.getString(u.getFIELD_SUPERVISOR_EMAIL()));
+                try {
+                    projectTitle.setText(document.getString(u.getFIELD_PROJECT_TITLE()));
+                    projectDescription.setText(document.getString(u.getFIELD_PROJECT_DESCRIPTION()));
+                    projectApprovalStatus.setText("Approved: " + document.getBoolean(u.getFIELD_PROJECT_APPROVED()).toString());
+                    userSupervisor.setText(document.getString(u.getFIELD_SUPERVISOR_EMAIL()));
+                } catch (Exception e) {
+                    Log.e("LOGGER", "failed with exception " + e);
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

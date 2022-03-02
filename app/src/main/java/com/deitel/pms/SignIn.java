@@ -61,8 +61,6 @@ public class SignIn extends Fragment {
             @Override
             public void onClick(View view) {
 
-                // TODO - clear credentials for user id so it doesnt get over-logged
-
                 final String userEmail = email.getText().toString();
                 final String userPassword = password.getText().toString();
                 final String errorMsg = "Username or Password is Incorrect";
@@ -70,24 +68,24 @@ public class SignIn extends Fragment {
                 if (!validDetails(context, userEmail, userPassword, errorMsg)) {
                     Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show();
 
-                } else if (validDetails(context, userEmail, userPassword, errorMsg)) {
+                } else if (validDetails(context, userEmail, userPassword, errorMsg)) { // TODO - && account created = true
                     user.clearIdPreferences(requireActivity());
                     user.setUserId(requireActivity(), userEmail);
                     if (user.getUserId(requireActivity()).contains("supervisor")) {
                         if (rememberCredentials.isChecked()) {
                             saveUserCredentials();
                         }
-                        System.out.println("Logged in with ID - " + user.getUserId(requireActivity()));
                         loadSupervisorActivity(context);
+                        System.out.println("Logged in with ID - " + user.getUserId(requireActivity()));
+                    } else {
+                        user.clearIdPreferences(requireActivity());
+                        user.setUserId(requireActivity(), userEmail);
+                        if (rememberCredentials.isChecked()) {
+                            saveUserCredentials();
+                        }
+                        System.out.println("Logged in with ID - " + user.getUserId(requireActivity()));
+                        loadHomeActivity(context);
                     }
-                } else {
-                    user.clearIdPreferences(requireActivity());
-                    user.setUserId(requireActivity(), userEmail);
-                    if (rememberCredentials.isChecked()) {
-                        saveUserCredentials();
-                    }
-                    System.out.println("Logged in with ID - " + user.getUserId(requireActivity()));
-                    loadHomeActivity(context);
                 }
             }
         });
