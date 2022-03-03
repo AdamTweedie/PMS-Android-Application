@@ -79,13 +79,15 @@ public class ExpandedProjectRequest extends Fragment {
 
                 // Set student project approval to true
                 Map<String, Object> studentUpdates = new HashMap<>();
+                studentUpdates.put(utils.getFIELD_SUPERVISOR_EMAIL(), user.getUserId(requireActivity()));
                 studentUpdates.put(utils.getFIELD_PROJECT_APPROVED(), true);
+
                 dbInstance.collection(utils.getUSER_COLLECTION_PATH())
-                        .document(getProjectData().get(0)).set(studentUpdates, SetOptions.merge())
+                        .document(getProjectData().get(0)).update(studentUpdates)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Log.w("LOGGER", "successfully set project approval to true");
+                        Log.w("LOGGER", "successfully updated student project data");
 
                         // Add student to supervisors myStudents collection
                         Map<String, Object> newMyStudent = new HashMap<>();
@@ -102,6 +104,20 @@ public class ExpandedProjectRequest extends Fragment {
                                     public void onComplete(@NonNull Task<Void> task) {
 
                                         // delete project request
+                                        dbInstance.collection("student suggested projects")
+                                                .document(projectData.get(0))
+                                                .delete()
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Log.w("LOGGER", "suggested project deleted");
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w("LOGGER", "failed to delete suggested project, may be supervisor recommended.");
+                                            }
+                                        });
                                         dbInstance.collection(utils.getSUPERVISOR_COLLECTION_PATH())
                                                 .document(user.getUserId(requireActivity()))
                                                 .collection(utils.getSUPERVISOR_REQUESTS_COLLECTION_PATH())
