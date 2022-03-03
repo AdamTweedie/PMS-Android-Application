@@ -40,7 +40,7 @@ public class ProjectRequestsRecyclerViewAdapter extends RecyclerView
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(com.deitel.pms.supervisor.ProjectRequestsRecyclerViewAdapter.ViewHolder holder, int position) {
-        ArrayList<String> project = mData.get(position);
+        ArrayList<String> project = getmData().get(position);
         holder.studentId.setText(project.get(0));
         holder.projectTitle.setText(project.get(1));
     }
@@ -48,7 +48,7 @@ public class ProjectRequestsRecyclerViewAdapter extends RecyclerView
     // total number of rows
     @Override
     public int getItemCount() {
-        return mData.size();
+        return getmData().size();
     }
 
 
@@ -72,12 +72,20 @@ public class ProjectRequestsRecyclerViewAdapter extends RecyclerView
 
     // convenience method for getting data at click position
     public ArrayList<String> getItem(int id) {
-        return mData.get(id);
+        return getmData().get(id);
     }
 
     // allows clicks events to be caught
     public void setClickListener(ProjectRequests itemClickListener) {
         this.mClickListener = itemClickListener;
+    }
+
+    public void setmData(ArrayList<ArrayList<String>> data) {
+        this.mData = data;
+    }
+
+    public ArrayList<ArrayList<String>> getmData() {
+        return this.mData;
     }
 
 

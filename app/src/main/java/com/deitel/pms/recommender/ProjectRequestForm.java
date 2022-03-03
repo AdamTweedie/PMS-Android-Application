@@ -2,7 +2,6 @@ package com.deitel.pms.recommender;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +17,6 @@ import com.deitel.pms.FirestoreUtils;
 import com.deitel.pms.R;
 import com.deitel.pms.User;
 import com.deitel.pms.student.HomeActivity;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.SetOptions;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ProjectRequestForm extends Fragment {
 
@@ -47,9 +40,11 @@ public class ProjectRequestForm extends Fragment {
                 final String title = suggestedTitle.getText().toString();
                 final String description = suggestedDescription.getText().toString();
                 final FirestoreUtils firestoreUtils = new FirestoreUtils();
+                final User user = new User();
 
                 firestoreUtils.addUserProject(requireActivity(),
                         null, null, title, description);
+                firestoreUtils.studentSuggestedProjectRequest(user.getUserId(requireActivity()), title, description);
 
                 getParentFragmentManager().popBackStack();
                 Intent homeScreen = new Intent(getActivity(), HomeActivity.class);

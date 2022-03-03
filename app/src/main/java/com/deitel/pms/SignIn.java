@@ -71,7 +71,7 @@ public class SignIn extends Fragment {
                 } else if (validDetails(context, userEmail, userPassword, errorMsg)) { // TODO - && account created = true
                     user.clearIdPreferences(requireActivity());
                     user.setUserId(requireActivity(), userEmail);
-                    if (user.getUserId(requireActivity()).contains("supervisor")) {
+                    if (user.getUserId(requireActivity()).contains("supervisor")) { // and is a supervisor account
                         if (rememberCredentials.isChecked()) {
                             saveUserCredentials();
                         }

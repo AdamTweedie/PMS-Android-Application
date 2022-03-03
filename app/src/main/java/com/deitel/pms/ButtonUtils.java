@@ -23,4 +23,16 @@ public class ButtonUtils {
             }
         }, 250); // Millisecond 100 = 0.1 sec
     }
+
+    public static void tabViewButtonColorChanger(View btnCurrent, View btnTarget) {
+        btnCurrent.setEnabled(true);
+        btnTarget.setEnabled(true);
+
+        Button currentTabButton = (Button) btnCurrent;
+        Button targetTabButton = (Button) btnTarget;
+
+        currentTabButton.setTextColor(Color.parseColor("#B185DB"));
+        targetTabButton.setTextColor(Color.parseColor("#6247AA"));
+
+    }
 }

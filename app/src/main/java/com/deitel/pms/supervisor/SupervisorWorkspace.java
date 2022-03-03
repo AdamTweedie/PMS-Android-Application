@@ -20,6 +20,7 @@ import com.deitel.pms.student.Calendar;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -51,11 +52,13 @@ public class SupervisorWorkspace extends Fragment {
                 Fragment fragment = getParentFragmentManager()
                         .findFragmentById(R.id.supervisor_nav_bar_fragment);
 
-                ArrayList<ArrayList<String>> projectRequests = new ArrayList<>();
+                ArrayList<ArrayList<String>> supervisorRecommendedProjects = new ArrayList<>();
+                ArrayList<ArrayList<String>> studentSuggestedProjects = new ArrayList<>();
                 dbInstance.collection(utils.getSUPERVISOR_COLLECTION_PATH())
                         .document(user.getUserId(requireActivity()))
                         .collection(utils.getSUPERVISOR_REQUESTS_COLLECTION_PATH())
-                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         QuerySnapshot snapshots = task.getResult();
@@ -65,23 +68,46 @@ public class SupervisorWorkspace extends Fragment {
                             project.add(requireNonNull(studentId.get("project title")).toString());
                             project.add(requireNonNull(studentId.get("project description")).toString());
 
-                            projectRequests.add(project);
+                            supervisorRecommendedProjects.add(project);
                         }
 
-                        if (fragment!=null) {
-                            getParentFragmentManager().beginTransaction()
-                                    .add(R.id.supervisor_nav_bar_fragment, new ProjectRequests(projectRequests))
-                                    .addToBackStack("project requests")
-                                    .commit();
-                        }
+                        System.out.println("supervisor recommended projects " + supervisorRecommendedProjects);
 
+                        dbInstance.collection("student suggested projects")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                QuerySnapshot snapshots = task.getResult();
+                                for (QueryDocumentSnapshot studentId : snapshots) {
+                                    ArrayList<String> project = new ArrayList<>();
+                                    project.add(studentId.getId());
+                                    project.add(requireNonNull(studentId.get("project title")).toString());
+                                    project.add(requireNonNull(studentId.get("project description")).toString());
 
+                                    studentSuggestedProjects.add(project);
+                                }
 
+                                System.out.println("student suggested projects " + studentSuggestedProjects);
+
+                                if (fragment!=null) {
+                                    getParentFragmentManager().beginTransaction()
+                                            .add(R.id.supervisor_nav_bar_fragment, new ProjectRequests(supervisorRecommendedProjects, studentSuggestedProjects))
+                                            .addToBackStack("project requests")
+                                            .commit();
+                                }
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Failed to find project requests", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Failed to find supervisor recommended project requests", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

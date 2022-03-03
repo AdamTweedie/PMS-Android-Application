@@ -76,6 +76,27 @@ public class FirestoreUtils {
         });
     }
 
+    public void studentSuggestedProjectRequest(String userId, String projectTitle, String projectDescription) {
+        Map<String, Object> projectRequestInfo = new HashMap<>();
+        projectRequestInfo.put("project title", projectTitle);
+        projectRequestInfo.put("project description", projectDescription);
+
+        dbInstance.collection("student suggested projects")
+                .document(userId)
+                .set(projectRequestInfo)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.w(TAG, "Successfully added suggested project!");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Failed to add suggested project!");
+            }
+        });
+    }
+
     public void standardProjectRequest(String userId, String supervisorId,
                                        String projectTitle, String projectDescription) {
 
