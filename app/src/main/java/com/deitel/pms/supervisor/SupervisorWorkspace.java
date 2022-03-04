@@ -3,6 +3,7 @@ package com.deitel.pms.supervisor;
 import static java.util.Objects.requireNonNull;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,26 +13,27 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.deitel.pms.FirestoreUtils;
 import com.deitel.pms.R;
 import com.deitel.pms.User;
-import com.deitel.pms.student.Calendar;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class SupervisorWorkspace extends Fragment {
+public class SupervisorWorkspace extends Fragment implements MyStudentsRecyclerViewAdapter.ItemClickListener {
 
     FirestoreUtils utils = new FirestoreUtils();
     User user = new User();
     final FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
+    MyStudentsRecyclerViewAdapter adapter;
 
     @Nullable
     @Override
@@ -54,6 +56,7 @@ public class SupervisorWorkspace extends Fragment {
 
                 ArrayList<ArrayList<String>> supervisorRecommendedProjects = new ArrayList<>();
                 ArrayList<ArrayList<String>> studentSuggestedProjects = new ArrayList<>();
+                // get supervisor recommended projects
                 dbInstance.collection(utils.getSUPERVISOR_COLLECTION_PATH())
                         .document(user.getUserId(requireActivity()))
                         .collection(utils.getSUPERVISOR_REQUESTS_COLLECTION_PATH())
@@ -73,6 +76,7 @@ public class SupervisorWorkspace extends Fragment {
 
                         System.out.println("supervisor recommended projects " + supervisorRecommendedProjects);
 
+                        //  get student suggested projects
                         dbInstance.collection("student suggested projects")
                                 .get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -110,7 +114,39 @@ public class SupervisorWorkspace extends Fragment {
                         Toast.makeText(getContext(), "Failed to find supervisor recommended project requests", Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
-        });
+            }});
+
+            RecyclerView recyclerView = view.findViewById(R.id.rvSupervisorsStudents);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            adapter = new MyStudentsRecyclerViewAdapter(getContext(), null);
+
+            dbInstance.collection(utils.getSUPERVISOR_COLLECTION_PATH())
+                    .document(user.getUserId(requireActivity()))
+                    .collection("approved projects")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    QuerySnapshot snapshots = task.getResult();
+                    ArrayList<String> myStudentArray = new ArrayList<>();
+                    for (QueryDocumentSnapshot student : snapshots) {
+                        myStudentArray.add(student.getId());
+                    }
+                    System.out.println("My Students " + myStudentArray);
+                    adapter.setmData(myStudentArray);
+                    adapter.setClickListener(SupervisorWorkspace.this);
+                    recyclerView.setAdapter(adapter);
+                    Log.w("LOGGER", "successfully loaded myStudents to RecyclerView");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w("LOGGER", "failed to upload myStudents to RecyclerView");
+                }
+            });
+    }
+    @Override
+    public void onItemClick(View view, int position) {
+        Toast.makeText(getContext(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
     }
 }

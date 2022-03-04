@@ -80,13 +80,13 @@ public class ProjectRequestsRecyclerViewAdapter extends RecyclerView
         this.mClickListener = itemClickListener;
     }
 
-    public void setmData(ArrayList<ArrayList<String>> data) {
-        this.mData = data;
-    }
+public void setmData(ArrayList<ArrayList<String>> data) {
+    this.mData = data;
+}
 
-    public ArrayList<ArrayList<String>> getmData() {
-        return this.mData;
-    }
+public ArrayList<ArrayList<String>> getmData() {
+    return this.mData;
+}
 
 
     // parent activity will implement this method to respond to click events
