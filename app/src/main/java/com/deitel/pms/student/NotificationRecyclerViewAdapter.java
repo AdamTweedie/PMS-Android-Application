@@ -11,16 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.deitel.pms.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<NotificationRecyclerViewAdapter.ViewHolder> {
 
-    private List<String> mData;
+    private ArrayList<ArrayList<String>> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public NotificationRecyclerViewAdapter(Context context, ArrayList<String> data) {
+    public NotificationRecyclerViewAdapter(Context context, ArrayList<ArrayList<String>> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -28,15 +27,15 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.recyclerview_row, parent, false);
+        View view = mInflater.inflate(R.layout.student_notification_row, parent, false);
         return new ViewHolder(view);
     }
 
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String animal = getmData().get(position);
-        holder.myTextView.setText(animal);
+        ArrayList<String> notification = getmData().get(position);
+        holder.myTextView.setText(notification.get(0));
     }
 
     // total number of rows
@@ -63,7 +62,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
     }
 
     // convenience method for getting data at click position
-    public String getItem(int id) {
+    public ArrayList<String> getItem(int id) {
         return getmData().get(id);
     }
 
@@ -72,11 +71,11 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         this.mClickListener = itemClickListener;
     }
 
-    public void setmData(ArrayList<String> data) {
+    public void setmData(ArrayList<ArrayList<String>> data) {
         this.mData = data;
     }
 
-    public List<String> getmData() {
+    public ArrayList<ArrayList<String>> getmData() {
         return this.mData;
     }
 
