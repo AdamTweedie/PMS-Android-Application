@@ -47,6 +47,38 @@ public class SupervisorWorkspace extends Fragment implements MyStudentsRecyclerV
 
 
         final Button btnProjectRequests = (Button) view.findViewById(R.id.swBtnProjectRequests);
+        final Button btnCreateNotification = (Button) view.findViewById(R.id.swBtnCreateNotification);
+
+        // Load myStudents
+        RecyclerView recyclerView = view.findViewById(R.id.rvSupervisorsStudents);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new MyStudentsRecyclerViewAdapter(getContext(), null);
+        dbInstance.collection(utils.getSUPERVISOR_COLLECTION_PATH())
+                .document(user.getUserId(requireActivity()))
+                .collection("approved projects")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        QuerySnapshot snapshots = task.getResult();
+                        ArrayList<String> myStudentArray = new ArrayList<>();
+                        for (QueryDocumentSnapshot student : snapshots) {
+                            myStudentArray.add(student.getId());
+                        }
+                        System.out.println("My Students " + myStudentArray);
+                        adapter.setmData(myStudentArray);
+                        adapter.setClickListener(SupervisorWorkspace.this);
+                        recyclerView.setAdapter(adapter);
+                        Log.w("LOGGER", "successfully loaded myStudents to RecyclerView");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("LOGGER", "failed to upload myStudents to RecyclerView");
+            }
+        });
+
+
         btnProjectRequests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,6 +102,7 @@ public class SupervisorWorkspace extends Fragment implements MyStudentsRecyclerV
                             project.add(studentId.getId());
                             project.add(requireNonNull(studentId.get("project title")).toString());
                             project.add(requireNonNull(studentId.get("project description")).toString());
+                            project.add(user.getUserId(requireActivity()));
 
                             supervisorRecommendedProjects.add(project);
                         }
@@ -88,6 +121,7 @@ public class SupervisorWorkspace extends Fragment implements MyStudentsRecyclerV
                                     project.add(studentId.getId());
                                     project.add(requireNonNull(studentId.get("project title")).toString());
                                     project.add(requireNonNull(studentId.get("project description")).toString());
+                                    project.add((String) studentId.get("supervisor email"));
 
                                     studentSuggestedProjects.add(project);
                                 }
@@ -116,35 +150,19 @@ public class SupervisorWorkspace extends Fragment implements MyStudentsRecyclerV
                 });
             }});
 
-            RecyclerView recyclerView = view.findViewById(R.id.rvSupervisorsStudents);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            adapter = new MyStudentsRecyclerViewAdapter(getContext(), null);
 
-            dbInstance.collection(utils.getSUPERVISOR_COLLECTION_PATH())
-                    .document(user.getUserId(requireActivity()))
-                    .collection("approved projects")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    QuerySnapshot snapshots = task.getResult();
-                    ArrayList<String> myStudentArray = new ArrayList<>();
-                    for (QueryDocumentSnapshot student : snapshots) {
-                        myStudentArray.add(student.getId());
-                    }
-                    System.out.println("My Students " + myStudentArray);
-                    adapter.setmData(myStudentArray);
-                    adapter.setClickListener(SupervisorWorkspace.this);
-                    recyclerView.setAdapter(adapter);
-                    Log.w("LOGGER", "successfully loaded myStudents to RecyclerView");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.w("LOGGER", "failed to upload myStudents to RecyclerView");
-                }
-            });
+        btnCreateNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getParentFragmentManager()
+                        .beginTransaction().add(R.id.supervisor_nav_bar_fragment, new CreateNotification())
+                        .addToBackStack("new notification")
+                        .commit();
+            }
+        });
     }
+
+
     @Override
     public void onItemClick(View view, int position) {
         Toast.makeText(getContext(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();

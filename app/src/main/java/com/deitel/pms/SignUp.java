@@ -220,6 +220,11 @@ public class SignUp extends Fragment {
 
         Map<String, Object> user = new HashMap<>();
         user.put("uni id", uniCode);
+        user.put("project title", null);
+        user.put("project description", null);
+        user.put("supervisor name", null);
+        user.put("supervisor email", null);
+        user.put("approved project", false);
 
         db.collection("users")
                 .document(email)

@@ -35,14 +35,14 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String animal = mData.get(position);
+        String animal = getmData().get(position);
         holder.myTextView.setText(animal);
     }
 
     // total number of rows
     @Override
     public int getItemCount() {
-        return mData.size();
+        return getmData().size();
     }
 
 
@@ -64,12 +64,20 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
 
     // convenience method for getting data at click position
     public String getItem(int id) {
-        return mData.get(id);
+        return getmData().get(id);
     }
 
     // allows clicks events to be caught
     public void setClickListener(Notifications itemClickListener) {
         this.mClickListener = itemClickListener;
+    }
+
+    public void setmData(ArrayList<String> data) {
+        this.mData = data;
+    }
+
+    public List<String> getmData() {
+        return this.mData;
     }
 
     // parent activity will implement this method to respond to click events

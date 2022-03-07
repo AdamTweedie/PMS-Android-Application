@@ -82,7 +82,6 @@ public class ProjectRequests extends Fragment implements ProjectRequestsRecycler
         Toast.makeText(getContext(), "You clicked on row number " + position, Toast.LENGTH_SHORT).show();
         ArrayList<String> projectRequestData = adapter.getItem(position);
 
-
         requireActivity().getSupportFragmentManager().beginTransaction()
                 .add(R.id.supervisor_nav_bar_fragment,
                         new ExpandedProjectRequest(projectRequestData))

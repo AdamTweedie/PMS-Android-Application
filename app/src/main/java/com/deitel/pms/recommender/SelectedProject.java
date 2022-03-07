@@ -2,6 +2,7 @@ package com.deitel.pms.recommender;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,13 @@ import com.deitel.pms.FirestoreUtils;
 import com.deitel.pms.R;
 import com.deitel.pms.User;
 import com.deitel.pms.student.HomeActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class SelectedProject extends Fragment {
 
@@ -74,23 +81,58 @@ public class SelectedProject extends Fragment {
             public void onClick(View view) {
 
                 User user = new User();
-                String userId = user.getUserId(requireActivity());
+                final String userId = user.getUserId(requireActivity());
+                final FirestoreUtils utils = new FirestoreUtils();
+                final FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
 
-                FirestoreUtils firestoreUtils = new FirestoreUtils();
-                firestoreUtils.addUserProject(requireActivity(),
-                        getSupervisorEmail(),
-                        getSupervisorName(),
-                        getProjectTitle(),
-                        getProjectDescription());
+                // if student has a current project request
+                // delete request from current supervisor
+                // then
+                // add request to new supervisor
 
-                firestoreUtils.standardProjectRequest(userId, getSupervisorEmail(), getProjectTitle(), getProjectDescription());
-
-                getParentFragmentManager().popBackStack();
-                Intent homeScreen = new Intent(getActivity(), HomeActivity.class);
-                startActivity(homeScreen);
-                Toast.makeText(getContext(), "Project selected !", Toast.LENGTH_SHORT).show();
-                requireActivity().finish();
-
+                dbInstance.collection(utils.getUSER_COLLECTION_PATH())
+                        .document(userId)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                DocumentSnapshot snapshot = task.getResult();
+                                if (snapshot.get("supervisor email")!=null) { // && project approved != true
+                                    String supervisorId = snapshot.get("supervisor email").toString();
+                                    utils.deleteProjectRequest(supervisorId, userId);
+                                    utils.addUserProject(requireActivity(),
+                                            getSupervisorEmail(),
+                                            getSupervisorName(),
+                                            getProjectTitle(),
+                                            getProjectDescription());
+                                    utils.standardProjectRequest(userId, getSupervisorEmail(), getProjectTitle(), getProjectDescription());
+                                    getParentFragmentManager().popBackStack();
+                                    Intent homeScreen = new Intent(getActivity(), HomeActivity.class);
+                                    startActivity(homeScreen);
+                                } else {
+                                    utils.addUserProject(requireActivity(),
+                                            getSupervisorEmail(),
+                                            getSupervisorName(),
+                                            getProjectTitle(),
+                                            getProjectDescription());
+                                    utils.standardProjectRequest(userId, getSupervisorEmail(), getProjectTitle(), getProjectDescription());
+                                    getParentFragmentManager().popBackStack();
+                                    Intent homeScreen = new Intent(getActivity(), HomeActivity.class);
+                                    startActivity(homeScreen);
+                                }
+                                Toast.makeText(getContext(), "Project selected !", Toast.LENGTH_SHORT).show();
+                                requireActivity().finish();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("LOGGER", "failed to delete project request with exception " + e);
+                        Intent homeScreen = new Intent(getActivity(), HomeActivity.class);
+                        startActivity(homeScreen);
+                        Toast.makeText(getContext(), "Failed to add user project", Toast.LENGTH_SHORT).show();
+                        requireActivity().finish();
+                    }
+                });
             }
         });
 

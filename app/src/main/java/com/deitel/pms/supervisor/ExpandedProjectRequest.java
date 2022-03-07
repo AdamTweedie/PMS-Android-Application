@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -103,7 +104,7 @@ public class ExpandedProjectRequest extends Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
 
-                                        // delete project request
+                                        // delete user suggested project from requests
                                         dbInstance.collection("student suggested projects")
                                                 .document(projectData.get(0))
                                                 .delete()
@@ -118,6 +119,7 @@ public class ExpandedProjectRequest extends Fragment {
                                                 Log.w("LOGGER", "failed to delete suggested project, may be supervisor recommended.");
                                             }
                                         });
+                                        // delete supervisor recommended project from requests
                                         dbInstance.collection(utils.getSUPERVISOR_COLLECTION_PATH())
                                                 .document(user.getUserId(requireActivity()))
                                                 .collection(utils.getSUPERVISOR_REQUESTS_COLLECTION_PATH())
@@ -141,6 +143,8 @@ public class ExpandedProjectRequest extends Fragment {
                                 Log.w("LOGGER", "failed to add student to my projects");
                             }
                         });
+                        Toast.makeText(getContext(), "Successfully accepted project request!", Toast.LENGTH_SHORT).show();
+                        sendProjectAcceptedNotification(getProjectData().get(0));
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -150,6 +154,21 @@ public class ExpandedProjectRequest extends Fragment {
                 });
             }
         });
+
+
+        if (getProjectData().get(3)==null) {
+            btnDeclineRequest.setVisibility(View.GONE);
+        }
+        btnDeclineRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // suggest new supervisor
+            }
+        });
+    }
+
+    private void sendProjectAcceptedNotification(String studentId) {
+
     }
 
     public ArrayList<String> getProjectData() {

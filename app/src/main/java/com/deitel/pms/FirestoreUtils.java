@@ -63,7 +63,8 @@ public class FirestoreUtils {
 
         dbInstance.collection(USER_COLLECTION_PATH)
                 .document(userId)
-                .set(project, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                .update(project)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 Log.d(TAG, "DocumentSnapshot added with ID: " + userId);
@@ -118,6 +119,30 @@ public class FirestoreUtils {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w(TAG, "Failed to request project");
+            }
+        });
+    }
+
+    public void deleteProjectRequest(String supervisorId, String studentId) {
+        System.out.println("DELETE PROJECT REQUEST:");
+        System.out.println("C-" + SUPERVISOR_COLLECTION_PATH);
+        System.out.println("D- " + supervisorId);
+        System.out.println("C- " + SUPERVISOR_REQUESTS_COLLECTION_PATH);
+        System.out.println("D- " + studentId);
+        dbInstance.collection(SUPERVISOR_COLLECTION_PATH)
+                .document(supervisorId)
+                .collection(SUPERVISOR_REQUESTS_COLLECTION_PATH)
+                .document(studentId)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.w(TAG, "Successfully deleted project request");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Failed to delete project request due to exception: " + e);
             }
         });
     }

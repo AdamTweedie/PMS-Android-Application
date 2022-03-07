@@ -32,7 +32,8 @@
     <ScrollView
         android:id="@+id/myProjectScrollView"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.37"
         app:layout_constraintTop_toBottomOf="@id/myProjectTitle"
         app:layout_constraintStart_toStartOf="parent"
         android:background="@color/white"
@@ -58,24 +59,36 @@
             android:text="loading project description..."
             android:textSize="16sp"
             android:layout_marginTop="10sp"
-            android:textColor="@color/black"
             app:layout_constraintTop_toBottomOf="@id/profileProjectTitle" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
 
+    <Button
+        android:id="@+id/btnChangeProject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/myProjectScrollView"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        style="?android:attr/borderlessButtonStyle"
+        android:textColor="#6247AA"
+        app:backgroundTint="@android:color/transparent"
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/tvProfile"
         android:paddingHorizontal="7dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="60dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Profile"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/myProjectScrollView"
+        app:layout_constraintBottom_toTopOf="@id/clProfile"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -196,6 +209,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/tvAccount"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_weight="0.5"
         android:background="@color/white">

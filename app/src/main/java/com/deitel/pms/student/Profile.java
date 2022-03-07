@@ -22,6 +22,7 @@ import com.deitel.pms.MainActivity;
 import com.deitel.pms.R;
 import com.deitel.pms.SignIn;
 import com.deitel.pms.User;
+import com.deitel.pms.recommender.RecommenderActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -56,6 +57,7 @@ public class Profile extends Fragment {
         TextView userEmail = (TextView) view.findViewById(R.id.tvProfileUserEmail);
         TextView userSupervisor = (TextView) view.findViewById(R.id.tvProfileUserSupervisor);
 
+        final Button changeProject = (Button) view.findViewById(R.id.btnChangeProject);
         final Button signOut = (Button) view.findViewById(R.id.btnAccountSignOut);
         final Context context = getContext();
 
@@ -70,6 +72,19 @@ public class Profile extends Fragment {
                     projectTitle.setText(document.getString(u.getFIELD_PROJECT_TITLE()));
                     projectDescription.setText(document.getString(u.getFIELD_PROJECT_DESCRIPTION()));
                     projectApprovalStatus.setText("Approved: " + document.getBoolean(u.getFIELD_PROJECT_APPROVED()).toString());
+                    if (document.getBoolean(u.getFIELD_PROJECT_APPROVED())==null || !document.getBoolean(u.getFIELD_PROJECT_APPROVED())) {
+                        changeProject.setVisibility(View.VISIBLE);
+                        changeProject.setText("Change project");
+                        changeProject.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                getParentFragmentManager().popBackStack();
+                                Intent recommender = new Intent(getActivity(), RecommenderActivity.class);
+                                startActivity(recommender);
+                                requireActivity().finish();
+                            }
+                        });
+                    }
                     userSupervisor.setText(document.getString(u.getFIELD_SUPERVISOR_EMAIL()));
                 } catch (Exception e) {
                     Log.e("LOGGER", "failed with exception " + e);
