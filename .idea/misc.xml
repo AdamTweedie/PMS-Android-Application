@@ -17,7 +17,7 @@
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_recommended_projects.xml" value="0.2" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_selected_project.xml" value="0.152" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_sign_in.xml" value="0.10714285714285714" />
-        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_sign_up.xml" value="0.12158054711246201" />
+        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_sign_up.xml" value="0.144" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_suggest_project.xml" value="0.25" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_workspace.xml" value="0.1" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/kanban_task_view.xml" value="0.12158054711246201" />
@@ -28,6 +28,7 @@
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_activity_main.xml" value="0.25" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_create_notification.xml" value="0.2" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_my_student_row.xml" value="0.152" />
+        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_new_project_idea.xml" value="0.2" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_project_request_row.xml" value="0.2" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_project_requests.xml" value="0.1" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_workspace.xml" value="0.16" />

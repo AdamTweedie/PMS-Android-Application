@@ -48,6 +48,7 @@ public class SupervisorWorkspace extends Fragment implements MyStudentsRecyclerV
 
         final Button btnProjectRequests = (Button) view.findViewById(R.id.swBtnProjectRequests);
         final Button btnCreateNotification = (Button) view.findViewById(R.id.swBtnCreateNotification);
+        final Button btnCreateNewProject = (Button) view.findViewById(R.id.swBtnCreateNewProject);
 
         // Load myStudents
         RecyclerView recyclerView = view.findViewById(R.id.rvSupervisorsStudents);
@@ -160,6 +161,18 @@ public class SupervisorWorkspace extends Fragment implements MyStudentsRecyclerV
                         .commit();
             }
         });
+
+        btnCreateNewProject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getParentFragmentManager()
+                        .beginTransaction().add(R.id.supervisor_nav_bar_fragment, new CreateNewProject())
+                        .addToBackStack("new project")
+                        .commit();
+            }
+        });
+
+
     }
 
 
