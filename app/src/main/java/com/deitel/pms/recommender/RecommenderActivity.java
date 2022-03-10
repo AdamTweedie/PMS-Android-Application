@@ -1,12 +1,14 @@
 package com.deitel.pms.recommender;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
@@ -23,6 +25,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -88,20 +91,32 @@ public class RecommenderActivity extends AppCompatActivity {
 
     private class RecommenderThread extends AsyncTask<ArrayList<ArrayList<String>>, Void, ArrayList<ArrayList<String>>> {
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected ArrayList<ArrayList<String>> doInBackground(ArrayList<ArrayList<String>>... arrayLists) {
 
-            // TODO - take the additional projects, add them to Recommender.py and run the algorithm with them included.
-            // arrayList[0].get(all but 0)
+            // TODO - I think this will fail if there is no additional projects so account for that !!
 
-            System.out.println("Student entry: " + arrayLists[0].get(0).get(0));
+            // create additional projects array
+            ArrayList<ArrayList<String>> additional_projects = new ArrayList<>();
+            ArrayList<String> data_for_recommender = new ArrayList<>();
+            try {
+                for (int i = 1; i < arrayLists[0].size(); i ++) {
+                    additional_projects.add(arrayLists[0].get(i));
+                    data_for_recommender.add(arrayLists[0].get(i).get(2) + " " + arrayLists[0].get(i).get(3) + " " + arrayLists[0].get(i).get(4));
+                }
+            } catch(Exception e) {
+                Log.e("LOGGER", "Failed with exception: " + e);
+            }
+
             if (! Python.isStarted()) {
                 Python.start(new AndroidPlatform(getApplicationContext()));
             }
+
             Python py = Python.getInstance();
             PyObject module = py.getModule("Recommender");
 
-            List<PyObject> pyIndexList = module.callAttr("recommender", arrayLists[0].get(0).get(0)).asList();
+            List<PyObject> pyIndexList = module.callAttr("recommender", arrayLists[0].get(0).get(0), data_for_recommender.toArray()).asList();
 
             ArrayList<Integer> indexList = new ArrayList<>();
             ArrayList<ArrayList<String>> projects = new ArrayList<>();
@@ -127,7 +142,7 @@ public class RecommenderActivity extends AppCompatActivity {
 
             for (int index : indexList) {
                 ArrayList<String> project = new ArrayList<>();
-                List<PyObject> pyArrayOfProjects = module.callAttr("obtain_suggestions", index).asList();
+                List<PyObject> pyArrayOfProjects = module.callAttr("obtain_suggestions", index, additional_projects.toArray()).asList();
                 List<PyObject> thisProjectList= pyArrayOfProjects.get(0).asList();
 
                 for (PyObject item : thisProjectList) {
