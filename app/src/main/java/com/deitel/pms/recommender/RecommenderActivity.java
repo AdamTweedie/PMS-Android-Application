@@ -91,7 +91,6 @@ public class RecommenderActivity extends AppCompatActivity {
 
     private class RecommenderThread extends AsyncTask<ArrayList<ArrayList<String>>, Void, ArrayList<ArrayList<String>>> {
 
-        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected ArrayList<ArrayList<String>> doInBackground(ArrayList<ArrayList<String>>... arrayLists) {
 

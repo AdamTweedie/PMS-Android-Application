@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.deitel.pms.R;
 import com.deitel.pms.student.HomeActivity;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProjectSelectionIntro extends Fragment {
 
@@ -28,6 +29,8 @@ public class ProjectSelectionIntro extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
 
         Button btnStartRecommender = view.findViewById(R.id.psiBtnLoadRecommender);
         Button btnSuggestOwnProject = view.findViewById(R.id.psiBtnSuggestOwnProject);
@@ -61,7 +64,12 @@ public class ProjectSelectionIntro extends Fragment {
         btnSeeFullProjectList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                getParentFragmentManager().popBackStack();
+                getParentFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.recommenderContainterView, new FullProjectList())
+                        .addToBackStack("projectRequestForm")
+                        .commit();
             }
         });
 
