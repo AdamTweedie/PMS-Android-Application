@@ -30,8 +30,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class SelectedProject extends Fragment {
 
-    final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     final String projectTitle;
     final String projectDescription;
     final String supervisorName;

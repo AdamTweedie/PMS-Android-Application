@@ -37,8 +37,13 @@ public class FullProjectListRecyclerViewAdapter extends RecyclerView.Adapter<com
     @Override
     public void onBindViewHolder(com.deitel.pms.recommender.FullProjectListRecyclerViewAdapter.ViewHolder holder, int position) {
         ArrayList<String> project = getmData().get(position);
-        holder.projectTitle.setText(project.get(0));
-
+        if (project.get(2).length() > 100) {
+            String titleSubstring = project.get(2).substring(0, 100);
+            holder.projectTitle.setText(titleSubstring);
+        } else {
+            String titleSubstring = project.get(2);
+            holder.projectTitle.setText(titleSubstring);
+        }
     }
 
     // total number of rows
@@ -70,8 +75,8 @@ public class FullProjectListRecyclerViewAdapter extends RecyclerView.Adapter<com
     }
 
     // allows clicks events to be caught
-    public void setClickListener(ProjectRequests itemClickListener) {
-        this.mClickListener = (ItemClickListener) itemClickListener;
+    public void setClickListener(FullProjectList itemClickListener) {
+        this.mClickListener = itemClickListener;
     }
 
     public void setmData(ArrayList<ArrayList<String>> data) {
