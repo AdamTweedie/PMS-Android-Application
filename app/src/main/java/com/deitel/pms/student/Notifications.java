@@ -34,6 +34,8 @@ public class Notifications extends Fragment implements NotificationRecyclerViewA
     FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
     User user = new User();
 
+    boolean flag = true;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -88,17 +90,30 @@ public class Notifications extends Fragment implements NotificationRecyclerViewA
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getContext(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
-        ArrayList<String> notification = adapter.getItem(position);
 
-        requireActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.nav_bar_fragment, new ExpandedNotification(notification.get(0),
-                        notification.get(1),
-                        notification.get(2),
-                        notification.get(3),
-                        notification.get(4)))
-                .addToBackStack("expanded notification")
-                .commit();
+        if (getFlag()) {
+            Toast.makeText(getContext(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+            ArrayList<String> notification = adapter.getItem(position);
+
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .add(R.id.nav_bar_fragment, new ExpandedNotification(notification.get(0),
+                            notification.get(1),
+                            notification.get(2),
+                            notification.get(3),
+                            notification.get(4),
+                            Notifications.this))
+                    .addToBackStack("expanded notification")
+                    .commit();
+            setFlag(!flag);
+        }
+    }
+
+    public void setFlag(boolean b) {
+        this.flag = b;
+    }
+
+    public boolean getFlag() {
+        return this.flag;
     }
 }
 

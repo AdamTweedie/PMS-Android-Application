@@ -30,13 +30,15 @@ public class ExpandedNotification extends Fragment {
     private final String nDueDate;
     private final String nSender;
     private final String nId;
+    private final Notifications notifications;
 
-    ExpandedNotification(String title, String description, String dueDate, String sender, String id) {
+    ExpandedNotification(String title, String description, String dueDate, String sender, String id, Notifications notif) {
         this.nTitle = title;
         this.nDescription = description;
         this.nDueDate = dueDate;
         this.nSender = sender;
         this.nId = id;
+        this.notifications = notif;
     }
 
     @Nullable
@@ -70,6 +72,7 @@ public class ExpandedNotification extends Fragment {
         undo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                notifications.setFlag(true);
                 getParentFragmentManager().popBackStack();
                 Fragment fragment = getParentFragmentManager().findFragmentById(R.id.nav_bar_fragment);
                 assert fragment != null;

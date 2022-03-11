@@ -11,7 +11,7 @@
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/expanded_project_request.xml" value="0.136" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_kanban.xml" value="0.1" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_notifications.xml" value="0.12158054711246201" />
-        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_profile.xml" value="0.16" />
+        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_profile.xml" value="0.152" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_project_interests.xml" value="0.2" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_provide_suggestions.xml" value="0.25" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_recommended_projects.xml" value="0.2" />
@@ -28,9 +28,10 @@
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/student_notification_row.xml" value="0.23958333333333334" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_acitivity_navbar.xml" value="0.25" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_activity_main.xml" value="0.25" />
-        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_create_notification.xml" value="0.2" />
+        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_create_notification.xml" value="0.152" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_my_student_row.xml" value="0.152" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_new_project_idea.xml" value="0.2" />
+        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_profile.xml" value="0.1480978260869565" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_project_request_row.xml" value="0.2" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_project_requests.xml" value="0.1" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_workspace.xml" value="0.16" />

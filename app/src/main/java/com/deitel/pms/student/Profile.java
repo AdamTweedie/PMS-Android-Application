@@ -101,12 +101,12 @@ public class Profile extends Fragment {
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                unsaveUserCredentials();
+                unsaveUserCredentials(requireActivity());
                 saveAllFragmentState();
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 getActivity().finish();
                 startActivity(intent);
-                Toast.makeText(context, "Goodbye !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Goodbye!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -116,14 +116,14 @@ public class Profile extends Fragment {
 
     }
 
-    private void unsaveUserCredentials() {
-        SharedPreferences sharedPreferences = (SharedPreferences) requireActivity()
+    public void unsaveUserCredentials(Activity activity) {
+        SharedPreferences sharedPreferences = (SharedPreferences) activity
                 .getSharedPreferences("save_creds", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("rememberMe", "no");
         editor.apply();
     }
 
-    private void saveAllFragmentState() {
+    public void saveAllFragmentState() {
     }
 }

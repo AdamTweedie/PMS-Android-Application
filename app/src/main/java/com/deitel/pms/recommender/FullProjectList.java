@@ -19,8 +19,6 @@ import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 import com.deitel.pms.R;
-import com.deitel.pms.supervisor.ProjectRequests;
-import com.deitel.pms.supervisor.ProjectRequestsRecyclerViewAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;

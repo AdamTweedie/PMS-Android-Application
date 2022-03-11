@@ -111,7 +111,11 @@ public class CreateNotification extends Fragment {
                                                         @Override
                                                         public void onSuccess(DocumentReference documentReference) {
                                                             Log.w("LOGGER", "Added notification to students notifications");
-                                                            getParentFragmentManager().popBackStack();
+                                                            try {
+                                                                getParentFragmentManager().popBackStack();
+                                                            } catch (Exception e) {
+                                                                Log.e("LOGGER", "failed with exception: " + e);
+                                                            }
                                                         }
                                                     }).addOnFailureListener(new OnFailureListener() {
                                                 @Override

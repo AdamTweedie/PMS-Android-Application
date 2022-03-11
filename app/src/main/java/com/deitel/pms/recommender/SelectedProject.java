@@ -96,7 +96,7 @@ public class SelectedProject extends Fragment {
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 DocumentSnapshot snapshot = task.getResult();
                                 if (snapshot.get("supervisor email")!=null) { // && project approved != true
-                                    String supervisorId = snapshot.get("supervisor email").toString();
+                                    String supervisorId = (String) snapshot.get("supervisor email");
                                     utils.deleteProjectRequest(supervisorId, userId);
                                     utils.addUserProject(requireActivity(),
                                             getSupervisorEmail(),
