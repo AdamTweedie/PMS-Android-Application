@@ -57,6 +57,11 @@ public class SupervisorActivity extends AppCompatActivity {
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearBackStack(fm.getBackStackEntryCount());
+                fm.beginTransaction()
+                        .add(R.id.supervisor_nav_bar_fragment, new SupervisorProfile())
+                        .addToBackStack("supervisor profile")
+                        .commit();
             }
         });
     }
