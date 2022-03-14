@@ -4,17 +4,21 @@
     android:id="@+id/parentId"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingVertical="2.5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl"
         android:layout_width="0dp"
         app:layout_constraintWidth_percent="0.5"
         android:layout_height="wrap_content"
-        android:background="@drawable/spinner_corner_radius"
+        android:background="@drawable/message_corner_radius"
         app:layout_constraintTop_toTopOf="parent"
-        android:paddingHorizontal="5dp"
-        tools:ignore="MissingConstraints">
+        android:paddingHorizontal="10dp"
+        tools:ignore="MissingConstraints"
+        android:paddingVertical="5dp"
+        android:layout_marginVertical="5dp"
+        android:layout_marginHorizontal="5dp">
 
         <TextView
             android:id="@+id/tvMessageContent"

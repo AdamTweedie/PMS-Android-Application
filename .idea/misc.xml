@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android Applications/PMS/app/src/main/res/drawable/message_corner_radius.xml" value="0.1655" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/drawable/project_suggestion_circle.xml" value="0.171" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/drawable/spinner_corner_radius.xml" value="0.166" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/activity_home_navbar.xml" value="0.12" />
@@ -31,6 +32,7 @@
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_acitivity_navbar.xml" value="0.25" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_activity_main.xml" value="0.25" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_create_notification.xml" value="0.152" />
+        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_message_frag_holder.xml" value="0.21240942028985507" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_my_student_row.xml" value="0.152" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_new_project_idea.xml" value="0.2" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/supervisor_profile.xml" value="0.1480978260869565" />

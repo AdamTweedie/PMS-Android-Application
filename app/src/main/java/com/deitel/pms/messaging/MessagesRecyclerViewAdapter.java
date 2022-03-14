@@ -1,6 +1,8 @@
 package com.deitel.pms.messaging;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.deitel.pms.R;
@@ -48,11 +51,14 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
             constraintSet.connect(holder.messageConstraint.getId(),ConstraintSet.END,holder.parent.getId(),ConstraintSet.END,0);
             constraintSet.connect(holder.messageConstraint.getId(),ConstraintSet.TOP,holder.parent.getId(),ConstraintSet.TOP,0);
             constraintSet.applyTo(holder.parent);
+            holder.messageConstraint.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#9163CB")));
+            holder.myTextView.setTextColor(Color.parseColor("#FFFFFF"));
         } else {
             constraintSet.clone(holder.parent);
             constraintSet.connect(holder.messageConstraint.getId(),ConstraintSet.START,holder.parent.getId(),ConstraintSet.START,0);
             constraintSet.connect(holder.messageConstraint.getId(),ConstraintSet.TOP,holder.parent.getId(),ConstraintSet.TOP,0);
             constraintSet.applyTo(holder.parent);
+            holder.messageConstraint.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#CFD1D3")));
         }
     }
 

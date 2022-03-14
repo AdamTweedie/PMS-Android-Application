@@ -44,6 +44,8 @@ public class MyStudentsRecyclerViewAdapter extends RecyclerView.Adapter<MyStuden
         return getmData().size();
     }
 
+
+
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView studentEmail;
@@ -75,6 +77,10 @@ public class MyStudentsRecyclerViewAdapter extends RecyclerView.Adapter<MyStuden
 
     // allows clicks events to be caught
     public void setClickListener(SupervisorWorkspace itemClickListener) {
+        this.mClickListener = itemClickListener;
+    }
+
+    public void setClickListener(SupervisorMessages itemClickListener) {
         this.mClickListener = itemClickListener;
     }
 
