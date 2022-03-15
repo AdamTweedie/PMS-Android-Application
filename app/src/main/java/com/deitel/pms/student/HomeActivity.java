@@ -3,6 +3,7 @@ import com.deitel.pms.FirestoreUtils;
 import com.deitel.pms.R;
 import com.deitel.pms.User;
 import com.deitel.pms.messaging.MessageCenter;
+import com.deitel.pms.student.kanban.KanbanBoard;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;

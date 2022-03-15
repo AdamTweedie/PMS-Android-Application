@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.deitel.pms.R;
+import com.deitel.pms.student.kanban.KanbanBoard;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -37,7 +38,23 @@ public class Workspace extends Fragment {
         Button btnCalendar = (Button) view.findViewById(R.id.btnCalendarView);
         TextView tvDate = (TextView) view.findViewById(R.id.tvCurrentDate);
         Button btnReferences = (Button) view.findViewById(R.id.btnReferencingGuide);
-        Button btnKanban1 = (Button) view.findViewById(R.id.btnKanbanBoard1);
+        Button btnKanban = (Button) view.findViewById(R.id.btnKanbanBoard);
+
+        btnKanban.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Fragment fragment = getParentFragmentManager()
+                        .findFragmentById(R.id.nav_bar_fragment);
+
+                if (fragment!=null) {
+                    getParentFragmentManager().beginTransaction()
+                            .add(R.id.nav_bar_fragment, new KanbanBoard())
+                            .addToBackStack("calendar")
+                            .commit();
+                }
+            }
+        });
 
         try {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");

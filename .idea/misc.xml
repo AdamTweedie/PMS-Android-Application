@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android Applications/PMS/app/src/main/res/drawable/kanban.xml" value="0.1" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/drawable/message_corner_radius.xml" value="0.1655" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/drawable/project_suggestion_circle.xml" value="0.171" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/drawable/spinner_corner_radius.xml" value="0.166" />
@@ -23,7 +24,9 @@
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_workspace.xml" value="0.1" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/full_project_list.xml" value="0.176" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/in_app_messaging.xml" value="0.1" />
+        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/kanban_task_list_child_frag.xml" value="0.12132725430597771" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/kanban_task_view.xml" value="0.12158054711246201" />
+        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/kanban_toolbar.xml" value="0.264" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/message_row.xml" value="0.12" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/project_selection_intro.xml" value="0.25" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/recyclerview_row.xml" value="0.176" />
