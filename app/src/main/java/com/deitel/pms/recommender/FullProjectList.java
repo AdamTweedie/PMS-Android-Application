@@ -2,6 +2,7 @@ package com.deitel.pms.recommender;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,12 +48,17 @@ public class FullProjectList extends Fragment implements FullProjectListRecycler
         undo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getParentFragmentManager().popBackStack();
-                getParentFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.recommenderContainterView, new ProjectSelectionIntro())
-                        .addToBackStack("project selection intro")
-                        .commit();
+                try {
+                    getParentFragmentManager().popBackStack();
+                    getParentFragmentManager()
+                            .beginTransaction()
+                            .add(R.id.recommenderContainterView, new ProjectSelectionIntro())
+                            .addToBackStack("project selection intro")
+                            .commit();
+                } catch (Exception e) {
+                    Log.e("LOGGER", "failed to po fragment with exception " + e);
+                }
+
             }
         });
 
@@ -92,39 +98,43 @@ public class FullProjectList extends Fragment implements FullProjectListRecycler
             super.onPostExecute(results);
 
             FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
-            RecyclerView recyclerView = requireView().findViewById(R.id.fullProjectListRecyclerView);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            RecyclerView recyclerView;
+            try {
+                recyclerView = requireView().findViewById(R.id.fullProjectListRecyclerView);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                dbInstance.collection("New Projects")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    ArrayList<String> project = new ArrayList<>();
+                                    // Email,Name,Project title,Brief description,Any other useful information
+                                    project.add((String) document.get("supervisor email"));
+                                    project.add((String) document.get("supervisor name"));
+                                    project.add((String) document.get("project title"));
+                                    project.add((String) document.get("project description"));
+                                    project.add((String) document.get("other info"));
 
-            dbInstance.collection("New Projects")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        ArrayList<String> project = new ArrayList<>();
-                        // Email,Name,Project title,Brief description,Any other useful information
-                        project.add((String) document.get("supervisor email"));
-                        project.add((String) document.get("supervisor name"));
-                        project.add((String) document.get("project title"));
-                        project.add((String) document.get("project description"));
-                        project.add((String) document.get("other info"));
-
-                        results.add(project);
+                                    results.add(project);
+                                }
+                                LoadingSuggestions(false);
+                                adapter = new FullProjectListRecyclerViewAdapter(getContext(), results);
+                                adapter.setClickListener(FullProjectList.this);
+                                recyclerView.setAdapter(adapter);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        LoadingSuggestions(false);
+                        adapter = new FullProjectListRecyclerViewAdapter(getContext(), results);
+                        adapter.setClickListener(FullProjectList.this);
+                        recyclerView.setAdapter(adapter);
                     }
-                    LoadingSuggestions(false);
-                    adapter = new FullProjectListRecyclerViewAdapter(getContext(), results);
-                    adapter.setClickListener(FullProjectList.this);
-                    recyclerView.setAdapter(adapter);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    LoadingSuggestions(false);
-                    adapter = new FullProjectListRecyclerViewAdapter(getContext(), results);
-                    adapter.setClickListener(FullProjectList.this);
-                    recyclerView.setAdapter(adapter);
-                }
-            });
+                });
+            } catch (Exception e) {
+                Log.e("LOGGER", "Failed to create recycler view with exception" + e);
+            }
         }
     }
 

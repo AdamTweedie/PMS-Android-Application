@@ -52,7 +52,6 @@ public class ProjectSelectionIntro extends Fragment {
         btnSuggestOwnProject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getParentFragmentManager().popBackStack();
                 getParentFragmentManager()
                         .beginTransaction()
                         .add(R.id.recommenderContainterView, new ProjectRequestForm())

@@ -2,11 +2,13 @@ package com.deitel.pms.recommender;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,6 +35,18 @@ public class ProjectRequestForm extends Fragment {
         EditText suggestedTitle = (EditText) view.findViewById(R.id.fspEtProjectTitle);
         EditText suggestedDescription = (EditText) view.findViewById(R.id.fspTvProjectDescription);
         Button btnRequestProject = (Button) view.findViewById(R.id.fspBtnRequestProject);
+        ImageButton btnPopFragment = (ImageButton) view.findViewById(R.id.fspGoBack);
+
+        btnPopFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    getParentFragmentManager().popBackStack();
+                } catch (NullPointerException e) {
+                    Log.e("LOGGER", "Failed with exception " + e);
+                }
+            }
+        });
 
         btnRequestProject.setOnClickListener(new View.OnClickListener() {
             @Override
