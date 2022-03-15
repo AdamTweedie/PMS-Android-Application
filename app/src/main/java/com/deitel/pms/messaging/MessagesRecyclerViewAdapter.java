@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRecyclerViewAdapter.ViewHolder>{
 
     private ArrayList<String> mData;
-    private LayoutInflater mInflater;
+    private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
@@ -35,31 +35,42 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
     }
     @NonNull
     @Override
-    public MessagesRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MessagesRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.message_row, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String message = getmData().get(position);
         holder.myTextView.setText(message);
 
         ConstraintSet constraintSet = new ConstraintSet();
-        if (message.contains("S")) {
+        if (message.contains("S:")) {
+            String newMessage = message.replace("S:", "");
+            holder.myTextView.setText(newMessage);
             constraintSet.clone(holder.parent);
             constraintSet.connect(holder.messageConstraint.getId(),ConstraintSet.END,holder.parent.getId(),ConstraintSet.END,0);
             constraintSet.connect(holder.messageConstraint.getId(),ConstraintSet.TOP,holder.parent.getId(),ConstraintSet.TOP,0);
             constraintSet.applyTo(holder.parent);
             holder.messageConstraint.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#9163CB")));
             holder.myTextView.setTextColor(Color.parseColor("#FFFFFF"));
+
         } else {
+            String newMessage = message.replace("R:", "");
+            holder.myTextView.setText(newMessage);
             constraintSet.clone(holder.parent);
             constraintSet.connect(holder.messageConstraint.getId(),ConstraintSet.START,holder.parent.getId(),ConstraintSet.START,0);
             constraintSet.connect(holder.messageConstraint.getId(),ConstraintSet.TOP,holder.parent.getId(),ConstraintSet.TOP,0);
             constraintSet.applyTo(holder.parent);
             holder.messageConstraint.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#CFD1D3")));
+
         }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     @Override
@@ -109,4 +120,5 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
     public interface ItemClickListener {
         void onItemClick(View view, int position);
     }
+
 }

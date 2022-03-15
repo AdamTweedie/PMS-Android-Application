@@ -51,6 +51,7 @@ public class MessageCenter extends Fragment implements MessagesRecyclerViewAdapt
     String sender;
     Context context;
     MessagesRecyclerViewAdapter adapter;
+    ArrayList<String> messageContent = new ArrayList<>();
 
     public String getRecipient() {
         return recipient;
@@ -76,12 +77,20 @@ public class MessageCenter extends Fragment implements MessagesRecyclerViewAdapt
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        RecyclerView recyclerView = requireView().findViewById(R.id.rvSentAndReceivedMessages);
+
         FirestoreUtils utils = new FirestoreUtils();
 
         String senderId = this.sender;
 
         EditText typedMessage = (EditText) view.findViewById(R.id.etMessageBody);
         ImageButton sendMessage = (ImageButton) view.findViewById(R.id.btnSendMessage);
+
+        recyclerView = requireView().findViewById(R.id.rvSentAndReceivedMessages);
+        adapter.setmData(messageContent);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter.setClickListener(MessageCenter.this);
+        recyclerView.setAdapter(adapter);
 
         // load messages
         if (senderId.contains("supervisor")) {
@@ -103,6 +112,7 @@ public class MessageCenter extends Fragment implements MessagesRecyclerViewAdapt
                 message.setSenderId(senderId);
                 message.setRecipient(getRecipient());
 
+                insertSingleItem("S: " + message.getContent());
 
                 // TODO - fix this so that when a user is created they have an attribute which
                 // TODO - specifies if they are a supervisor or not
@@ -135,7 +145,7 @@ public class MessageCenter extends Fragment implements MessagesRecyclerViewAdapt
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         for (QueryDocumentSnapshot snapshot : task.getResult()) {
-                            messages.put(snapshot.getId(), "S " + snapshot.get("content"));
+                            messages.put(snapshot.getId(), "S: " + snapshot.get("content"));
                         }
                         dbInstance.collection(recipientCollectionPath)
                                 .document(recipientId)
@@ -145,7 +155,7 @@ public class MessageCenter extends Fragment implements MessagesRecyclerViewAdapt
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                         for (QueryDocumentSnapshot snapshot : task.getResult()) {
-                                            messages.put(snapshot.getId(), "R" + snapshot.get("content"));
+                                            messages.put(snapshot.getId(), "R: " + snapshot.get("content"));
                                         }
                                         sortMessages(messages);
                                     }
@@ -188,30 +198,43 @@ public class MessageCenter extends Fragment implements MessagesRecyclerViewAdapt
         });
     }
 
+    private void insertSingleItem(String item) {
+        int insertIndex = messageContent.size();
+        messageContent.add(insertIndex, item);
+        adapter.notifyItemInserted(insertIndex);
+    }
+
+    private void insertMultipleItems(ArrayList<String> data) {
+        int insertIndex = adapter.getItemCount();
+        messageContent.addAll(insertIndex, data);
+        adapter.notifyItemRangeInserted(insertIndex, data.size());
+    }
+
     private void sortMessages(Map<String, Object> messages) {
 
-        ArrayList<String> datestring = new ArrayList<String>(messages.keySet());
-        Collections.sort(datestring, new Comparator<String>() {
-            final DateFormat f = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss a");
-            @Override
-            public int compare(String o1, String o2) {
-                try {
-                    return f.parse(o1).compareTo(f.parse(o2));
-                } catch (ParseException e) {
-                    throw new IllegalArgumentException(e);
+        try {
+            ArrayList<String> datestring = new ArrayList<String>(messages.keySet());
+            Collections.sort(datestring, new Comparator<String>() {
+                final DateFormat f = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss a");
+                @Override
+                public int compare(String o1, String o2) {
+                    try {
+                        return f.parse(o1).compareTo(f.parse(o2));
+                    } catch (ParseException e) {
+                        throw new IllegalArgumentException(e);
+                    }
                 }
-            }
-        });
+            });
 
-        ArrayList<String> messageContent = new ArrayList<>();
-        for (String date : datestring) {
-            messageContent.add((String) messages.get(date));
+            ArrayList<String> sortedMsgs = new ArrayList<>();
+            for (String date : datestring) {
+                sortedMsgs.add((String) messages.get(date));
+            }
+            insertMultipleItems(sortedMsgs);
+
+        } catch (Exception e) {
+            Log.e("LOGGER", "Failed to sort messages with exception " + e);
         }
-        adapter.setmData(messageContent);
-        RecyclerView recyclerView = requireView().findViewById(R.id.rvSentAndReceivedMessages);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter.setClickListener(MessageCenter.this);
-        recyclerView.setAdapter(adapter);
     }
 
     @Override
