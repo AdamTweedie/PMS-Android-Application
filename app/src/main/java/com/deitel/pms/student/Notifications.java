@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.deitel.pms.FirestoreUtils;
 import com.deitel.pms.R;
 import com.deitel.pms.User;
-import com.deitel.pms.supervisor.ExpandedProjectRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -25,7 +24,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Notifications extends Fragment implements NotificationRecyclerViewAdapter.ItemClickListener {
 
@@ -33,6 +31,7 @@ public class Notifications extends Fragment implements NotificationRecyclerViewA
     FirestoreUtils u = new FirestoreUtils();
     FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
     User user = new User();
+    ArrayList<ArrayList<String>> notifications = new ArrayList<>();
 
     boolean flag = true;
 
@@ -49,7 +48,6 @@ public class Notifications extends Fragment implements NotificationRecyclerViewA
         // TODO - add better functionality,
         // TODO - calls to database
         // TODO - check this fragment runs correctly
-        ArrayList<ArrayList<String>> notifications = new ArrayList<>();
 
         Context context = getContext();
         RecyclerView recyclerView = view.findViewById(R.id.rvNotifications);
@@ -88,6 +86,11 @@ public class Notifications extends Fragment implements NotificationRecyclerViewA
 
     }
 
+    public void removeSingleItem(int removeIndex) {
+        notifications.remove(removeIndex);
+        adapter.notifyItemRemoved(removeIndex);
+    }
+
     @Override
     public void onItemClick(View view, int position) {
 
@@ -101,7 +104,8 @@ public class Notifications extends Fragment implements NotificationRecyclerViewA
                             notification.get(2),
                             notification.get(3),
                             notification.get(4),
-                            Notifications.this))
+                            Notifications.this,
+                            position))
                     .addToBackStack("expanded notification")
                     .commit();
             setFlag(!flag);

@@ -31,14 +31,16 @@ public class ExpandedNotification extends Fragment {
     private final String nSender;
     private final String nId;
     private final Notifications notifications;
+    private final int itemPosition;
 
-    ExpandedNotification(String title, String description, String dueDate, String sender, String id, Notifications notif) {
+    ExpandedNotification(String title, String description, String dueDate, String sender, String id, Notifications notif, int position) {
         this.nTitle = title;
         this.nDescription = description;
         this.nDueDate = dueDate;
         this.nSender = sender;
         this.nId = id;
         this.notifications = notif;
+        this.itemPosition = position;
     }
 
     @Nullable
@@ -99,8 +101,7 @@ public class ExpandedNotification extends Fragment {
                                 getParentFragmentManager().popBackStack();
                                 Fragment fragment = getParentFragmentManager().findFragmentById(R.id.nav_bar_fragment);
                                 assert fragment != null;
-                                getParentFragmentManager().beginTransaction().detach(fragment);
-                                getParentFragmentManager().beginTransaction().attach(fragment);
+                                notifications.removeSingleItem(itemPosition);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
