@@ -48,6 +48,7 @@ public class Workspace extends Fragment {
                         .findFragmentById(R.id.nav_bar_fragment);
 
                 if (fragment!=null) {
+                    getParentFragmentManager().popBackStack();
                     getParentFragmentManager().beginTransaction()
                             .add(R.id.nav_bar_fragment, new KanbanBoard())
                             .addToBackStack("calendar")
