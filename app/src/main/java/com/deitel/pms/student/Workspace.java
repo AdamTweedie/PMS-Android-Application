@@ -16,6 +16,8 @@ import androidx.fragment.app.Fragment;
 import com.deitel.pms.R;
 import com.deitel.pms.student.kanban.KanbanBoard;
 
+import org.w3c.dom.Text;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -36,31 +38,32 @@ public class Workspace extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Button btnCalendar = (Button) view.findViewById(R.id.btnCalendarView);
-        TextView tvDate = (TextView) view.findViewById(R.id.tvCurrentDate);
+        TextView tvDateMonth = (TextView) view.findViewById(R.id.tvCurrentDateMonth);
+        TextView tvDateDay = (TextView) view.findViewById(R.id.tvCurrentDateDay);
         Button btnReferences = (Button) view.findViewById(R.id.btnReferencingGuide);
         Button btnKanban = (Button) view.findViewById(R.id.btnKanbanBoard);
 
         btnKanban.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Fragment fragment = getParentFragmentManager()
                         .findFragmentById(R.id.nav_bar_fragment);
-
                 if (fragment!=null) {
                     getParentFragmentManager().popBackStack();
                     getParentFragmentManager().beginTransaction()
                             .add(R.id.nav_bar_fragment, new KanbanBoard())
-                            .addToBackStack("calendar")
+                            .addToBackStack("kanban")
                             .commit();
                 }
             }
         });
 
         try {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            DateTimeFormatter dtfMonth = DateTimeFormatter.ofPattern("MMM");
+            DateTimeFormatter dtfDay = DateTimeFormatter.ofPattern("dd");
             LocalDateTime now = LocalDateTime.now();
-            tvDate.setText(dtf.format(now));
+            tvDateMonth.setText(dtfMonth.format(now));
+            tvDateDay.setText(dtfDay.format(now));
         } catch (RuntimeException ignored) {}
 
         // functionality
@@ -94,20 +97,5 @@ public class Workspace extends Fragment {
                 }
             }
         });
-
-//        btnKanban1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Fragment fragment = getParentFragmentManager()
-//                        .findFragmentById(R.id.nav_bar_fragment);
-//
-//                if (fragment!=null) {
-//                    getParentFragmentManager().beginTransaction()
-//                            .add(R.id.nav_bar_fragment, new MainKanban())
-//                            .addToBackStack("kanban")
-//                            .commit();
-//                }
-//            }
-//        });
     }
 }

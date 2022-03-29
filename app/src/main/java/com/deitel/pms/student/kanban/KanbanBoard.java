@@ -1,7 +1,9 @@
 package com.deitel.pms.student.kanban;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,21 +13,20 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.deitel.pms.R;
+import com.deitel.pms.student.Workspace;
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 public class KanbanBoard extends Fragment {
+
+    final String user_kanban_prefs_id = "kanban_prefs";
 
     @Nullable
     @Override
@@ -39,12 +40,11 @@ public class KanbanBoard extends Fragment {
 
         ImageButton addTask = (ImageButton) view.findViewById(R.id.btnAddNewCard);
         ImageButton popFragment = (ImageButton) view.findViewById(R.id.popKanbanFragment);
-        Task task = new Task();
 
         FragmentManager fm = getChildFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
-        TaskList kanbanLists = new TaskList(getDataFromSharedPrefs(0));
+        TaskList kanbanLists;
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         TabLayout.Tab firstTab = tabLayout.newTab();
@@ -56,6 +56,7 @@ public class KanbanBoard extends Fragment {
         thirdTab.setText("Done");
 
         tabLayout.addTab(firstTab, 0, true);
+        kanbanLists = new TaskList(getDataFromSharedPrefs(0, requireActivity()), 0);
         ft.add(R.id.view_pager, kanbanLists).commit();
         tabLayout.addTab(secondTab,1);
         tabLayout.addTab(thirdTab, 2);
@@ -69,16 +70,21 @@ public class KanbanBoard extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 // called when tab selected
                 // get the current selected tab's position and replace the fragment accordingly
-                System.out.println("YOU MADE IT 1");
                 switch(tab.getPosition()) {
                     case 0:
-                        kanbanLists.setTaskListData(getDataFromSharedPrefs(0));
+                        kanbanLists.clearAdapter();
+                        kanbanLists.fillAdapter(getDataFromSharedPrefs(0, requireActivity()));
+                        kanbanLists.setTabPosition(0);
                         break;
                     case 1:
-                        kanbanLists.setTaskListData(getDataFromSharedPrefs(1));
+                        kanbanLists.clearAdapter();
+                        kanbanLists.fillAdapter(getDataFromSharedPrefs(1, requireActivity()));
+                        kanbanLists.setTabPosition(1);
                         break;
                     case 2:
-                        kanbanLists.setTaskListData(getDataFromSharedPrefs(2));
+                        kanbanLists.clearAdapter();
+                        kanbanLists.fillAdapter(getDataFromSharedPrefs(2, requireActivity()));
+                        kanbanLists.setTabPosition(2);
                         break;
                 }
             }
@@ -86,6 +92,9 @@ public class KanbanBoard extends Fragment {
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 // called when tab unselected
+                System.out.println("tab " + tab.getPosition() + " data: " +  kanbanLists.getTaskListData());
+                kanbanLists.saveToSharedPrefs(tab.getPosition());
+
             }
 
             @Override
@@ -95,31 +104,45 @@ public class KanbanBoard extends Fragment {
         });
 
 
-        addTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ArrayList<String> emptyTask = task.newEmptyTask();
-                kanbanLists.addNewTask(emptyTask);
+        addTask.setOnClickListener(view1 -> {
+            String emptyTask = Task.newEmptyTask();
+            kanbanLists.addNewTask(emptyTask);
+        });
+
+        popFragment.setOnClickListener( view2 -> {
+            Fragment fragment = getParentFragmentManager()
+                    .findFragmentById(R.id.nav_bar_fragment);
+
+            if (fragment != null) {
+                getParentFragmentManager().popBackStack();
+                getParentFragmentManager().beginTransaction()
+                        .add(R.id.nav_bar_fragment, new Workspace())
+                        .addToBackStack("workspace")
+                        .commit();
             }
         });
     }
 
-    private ArrayList<ArrayList<String>> getDataFromSharedPrefs(int tabPosition) {
-        ArrayList<ArrayList<String>> dataHolder = new ArrayList<>();
-        ArrayList<String> data = new ArrayList<>();
+    public ArrayList<String> getDataFromSharedPrefs(int tabPosition, Activity activity) {
+        ArrayList<String> dataHolder = new ArrayList<>();
+        String key;
+        SharedPreferences sharedPreferences = (SharedPreferences) activity
+                .getSharedPreferences(user_kanban_prefs_id, Context.MODE_PRIVATE);
+        Set<String> emptyStr = new HashSet<>();
 
         switch (tabPosition) {
             case 0:
-                data.add("hello mite");
-                dataHolder.add(data);
+                key = "KANBAN-0";
+                dataHolder.addAll(sharedPreferences.getStringSet(key, emptyStr));
+                System.out.println("sp data " + sharedPreferences.getStringSet(key, emptyStr));
                 return dataHolder;
             case 1:
-                data.add("hyes");
-                dataHolder.add(data);
+                key = "KANBAN-1";
+                dataHolder.addAll(sharedPreferences.getStringSet(key, emptyStr));
                 return dataHolder;
             case 2:
-                data.add("hno");
-                dataHolder.add(data);
+                key = "KANBAN-2";
+                dataHolder.addAll(sharedPreferences.getStringSet(key, emptyStr));
                 return dataHolder;
             default:
                 return null;

@@ -4,9 +4,12 @@ import java.util.ArrayList;
 
 public class Task {
 
-    public ArrayList<String> newEmptyTask() {
-        ArrayList<String> emptyTask = new ArrayList<String>();
-        emptyTask.add("");
-        return emptyTask;
+    String taskTitle;
+    public Task(String title) {
+        this.taskTitle = title;
+    }
+
+    public static String newEmptyTask() {
+        return "";
     }
 }
