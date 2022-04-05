@@ -183,4 +183,51 @@
 
     </androidx.cardview.widget.CardView>
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewMyProject"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp"
+        app:cardMaxElevation="12dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintTop_toBottomOf="@id/cardViewReferencing"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.35"
+        app:layout_constraintWidth_percent="0.5">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:paddingVertical="15dp"
+            android:paddingHorizontal="15dp"
+            android:layout_marginStart="15dp"
+            android:text="My Project"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#6247AA" />
+
+        <!--            app:backgroundTint="@android:color/transparent"-->
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/myprojecticon"
+            android:scaleY="0.4"
+            android:scaleX="0.7"
+            android:layout_marginTop="20dp"/>
+
+
+        <Button
+            android:id="@+id/btnMyProject"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

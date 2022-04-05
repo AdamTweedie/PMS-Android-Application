@@ -16,7 +16,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.deitel.pms.R;
 import com.deitel.pms.student.HomeActivity;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProjectSelectionIntro extends Fragment {
 
@@ -36,6 +35,8 @@ public class ProjectSelectionIntro extends Fragment {
         Button btnSuggestOwnProject = view.findViewById(R.id.psiBtnSuggestOwnProject);
         Button btnSeeFullProjectList = view.findViewById(R.id.psiBtnSeeFullProjectList);
         Button btnContinueToWorkspace = view.findViewById(R.id.psiBtnContinueToWorkspace);
+
+
 
         btnStartRecommender.setOnClickListener(new View.OnClickListener() {
             @Override

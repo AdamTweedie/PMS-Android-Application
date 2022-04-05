@@ -58,84 +58,51 @@ public class FullProjectList extends Fragment implements FullProjectListRecycler
                 } catch (Exception e) {
                     Log.e("LOGGER", "failed to po fragment with exception " + e);
                 }
-
             }
         });
 
-        if (! Python.isStarted()) {
-            Python.start(new AndroidPlatform(requireContext()));
-        }
-
-        Python py = Python.getInstance();
-        new getProjectsThread().execute(py);
+        FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
+        RecyclerView recyclerView;
+        ArrayList<ArrayList<String>> projectsArray = new ArrayList<>();
         LoadingSuggestions(true);
+        try {
+            recyclerView = requireView().findViewById(R.id.fullProjectListRecyclerView);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            dbInstance.collection("New Projects")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                ArrayList<String> project = new ArrayList<>();
+                                // Email,Name,Project title,Brief description,Any other useful information
+                                project.add((String) document.get("supervisor email"));
+                                project.add((String) document.get("supervisor name"));
+                                project.add((String) document.get("project title"));
+                                project.add((String) document.get("project description"));
+                                project.add((String) document.get("other info"));
 
-    }
-
-    private class getProjectsThread extends AsyncTask<Python, Void, ArrayList<ArrayList<String>>> {
-
-        @Override
-        protected ArrayList<ArrayList<String>> doInBackground(Python... pythons) {
-
-            PyObject module = pythons[0].getModule("getProjects");
-
-            ArrayList<ArrayList<String>> projectsArray = new ArrayList<>();
-            List<PyObject> pyObjectList = module.callAttr("get_all_projects").asList();
-
-            for (PyObject objList : pyObjectList) {
-                ArrayList<String> project = new ArrayList<>();
-                for (PyObject objItem : objList.asList()) {
-                    project.add(objItem.toString());
-                }
-                projectsArray.add(project);
-            }
-
-            return projectsArray;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<ArrayList<String>> results) {
-            super.onPostExecute(results);
-
-            FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
-            RecyclerView recyclerView;
-            try {
-                recyclerView = requireView().findViewById(R.id.fullProjectListRecyclerView);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                dbInstance.collection("New Projects")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    ArrayList<String> project = new ArrayList<>();
-                                    // Email,Name,Project title,Brief description,Any other useful information
-                                    project.add((String) document.get("supervisor email"));
-                                    project.add((String) document.get("supervisor name"));
-                                    project.add((String) document.get("project title"));
-                                    project.add((String) document.get("project description"));
-                                    project.add((String) document.get("other info"));
-
-                                    results.add(project);
-                                }
-                                LoadingSuggestions(false);
-                                adapter = new FullProjectListRecyclerViewAdapter(getContext(), results);
-                                adapter.setClickListener(FullProjectList.this);
-                                recyclerView.setAdapter(adapter);
+                                projectsArray.add(project);
                             }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        LoadingSuggestions(false);
-                        adapter = new FullProjectListRecyclerViewAdapter(getContext(), results);
-                        adapter.setClickListener(FullProjectList.this);
-                        recyclerView.setAdapter(adapter);
-                    }
-                });
-            } catch (Exception e) {
-                Log.e("LOGGER", "Failed to create recycler view with exception" + e);
-            }
+                            LoadingSuggestions(false);
+                            adapter = new FullProjectListRecyclerViewAdapter(getContext(), projectsArray);
+                            adapter.setClickListener(FullProjectList.this);
+                            recyclerView.setAdapter(adapter);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    LoadingSuggestions(false);
+                    Toast.makeText(getContext(), "Cannot get projects, check internet connection !", Toast.LENGTH_SHORT).show();
+                    adapter = new FullProjectListRecyclerViewAdapter(getContext(), projectsArray);
+                    adapter.setClickListener(FullProjectList.this);
+                    recyclerView.setAdapter(adapter);
+                }
+            });
+        } catch (Exception e) {
+            Log.e("LOGGER", "Failed to create recycler view with exception" + e);
         }
+
     }
 
     @Override

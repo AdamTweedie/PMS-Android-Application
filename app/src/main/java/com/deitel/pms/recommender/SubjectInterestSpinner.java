@@ -1,12 +1,14 @@
 package com.deitel.pms.recommender;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -46,6 +48,7 @@ public class SubjectInterestSpinner extends Fragment {
         SpinnerArrayAdapter arrayAdapter3 = new SpinnerArrayAdapter();
         SpinnerArrayAdapter arrayAdapter4 = new SpinnerArrayAdapter();
         final Button btnConfirm = (Button) view.findViewById(R.id.btnConfirmChoices);
+        final ImageButton btnPopFragment = (ImageButton) view.findViewById(R.id.fpiPopFragment);
         EditText otherInfo = (EditText) view.findViewById(R.id.etOtherInformation);
         RecommenderActivity activity = new RecommenderActivity();
 
@@ -112,6 +115,22 @@ public class SubjectInterestSpinner extends Fragment {
         arrayAdapter2.listener(spinner2, getContext());
         arrayAdapter3.listener(spinner3, getContext());
         arrayAdapter4.listener(spinner4, getContext());
+
+        btnPopFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    getParentFragmentManager().popBackStack();
+                    getParentFragmentManager()
+                            .beginTransaction()
+                            .add(R.id.recommenderContainterView, new ProjectSelectionIntro())
+                            .addToBackStack("project selection intro")
+                            .commit();
+                } catch (Exception e) {
+                    Log.e("LOGGER", "failed to po fragment with exception " + e);
+                }
+            }
+        });
 
 
         btnConfirm.setOnClickListener(new View.OnClickListener() {

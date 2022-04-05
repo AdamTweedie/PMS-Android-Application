@@ -42,6 +42,21 @@ public class Workspace extends Fragment {
         TextView tvDateDay = (TextView) view.findViewById(R.id.tvCurrentDateDay);
         Button btnReferences = (Button) view.findViewById(R.id.btnReferencingGuide);
         Button btnKanban = (Button) view.findViewById(R.id.btnKanbanBoard);
+        Button btnMyProject = (Button) view.findViewById(R.id.btnMyProject);
+
+        btnMyProject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = getParentFragmentManager()
+                        .findFragmentById(R.id.nav_bar_fragment);
+                if (fragment!=null) {
+                    getParentFragmentManager().beginTransaction()
+                            .add(R.id.nav_bar_fragment, new MyProject())
+                            .addToBackStack("kanban")
+                            .commit();
+                }
+            }
+        });
 
         btnKanban.setOnClickListener(new View.OnClickListener() {
             @Override
