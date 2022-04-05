@@ -19,15 +19,21 @@ import com.chaquo.python.android.AndroidPlatform;
 import com.deitel.pms.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RecommenderActivity extends AppCompatActivity {
 
@@ -70,7 +76,6 @@ public class RecommenderActivity extends AppCompatActivity {
                             project_data_raw.add((String) snapshot.get("other info"));
                             data.add(project_data_raw);
                         }
-                        System.out.println("Additional projects: " + data);
                         Log.w("LOGGER", "Successfully got additional projects from Firestore");
                         new RecommenderThread().execute(data);
                         LoadingSuggestions(true);
@@ -97,15 +102,14 @@ public class RecommenderActivity extends AppCompatActivity {
             // TODO - I think this will fail if there is no additional projects so account for that !!
 
             // create additional projects array
-            ArrayList<ArrayList<String>> additional_projects = new ArrayList<>();
-            ArrayList<String> data_for_recommender = new ArrayList<>();
-            try {
-                for (int i = 1; i < arrayLists[0].size(); i ++) {
-                    additional_projects.add(arrayLists[0].get(i));
-                    data_for_recommender.add(arrayLists[0].get(i).get(2) + " " + arrayLists[0].get(i).get(3) + " " + arrayLists[0].get(i).get(4));
-                }
-            } catch(Exception e) {
-                Log.e("LOGGER", "Failed with exception: " + e);
+            //ArrayList<ArrayList<String>> additional_projects = new ArrayList<>();
+            //ArrayList<String> data_for_recommender = new ArrayList<>();
+            String userEntry = arrayLists[0].get(0).get(0);
+            arrayLists[0].remove(arrayLists[0].get(0));
+            ArrayList<ArrayList<String>> d = new ArrayList<>(arrayLists[0]);
+            ArrayList<Object[]> projectData = new ArrayList<>();
+            for (ArrayList<String> project : d) {
+                projectData.add(project.toArray());
             }
 
             if (! Python.isStarted()) {
@@ -113,9 +117,10 @@ public class RecommenderActivity extends AppCompatActivity {
             }
 
             Python py = Python.getInstance();
-            PyObject module = py.getModule("Recommender");
 
-            List<PyObject> pyIndexList = module.callAttr("recommender", arrayLists[0].get(0).get(0), data_for_recommender.toArray()).asList();
+            // TODO - get this working - cannot import random - maybe take that bit out
+            PyObject module = py.getModule("Recommenderr");
+            List<PyObject> pyIndexList = module.callAttr("recommender_new", userEntry, projectData.toArray()).asList();
 
             ArrayList<Integer> indexList = new ArrayList<>();
             ArrayList<ArrayList<String>> projects = new ArrayList<>();
@@ -141,7 +146,7 @@ public class RecommenderActivity extends AppCompatActivity {
 
             for (int index : indexList) {
                 ArrayList<String> project = new ArrayList<>();
-                List<PyObject> pyArrayOfProjects = module.callAttr("obtain_suggestions", index, additional_projects.toArray()).asList();
+                List<PyObject> pyArrayOfProjects = module.callAttr("obtain_suggestions", index, projectData.toArray()).asList();
                 List<PyObject> thisProjectList= pyArrayOfProjects.get(0).asList();
 
                 for (PyObject item : thisProjectList) {
