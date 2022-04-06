@@ -1,47 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E9ECEF"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    android:focusable="true">
 
-    <Button
+    <ImageButton
         android:id="@+id/btnGoBack"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
+        android:scaleY="0.7"
+        android:scaleX="0.7"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:background="@drawable/undo" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewCalendar"
+    <sun.bob.mcalendarview.MCalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        app:layout_constraintTop_toBottomOf="@id/btnGoBack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        />
+
+    <TextView
+        android:id="@+id/tv11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="10dp"
-        app:cardMaxElevation="12dp"
-        app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintTop_toBottomOf="@id/btnGoBack"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Mark Date"
+        app:layout_constraintTop_toBottomOf="@id/calendarView"
         app:layout_constraintStart_toStartOf="parent"
-         >
-
-        <CalendarView
-            android:id="@+id/calendarView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-
-    </androidx.cardview.widget.CardView>
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginStart="15dp"
+        android:paddingBottom="10dp"/>
 
 
+    <EditText
+        android:id="@+id/calendarDay"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_square"
+        app:layout_constraintTop_toBottomOf="@id/tv11"
+        app:layout_constraintStart_toStartOf="@id/tv11"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="day(dd)"
+        app:layout_constraintTop_toBottomOf="@id/calendarDay"
+        app:layout_constraintStart_toStartOf="@id/calendarDay"
+        app:layout_constraintEnd_toEndOf="@id/calendarDay"/>
+
+    <EditText
+        android:id="@+id/calendarMonth"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_square"
+        app:layout_constraintTop_toBottomOf="@id/tv11"
+        app:layout_constraintStart_toEndOf="@id/calendarDay"
+        android:layout_marginHorizontal="25dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="month(mm)"
+        app:layout_constraintTop_toBottomOf="@id/calendarMonth"
+        app:layout_constraintStart_toStartOf="@id/calendarMonth"
+        app:layout_constraintEnd_toEndOf="@id/calendarMonth"/>
+
+    <EditText
+        android:id="@+id/calendarYear"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_square"
+        app:layout_constraintTop_toBottomOf="@id/tv11"
+        android:layout_marginHorizontal="25dp"
+        app:layout_constraintStart_toEndOf="@id/calendarMonth"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="year(yyyy)"
+        app:layout_constraintEnd_toEndOf="@id/calendarYear"
+        app:layout_constraintStart_toStartOf="@id/calendarYear"
+        app:layout_constraintTop_toBottomOf="@id/calendarYear" />
+
+    <ImageButton
+        android:id="@+id/calendarSetDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#E9ECEF"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintStart_toEndOf="@id/calendarYear"
+        android:layout_marginStart="15dp"
+        app:layout_constraintTop_toTopOf="@+id/calendarYear"
+        app:srcCompat="@drawable/icon_forword_arrow" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

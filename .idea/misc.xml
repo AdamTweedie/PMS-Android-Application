@@ -7,11 +7,13 @@
         <entry key="..\:/Android Applications/PMS/app/src/main/res/drawable/kanban.xml" value="0.1" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/drawable/message_corner_radius.xml" value="0.1655" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/drawable/project_suggestion_circle.xml" value="0.171" />
+        <entry key="..\:/Android Applications/PMS/app/src/main/res/drawable/rounded_square.xml" value="0.2555" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/drawable/spinner_corner_radius.xml" value="0.166" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/activity_home_navbar.xml" value="0.12" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/activity_recommender.xml" value="0.24947916666666667" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/expanded_notification.xml" value="0.25" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/expanded_project_request.xml" value="0.136" />
+        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_calendar.xml" value="0.264" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_kanban.xml" value="0.2" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_notifications.xml" value="0.12158054711246201" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_profile.xml" value="0.152" />
