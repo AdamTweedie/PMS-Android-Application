@@ -71,23 +71,35 @@ public class KanbanRecyclerViewAdapter extends RecyclerView
                     .setOnClickListener(view -> {
                         final int position = getAdapterPosition();
                         notifyItemRemoved(getAdapterPosition());
+                        ArrayList<String> temp = new ArrayList<>(getTaskData());
+                        temp.remove(position);
                         getTaskData().remove(position);
+                        setTaskData(temp);
+                        taskList.setTaskListData(temp);
+                        taskList.saveToSharedPrefs(getTabPosition());
                     });
 
             itemView.findViewById(R.id.btn_move_task)
                     .setOnClickListener(view -> {
                         final int position = getAdapterPosition();
                         String task = getTaskData().get(position);
+                        ArrayList<String> temp = new ArrayList<>(getTaskData());
                         switch(getTabPosition()) {
                             case 0:
                                 getTaskList().addToPrefs(1, task);
                                 notifyItemRemoved(getAdapterPosition());
+                                temp.remove(position);
                                 getTaskData().remove(position);
+                                setTaskData(temp);
+                                taskList.setTaskListData(temp);
                                 break;
                             case 1:
                                 getTaskList().addToPrefs(2, task);
                                 notifyItemRemoved(getAdapterPosition());
+                                temp.remove(position);
                                 getTaskData().remove(position);
+                                setTaskData(temp);
+                                taskList.setTaskListData(temp);
                                 break;
                             case 2:
                                 Toast.makeText(getContext(), "Invalid Input!", Toast.LENGTH_SHORT).show();
@@ -139,6 +151,10 @@ public class KanbanRecyclerViewAdapter extends RecyclerView
 
     public ArrayList<String> getTaskData() {
         return this.taskData;
+    }
+
+    public void setTaskData(ArrayList<String> taskData) {
+        this.taskData = taskData;
     }
 
     // parent activity will implement this method to respond to click events

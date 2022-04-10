@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.deitel.pms.R;
+import com.deitel.pms.User;
 import com.deitel.pms.student.Workspace;
 import com.google.android.material.tabs.TabLayout;
 
@@ -25,8 +26,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class KanbanBoard extends Fragment {
-
-    final String user_kanban_prefs_id = "kanban_prefs";
 
     @Nullable
     @Override
@@ -37,6 +36,10 @@ public class KanbanBoard extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        final User user = new User();
+        final String userId = user.getUserId(requireActivity());
+        final String user_kanban_prefs_id = userId+"_kanban_prefs";
 
         ImageButton addTask = (ImageButton) view.findViewById(R.id.btnAddNewCard);
         ImageButton popFragment = (ImageButton) view.findViewById(R.id.popKanbanFragment);
@@ -56,7 +59,7 @@ public class KanbanBoard extends Fragment {
         thirdTab.setText("Done");
 
         tabLayout.addTab(firstTab, 0, true);
-        kanbanLists = new TaskList(getDataFromSharedPrefs(0, requireActivity()), 0);
+        kanbanLists = new TaskList(getDataFromSharedPrefs(0, requireActivity(), user_kanban_prefs_id), 0, user_kanban_prefs_id);
         ft.add(R.id.view_pager, kanbanLists).commit();
         tabLayout.addTab(secondTab,1);
         tabLayout.addTab(thirdTab, 2);
@@ -73,17 +76,17 @@ public class KanbanBoard extends Fragment {
                 switch(tab.getPosition()) {
                     case 0:
                         kanbanLists.clearAdapter();
-                        kanbanLists.fillAdapter(getDataFromSharedPrefs(0, requireActivity()));
+                        kanbanLists.fillAdapter(getDataFromSharedPrefs(0, requireActivity(), user_kanban_prefs_id));
                         kanbanLists.setTabPosition(0);
                         break;
                     case 1:
                         kanbanLists.clearAdapter();
-                        kanbanLists.fillAdapter(getDataFromSharedPrefs(1, requireActivity()));
+                        kanbanLists.fillAdapter(getDataFromSharedPrefs(1, requireActivity(), user_kanban_prefs_id));
                         kanbanLists.setTabPosition(1);
                         break;
                     case 2:
                         kanbanLists.clearAdapter();
-                        kanbanLists.fillAdapter(getDataFromSharedPrefs(2, requireActivity()));
+                        kanbanLists.fillAdapter(getDataFromSharedPrefs(2, requireActivity(), user_kanban_prefs_id));
                         kanbanLists.setTabPosition(2);
                         break;
                 }
@@ -113,6 +116,8 @@ public class KanbanBoard extends Fragment {
             Fragment fragment = getParentFragmentManager()
                     .findFragmentById(R.id.nav_bar_fragment);
 
+            kanbanLists.saveToSharedPrefs(kanbanLists.getTabPosition());
+
             if (fragment != null) {
                 getParentFragmentManager().popBackStack();
                 getParentFragmentManager().beginTransaction()
@@ -123,7 +128,7 @@ public class KanbanBoard extends Fragment {
         });
     }
 
-    public ArrayList<String> getDataFromSharedPrefs(int tabPosition, Activity activity) {
+    public ArrayList<String> getDataFromSharedPrefs(int tabPosition, Activity activity, String user_kanban_prefs_id) {
         ArrayList<String> dataHolder = new ArrayList<>();
         String key;
         SharedPreferences sharedPreferences = (SharedPreferences) activity
@@ -134,7 +139,6 @@ public class KanbanBoard extends Fragment {
             case 0:
                 key = "KANBAN-0";
                 dataHolder.addAll(sharedPreferences.getStringSet(key, emptyStr));
-                System.out.println("sp data " + sharedPreferences.getStringSet(key, emptyStr));
                 return dataHolder;
             case 1:
                 key = "KANBAN-1";

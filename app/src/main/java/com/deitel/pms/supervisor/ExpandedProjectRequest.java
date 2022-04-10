@@ -103,39 +103,10 @@ public class ExpandedProjectRequest extends Fragment {
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-
-                                        // delete user suggested project from requests
-                                        dbInstance.collection("student suggested projects")
-                                                .document(projectData.get(0))
-                                                .delete()
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void unused) {
-                                                Log.w("LOGGER", "suggested project deleted");
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.w("LOGGER", "failed to delete suggested project, may be supervisor recommended.");
-                                            }
-                                        });
+                                        // delete student suggested project from requests
+                                        deleteUserSuggestedProject();
                                         // delete supervisor recommended project from requests
-                                        dbInstance.collection(utils.getSUPERVISOR_COLLECTION_PATH())
-                                                .document(user.getUserId(requireActivity()))
-                                                .collection(utils.getSUPERVISOR_REQUESTS_COLLECTION_PATH())
-                                                .document(getProjectData().get(0))
-                                                .delete()
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void unused) {
-                                                        Log.w("LOGGER", "successfully deleted project request with id " + getProjectData().get(0));
-                                                    }
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.w("LOGGER", "failed to delete project request with id " + getProjectData().get(0));
-                                                    }
-                                                });
+                                        deleteSupervisorRecommendedProject();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -143,6 +114,8 @@ public class ExpandedProjectRequest extends Fragment {
                                 Log.w("LOGGER", "failed to add student to my projects");
                             }
                         });
+                        // send notification to student.
+
                         Toast.makeText(getContext(), "Successfully accepted project request!", Toast.LENGTH_SHORT).show();
                         sendProjectAcceptedNotification(getProjectData().get(0));
                     }
@@ -168,7 +141,63 @@ public class ExpandedProjectRequest extends Fragment {
     }
 
     private void sendProjectAcceptedNotification(String studentId) {
+        Map<String, String> notificationData = new HashMap<>();
+        notificationData.put("sender", user.getUserId(requireActivity()));
+        notificationData.put("title", "Project request update!");
+        notificationData.put("description", user.getUserId(requireActivity()) +
+                " has accepted your request for project supervision. \n" +
+                "Please check your My Project for conformation");
+        dbInstance.collection(utils.getUSER_COLLECTION_PATH())
+                .document(studentId)
+                .collection("notifications")
+                .add(notificationData)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.w("LOGGER", "successfully sent project request update notification");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("LOGGER", "failed to send project request update notification");
+            }
+        });
+    }
 
+    public void deleteUserSuggestedProject() {
+        dbInstance.collection("student suggested projects")
+                .document(projectData.get(0))
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.w("LOGGER", "suggested project deleted");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("LOGGER", "failed to delete suggested project, may be supervisor recommended.");
+            }
+        });
+    }
+
+    public void deleteSupervisorRecommendedProject() {
+        dbInstance.collection(utils.getSUPERVISOR_COLLECTION_PATH())
+                .document(user.getUserId(requireActivity()))
+                .collection(utils.getSUPERVISOR_REQUESTS_COLLECTION_PATH())
+                .document(getProjectData().get(0))
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.w("LOGGER", "successfully deleted project request with id " + getProjectData().get(0));
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("LOGGER", "failed to delete project request with id " + getProjectData().get(0));
+            }
+        });
     }
 
     public ArrayList<String> getProjectData() {

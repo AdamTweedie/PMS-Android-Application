@@ -16,8 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".student.HomeActivity"/>
-        <activity android:name=".recommender.RecommenderActivity"/>
-        <activity android:name=".supervisor.SupervisorActivity"/>
+        <activity android:name=".student.HomeActivity"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity android:name=".recommender.RecommenderActivity"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity android:name=".supervisor.SupervisorActivity"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
     </application>
 </manifest>

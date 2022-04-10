@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -83,6 +84,8 @@ public class MessageCenter extends Fragment implements MessagesRecyclerViewAdapt
 
         String senderId = this.sender;
 
+        TextView messageRecipient = (TextView) view.findViewById(R.id.tvMessageRecipient);
+        messageRecipient.setText(getRecipient());
         EditText typedMessage = (EditText) view.findViewById(R.id.etMessageBody);
         ImageButton sendMessage = (ImageButton) view.findViewById(R.id.btnSendMessage);
 

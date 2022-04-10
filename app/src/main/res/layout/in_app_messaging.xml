@@ -5,11 +5,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#6247AA"
+        app:layout_constraintBottom_toTopOf="@id/tvMessageRecipient"/>
+
+    <TextView
+        android:id="@+id/tvMessageRecipient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#6247AA"
+        app:layout_constraintTop_toBottomOf="@id/tvMessageRecipient"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSentAndReceivedMessages"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvMessageRecipient"
+        android:layout_marginTop="3dp"
         app:layout_constraintBottom_toTopOf="@id/cl2"
         android:layout_marginBottom="15dp" />
 

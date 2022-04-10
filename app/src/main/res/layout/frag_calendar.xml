@@ -52,6 +52,7 @@
         app:layout_constraintStart_toStartOf="@id/tv11"/>
 
     <TextView
+        android:id="@+id/dd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="day(dd)"
@@ -94,16 +95,59 @@
         app:layout_constraintStart_toStartOf="@id/calendarYear"
         app:layout_constraintTop_toBottomOf="@id/calendarYear" />
 
-    <ImageButton
-        android:id="@+id/calendarSetDate"
+    <TextView
+        android:id="@+id/tv33"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#E9ECEF"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintStart_toEndOf="@id/calendarYear"
+        android:text="Note"
+        app:layout_constraintTop_toBottomOf="@id/dd"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textStyle="bold"
+        android:textSize="18sp"
         android:layout_marginStart="15dp"
-        app:layout_constraintTop_toTopOf="@+id/calendarYear"
-        app:srcCompat="@drawable/icon_forword_arrow" />
+        android:paddingBottom="10dp"/>
+
+    <EditText
+        android:id="@+id/calendarMarkDayNote"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintWidth_percent="0.9"
+        android:background="@drawable/rounded_square"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@id/tv33"
+        app:layout_constraintTop_toBottomOf="@id/tv33" />
+
+    <TextView
+        android:id="@+id/tv44"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/calendarMarkDayNote"
+        app:layout_constraintStart_toStartOf="@id/calendarMarkDayNote"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:text="Reoccurring" />
+
+    <CheckBox
+        android:id="@+id/repeatDate"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toEndOf="@id/tv44"
+        app:layout_constraintTop_toTopOf="@id/tv44"
+        app:layout_constraintBottom_toBottomOf="@id/tv44" />
+
+    <Button
+        android:id="@+id/btnAddDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add date"
+        android:textAllCaps="false"
+        app:backgroundTint="#6247AA"
+        app:cornerRadius="60dp"
+        app:iconPadding="8dp"
+        app:layout_constraintStart_toStartOf="@id/tv44"
+        app:layout_constraintTop_toBottomOf="@id/tv44"
+        android:layout_marginTop="5dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

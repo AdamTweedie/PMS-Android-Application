@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.deitel.pms.R;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,13 +28,15 @@ import java.util.Set;
 public class TaskList extends Fragment implements KanbanRecyclerViewAdapter.ItemClickListener {
 
     KanbanRecyclerViewAdapter adapter;
-    final String user_kanban_prefs_id = "kanban_prefs";
 
+
+    String user_kanban_prefs_id;
     ArrayList<String> taskListData;
     int tabPosition;
-    public TaskList(ArrayList<String> data, int position) {
+    public TaskList(ArrayList<String> data, int position, String sp_key) {
         this.taskListData = data;
         this.tabPosition = position;
+        this.user_kanban_prefs_id = sp_key;
     }
 
     @Nullable
@@ -80,10 +83,10 @@ public class TaskList extends Fragment implements KanbanRecyclerViewAdapter.Item
 
     public void saveToSharedPrefs(int tabId) {
         SharedPreferences sharedPreferences = requireActivity()
-                .getSharedPreferences(user_kanban_prefs_id, Context.MODE_PRIVATE);
+                .getSharedPreferences(this.user_kanban_prefs_id, Context.MODE_PRIVATE);
         final String key = "KANBAN-" + tabId;
-        Set<String> set = new HashSet<>(this.taskListData);
-        System.out.println("data going into set + " + this.taskListData);
+        Set<String> set = new HashSet<>(getTaskListData());
+        System.out.println("data going into set + " + getTaskListData());
         System.out.println("SET = " + set);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putStringSet(key, set);
@@ -92,10 +95,10 @@ public class TaskList extends Fragment implements KanbanRecyclerViewAdapter.Item
 
     public void addToPrefs(int tabPosition, String task) {
         SharedPreferences sharedPreferences = requireActivity()
-                .getSharedPreferences(user_kanban_prefs_id, Context.MODE_PRIVATE);
+                .getSharedPreferences(this.user_kanban_prefs_id, Context.MODE_PRIVATE);
         final String key = "KANBAN-" + tabPosition;
         KanbanBoard kb = new KanbanBoard();
-        ArrayList<String> tabData = kb.getDataFromSharedPrefs(tabPosition, requireActivity());
+        ArrayList<String> tabData = kb.getDataFromSharedPrefs(tabPosition, requireActivity(), this.user_kanban_prefs_id);
         tabData.add(task);
 
         Set<String> set = new HashSet<>(tabData);
@@ -106,6 +109,14 @@ public class TaskList extends Fragment implements KanbanRecyclerViewAdapter.Item
 
     public ArrayList<String> getTaskListData() {
         return this.taskListData;
+    }
+
+    public void setTaskListData(ArrayList<String> data) {
+        this.taskListData = data;
+    }
+
+    public int getTabPosition() {
+        return this.tabPosition;
     }
 
     public void setTabPosition(int tabPosition) {

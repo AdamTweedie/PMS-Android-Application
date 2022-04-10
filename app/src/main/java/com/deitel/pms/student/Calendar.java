@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -25,9 +27,6 @@ import sun.bob.mcalendarview.vo.DateData;
 
 public class Calendar extends Fragment {
 
-    private ImageButton btnGoBack;
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -42,21 +41,15 @@ public class Calendar extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // functionality
-        btnGoBack = (ImageButton) view.findViewById(R.id.btnGoBack);
+        final ImageButton btnGoBack = (ImageButton) view.findViewById(R.id.btnGoBack);
+        final Button addDateToCalendar = (Button) view.findViewById(R.id.btnAddDate);
+        final CheckBox reoccurringDate = (CheckBox) view.findViewById(R.id.repeatDate);
         EditText day = (EditText) view.findViewById(R.id.calendarDay);
         EditText month = (EditText) view.findViewById(R.id.calendarMonth);
         EditText year = (EditText) view.findViewById(R.id.calendarYear);
+        EditText calendarNote = (EditText) view.findViewById(R.id.calendarMarkDayNote);
 
         MCalendarView calendarView = (MCalendarView) view.findViewById(R.id.calendarView);
-
-        ArrayList<DateData> dates = new ArrayList<>();
-
-        dates.add(new DateData(2022,05,9));
-        dates.add(new DateData(2022,05,7));
-
-        for (DateData date : dates) {
-            calendarView.markDate(date.getYear(), date.getMonth(), date.getDay());
-        }
 
         calendarView.setOnDateClickListener(new OnDateClickListener() {
             @Override
@@ -65,6 +58,11 @@ public class Calendar extends Fragment {
                 day.setText(String.valueOf(date.getDay()));
                 month.setText(String.valueOf(date.getMonth()));
                 year.setText(String.valueOf(date.getYear()));
+                DateData dateData = new DateData(date.getYear(), date.getMonth(), date.getDay());
+                addDateToCalendar.setOnClickListener(view1 -> {
+                    calendarView.markDate(date.getYear(), date.getMonth(), date.getDay());
+
+                });
             }
         });
 
