@@ -119,8 +119,8 @@ public class RecommenderActivity extends AppCompatActivity {
             Python py = Python.getInstance();
 
             // TODO - get this working - cannot import random - maybe take that bit out
-            PyObject module = py.getModule("Recommenderr");
-            List<PyObject> pyIndexList = module.callAttr("recommender_new", userEntry, projectData.toArray()).asList();
+            PyObject module = py.getModule("Recommender");
+            List<PyObject> pyIndexList = module.callAttr("recommender", userEntry, projectData.toArray()).asList();
 
             ArrayList<Integer> indexList = new ArrayList<>();
             ArrayList<ArrayList<String>> projects = new ArrayList<>();

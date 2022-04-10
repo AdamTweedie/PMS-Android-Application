@@ -71,7 +71,7 @@ def clean_user_entry(entry):
     return ' '.join([word for word in entry.split() if word not in stopwords_dict])
 
 
-def recommender_new(user_entry, list_data):
+def recommender(user_entry, list_data):
 
     # covert data into pandas dataframe in real recommender
     c = ['email', 'name', 'project title', 'project description', 'other info']

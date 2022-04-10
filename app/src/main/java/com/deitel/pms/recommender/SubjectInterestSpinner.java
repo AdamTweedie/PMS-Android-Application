@@ -42,79 +42,42 @@ public class SubjectInterestSpinner extends Fragment {
         final Spinner spinner1 = (Spinner) view.findViewById(R.id.spinner1);
         final Spinner spinner2 = (Spinner) view.findViewById(R.id.spinner2);
         final Spinner spinner3 = (Spinner) view.findViewById(R.id.spinner3);
-        final Spinner spinner4 = (Spinner) view.findViewById(R.id.spinner4);
         SpinnerArrayAdapter arrayAdapter1 = new SpinnerArrayAdapter();
         SpinnerArrayAdapter arrayAdapter2 = new SpinnerArrayAdapter();
         SpinnerArrayAdapter arrayAdapter3 = new SpinnerArrayAdapter();
-        SpinnerArrayAdapter arrayAdapter4 = new SpinnerArrayAdapter();
         final Button btnConfirm = (Button) view.findViewById(R.id.btnConfirmChoices);
         final ImageButton btnPopFragment = (ImageButton) view.findViewById(R.id.fpiPopFragment);
         EditText otherInfo = (EditText) view.findViewById(R.id.etOtherInformation);
-        RecommenderActivity activity = new RecommenderActivity();
-
 
         // TODO - if (subject(from firestore)) -> subject keyword fill into spinner
-
-        String[] interest1 = new String[]{
-                "Select an item...",
-                "AI",
-                "Machine Learning",
-                "Social Media",
-                "Neural Networks",
-                "Security"
+        final String[] interests = new String[]{
+                "Select an item...", "AI", "Machine Learning",
+                "Social Media", "Neural Networks", "Security",
+                "Android Studio", "Java", "Python",
+                "Web Development", "Data mining", "Mobile phones",
+                "wireless technology", "Autonomy", "Social Media",
+                "Cyber threats", "complex networks",
         };
-        final List<String> interest1List = new ArrayList<>(Arrays.asList(interest1));
+
+        final List<String> interest1List = new ArrayList<>(Arrays.asList(interests));
         ArrayAdapter<String> interest1Adapter = arrayAdapter1.getArrayAdapter(getContext(), interest1List);
         interest1Adapter.setDropDownViewResource(R.layout.spinner_item);
         spinner1.setAdapter(interest1Adapter);
 
-        String[] interest2 = new String[]{
-                "Select an item...",
-                "Android Studio",
-                "Java",
-                "Python",
-                "Web Development",
-                "Data mining",
-                "Mobile phones"
-        };
-        final List<String> interest2List = new ArrayList<>(Arrays.asList(interest2));
+        final List<String> interest2List = new ArrayList<>(Arrays.asList(interests));
         ArrayAdapter<String> interest2Adapter = arrayAdapter2.getArrayAdapter(getContext(), interest2List);
         interest2Adapter.setDropDownViewResource(R.layout.spinner_item);
         spinner2.setAdapter(interest2Adapter);
 
-        String[] interest3 = new String[]{
-                "Select an item...",
-                "wireless technology",
-                "Autonomy",
-                "Social Media",
-                "Neural Networks",
-                "Security",
-                "Analysis, design, and implementation"
-        };
-        final List<String> interest3List = new ArrayList<>(Arrays.asList(interest3));
+
+        final List<String> interest3List = new ArrayList<>(Arrays.asList(interests));
         ArrayAdapter<String> interest3Adapter = arrayAdapter3.getArrayAdapter(getContext(), interest3List);
         interest3Adapter.setDropDownViewResource(R.layout.spinner_item);
         spinner3.setAdapter(interest3Adapter);
 
-        String[] interest4 = new String[]{
-                "Select an item...",
-                "Security",
-                "Cyber threats",
-                "policies",
-                "interactivity",
-                "monitoring",
-                "complex networks"
-        };
-        final List<String> interest4List = new ArrayList<>(Arrays.asList(interest4));
-        ArrayAdapter<String> interest4Adapter = arrayAdapter4.getArrayAdapter(getContext(), interest4List);
-        interest4Adapter.setDropDownViewResource(R.layout.spinner_item);
-        spinner4.setAdapter(interest4Adapter);
-
-
         arrayAdapter1.listener(spinner1, getContext());
         arrayAdapter2.listener(spinner2, getContext());
         arrayAdapter3.listener(spinner3, getContext());
-        arrayAdapter4.listener(spinner4, getContext());
 
         btnPopFragment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,13 +99,19 @@ public class SubjectInterestSpinner extends Fragment {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String item1 = arrayAdapter1.getSelectedItem();
-                String item2 = arrayAdapter2.getSelectedItem();
-                String item3 = arrayAdapter3.getSelectedItem();
-                String item4 = arrayAdapter4.getSelectedItem();
-                String anyOtherInfo = otherInfo.getText().toString();
+                String item1, item2, item3;
+                final String anyOtherInfo = otherInfo.getText().toString();
+                if (!arrayAdapter1.getSelectedItem().equals("Select an item...")) {
+                    item1 = arrayAdapter1.getSelectedItem();
+                } else {item1 = "";}
+                if (!arrayAdapter2.getSelectedItem().equals("Select an item...")) {
+                    item2 = arrayAdapter2.getSelectedItem();
+                } else {item2 = "";}
+                if (!arrayAdapter3.getSelectedItem().equals("Select an item...")) {
+                    item3 = arrayAdapter3.getSelectedItem();
+                } else {item3 = "";}
 
-                String dfEntry = item1 + " " + item2 + " " + item3 + " " + item4 + " " + anyOtherInfo;
+                String dfEntry = item1 + " " + item2 + " " + item3 + " " + anyOtherInfo;
                 System.out.println("DF ENTRY: " + dfEntry);
 
                 Bundle result = new Bundle();
