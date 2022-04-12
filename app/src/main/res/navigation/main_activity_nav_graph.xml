@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/signIn">
+
+    <fragment
+        android:id="@+id/signIn"
+        android:name="com.deitel.pms.SignIn"
+        android:label="SignIn" >
+        <action
+            android:id="@+id/action_signIn_to_signUp"
+            app:destination="@id/signUp" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUp"
+        android:name="com.deitel.pms.SignUp"
+        android:label="SignUp" />
+</navigation>

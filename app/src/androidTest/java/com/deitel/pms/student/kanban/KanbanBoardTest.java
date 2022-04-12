@@ -1,15 +1,12 @@
 package com.deitel.pms.student.kanban;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
-public class KanbanBoardTest extends TestCase {
+import org.junit.Test;
 
-    public void testOnCreateView() {
-    }
+public class KanbanBoardTest {
 
-    public void testOnViewCreated() {
-    }
-
-    public void testGetDataFromSharedPrefs() {
+    @Test
+    public void getDataFromSharedPrefs() {
     }
 }
