@@ -9,7 +9,7 @@ public class Message {
     private String senderId;
     private String recipient;
 
-    Message(String message, String date, String id, String recipient) {
+    public Message(String message, String date, String id, String recipient) {
         this.content = message;
         this.createdAt = date;
         this.senderId = id;

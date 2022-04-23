@@ -164,7 +164,7 @@ public class ExpandedProjectRequest extends Fragment {
         });
     }
 
-    public void deleteUserSuggestedProject() {
+    private void deleteUserSuggestedProject() {
         dbInstance.collection("student suggested projects")
                 .document(projectData.get(0))
                 .delete()
@@ -181,7 +181,7 @@ public class ExpandedProjectRequest extends Fragment {
         });
     }
 
-    public void deleteSupervisorRecommendedProject() {
+    private void deleteSupervisorRecommendedProject() {
         dbInstance.collection(utils.getSUPERVISOR_COLLECTION_PATH())
                 .document(user.getUserId(requireActivity()))
                 .collection(utils.getSUPERVISOR_REQUESTS_COLLECTION_PATH())

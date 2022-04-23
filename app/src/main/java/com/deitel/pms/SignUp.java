@@ -20,8 +20,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.security.crypto.MasterKey;
 
 import com.deitel.pms.recommender.RecommenderActivity;
+import com.deitel.pms.student.HomeActivity;
 import com.deitel.pms.supervisor.SupervisorActivity;
-import com.deitel.pms.supervisor.SupervisorWorkspace;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -114,7 +114,7 @@ public class SignUp extends Fragment {
                                     Log.d(TAG, "No such document");
                                     createStudentAccount(finalEmail, finalUniAccessCode, TAG);
                                     saveToPrefs(finalEmail, finalPassword, context);
-                                    loadRecommenderSystem(context);
+                                    loadStudentWorkspace(context);
                                     user.setUserId(requireActivity(), finalEmail);
                                 }
 
@@ -211,7 +211,7 @@ public class SignUp extends Fragment {
         return false;
     }
 
-    public void createStudentAccount(String email, String uniCode, String TAG) {
+    private void createStudentAccount(String email, String uniCode, String TAG) {
         // Create user info
 
         User newUser = new User();
@@ -241,7 +241,7 @@ public class SignUp extends Fragment {
         });
     }
 
-    public void saveToPrefs(String email, String password, Context context) {
+    private void saveToPrefs(String email, String password, Context context) {
         SharedPrefUtils utils = new SharedPrefUtils();
         MasterKey masterKeyAlias = utils.getMasterKey(context);
         SharedPreferences encryptedPreferences = utils.getEncryptedPreferences(masterKeyAlias, context);
@@ -253,9 +253,9 @@ public class SignUp extends Fragment {
         }
     }
 
-    public void loadRecommenderSystem(Context context) {
-        Intent recommender = new Intent(getActivity(), RecommenderActivity.class);
-        startActivity(recommender);
+    private void loadStudentWorkspace(Context context) {
+        Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
+        startActivity(homeIntent);
         getActivity().finish();
         Toast.makeText(context, "Account created!", Toast.LENGTH_SHORT).show();
     }
@@ -267,7 +267,7 @@ public class SignUp extends Fragment {
         Toast.makeText(context, "Account created!", Toast.LENGTH_SHORT).show();
     }
 
-    public void replaceFragment(Object object) {
+    private void replaceFragment(Object object) {
         final FragmentTransaction fragmentTransaction;
         final FragmentManager fragmentManager = getParentFragmentManager();
 

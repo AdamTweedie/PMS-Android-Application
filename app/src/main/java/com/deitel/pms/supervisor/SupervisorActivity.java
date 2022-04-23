@@ -84,7 +84,7 @@ public class SupervisorActivity extends AppCompatActivity {
 
     }
 
-    public void clearBackStack(int stackCount) {
+    private void clearBackStack(int stackCount) {
         for (int i = 0; i < stackCount; ++i) {
             getSupportFragmentManager().popBackStack();
         }

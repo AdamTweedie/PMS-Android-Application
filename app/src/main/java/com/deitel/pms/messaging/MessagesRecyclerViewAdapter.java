@@ -50,10 +50,17 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
             String newMessage = message.replace("S:", "");
             holder.myTextView.setText(newMessage);
             constraintSet.clone(holder.parent);
-            constraintSet.connect(holder.messageConstraint.getId(),ConstraintSet.END,holder.parent.getId(),ConstraintSet.END,0);
-            constraintSet.connect(holder.messageConstraint.getId(),ConstraintSet.TOP,holder.parent.getId(),ConstraintSet.TOP,0);
+            constraintSet.connect(holder.messageConstraint.getId(),
+                    ConstraintSet.END,
+                    holder.parent.getId(),
+                    ConstraintSet.END,0);
+            constraintSet.connect(holder.messageConstraint.getId(),
+                    ConstraintSet.TOP,
+                    holder.parent.getId(),
+                    ConstraintSet.TOP,0);
             constraintSet.applyTo(holder.parent);
-            holder.messageConstraint.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#9163CB")));
+            holder.messageConstraint.setBackgroundTintList(ColorStateList
+                    .valueOf(Color.parseColor("#9163CB")));
             holder.myTextView.setTextColor(Color.parseColor("#FFFFFF"));
 
         } else {

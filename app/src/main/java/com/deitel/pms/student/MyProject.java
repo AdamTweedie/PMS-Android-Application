@@ -98,10 +98,5 @@ public class MyProject extends Fragment {
                 Toast.makeText(getContext(), "No connection to database !", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
-
-
     }
 }

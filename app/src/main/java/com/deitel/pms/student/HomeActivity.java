@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -95,6 +96,7 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w("LOGGER", "Cannot load messages with exception " + e);
+                        Toast.makeText(getApplicationContext(), "cannot access feature yet", Toast.LENGTH_SHORT);
                     }
                 });
             }
@@ -112,7 +114,7 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    public void clearBackStack(int stackCount) {
+    private void clearBackStack(int stackCount) {
         for (int i = 0; i < stackCount; ++i) {
             getSupportFragmentManager().popBackStack();
         }

@@ -117,7 +117,7 @@ public class FullProjectList extends Fragment implements FullProjectListRecycler
                         projectData.get(0))).addToBackStack("project").commit();
     }
 
-    public void LoadingSuggestions(Boolean load) {
+    private void LoadingSuggestions(Boolean load) {
         ProgressBar progress = requireView().findViewById(R.id.progressBar_cyclic);
         if (load) {
             progress.setVisibility(View.VISIBLE);

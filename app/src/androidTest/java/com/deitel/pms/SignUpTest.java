@@ -30,14 +30,20 @@ public class SignUpTest {
         deleteDocument();
         FragmentScenario.launchInContainer(SignUp.class);
         onView(withId(R.id.sign_up)).check(matches(isDisplayed()));
-        onView(withId(R.id.etNewEmail)).perform(click(), typeText("testyy@exeter.ac.uk"), closeSoftKeyboard());
-        onView(withId(R.id.etNewPassword)).perform(click(), typeText("testyy"), closeSoftKeyboard());
-        onView(withId(R.id.etNewConfirmPassword)).perform(click(), typeText("testyy"), closeSoftKeyboard());
-        onView(withId(R.id.etUniversityAccessCode)).perform(click(), typeText("12345"), closeSoftKeyboard());
+        onView(withId(R.id.etNewEmail)).perform(click(),
+                typeText("testyy@exeter.ac.uk"), closeSoftKeyboard());
+        onView(withId(R.id.etNewPassword)).perform(click(),
+                typeText("testyy"), closeSoftKeyboard());
+        onView(withId(R.id.etNewConfirmPassword)).perform(click(),
+                typeText("testyy"), closeSoftKeyboard());
+        onView(withId(R.id.etUniversityAccessCode)).perform(click(),
+                typeText("12345"), closeSoftKeyboard());
         onView(withId(R.id.btnCreateAccount)).perform(click());
         // wait 5 seconds for view
-        onView(isRoot()).perform(Waiter.waitId(R.id.activity_home_navbar, TimeUnit.SECONDS.toMillis(7)));
+        onView(isRoot()).perform(Waiter.waitId(R.id.activity_home_navbar,
+                TimeUnit.SECONDS.toMillis(7)));
         onView(withId(R.id.activity_home_navbar)).check(matches(isDisplayed()));
+        deleteDocument();
     }
 
     @Test

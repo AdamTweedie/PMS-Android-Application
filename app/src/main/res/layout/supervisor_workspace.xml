@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#E9ECEF"
-    android:paddingTop="50dp">
+    android:paddingTop="50dp"
+    android:id="@+id/supervisor_workspace">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

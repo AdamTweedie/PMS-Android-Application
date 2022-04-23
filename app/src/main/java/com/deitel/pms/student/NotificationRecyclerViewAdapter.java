@@ -35,7 +35,11 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         ArrayList<String> notification = getmData().get(position);
-        holder.myTextView.setText(notification.get(0));
+        if (notification.get(0).length()>25) {
+            holder.myTextView.setText(notification.get(0).substring(0, 25));
+        } else {
+            holder.myTextView.setText(notification.get(0));
+        }
     }
 
     // total number of rows

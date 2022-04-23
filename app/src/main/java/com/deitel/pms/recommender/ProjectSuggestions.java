@@ -287,7 +287,7 @@ public class ProjectSuggestions extends Fragment {
         }
     }
 
-    public void createFragment(FragmentManager fragmentManager, int projectId) {
+    private void createFragment(FragmentManager fragmentManager, int projectId) {
         fragmentManager.beginTransaction()
                 .add(R.id.recommenderContainterView, new SelectedProject(getProjectTitle(projectId),
                         getProjectDescription(projectId),
@@ -295,7 +295,7 @@ public class ProjectSuggestions extends Fragment {
                         getSupervisorEmail(projectId))).addToBackStack("project").commit();
     }
 
-    public Boolean isEmpty(ArrayList<String> arr) {
+    private Boolean isEmpty(ArrayList<String> arr) {
         return arr.isEmpty();
     }
 

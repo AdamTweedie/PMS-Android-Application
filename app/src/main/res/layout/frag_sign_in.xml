@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:textAlignment="center">
+    android:textAlignment="center"
+    android:id="@+id/sign_in">
 
 <!--    <include-->
 <!--        app:layout_constraintTop_toBottomOf="@+id/welcome"-->
@@ -13,7 +14,7 @@
 <!--        />-->
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+        android:id="@+id/cardViewSignIn"
         android:layout_width="350dp"
         android:layout_height="400dp"
         app:cardBackgroundColor="@color/white"
@@ -108,9 +109,9 @@
         android:layout_height="wrap_content"
         android:text="@string/forgot_password"
         android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/cardView"
-        app:layout_constraintStart_toStartOf="@id/cardView"
-        app:layout_constraintEnd_toEndOf="@id/cardView"
+        app:layout_constraintTop_toBottomOf="@id/cardViewSignIn"
+        app:layout_constraintStart_toStartOf="@id/cardViewSignIn"
+        app:layout_constraintEnd_toEndOf="@id/cardViewSignIn"
         />
 
     <Button

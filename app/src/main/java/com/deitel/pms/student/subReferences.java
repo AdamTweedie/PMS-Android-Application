@@ -35,21 +35,25 @@ public class subReferences extends Fragment {
         if (getStyle().equals("ACM")) {
             refInfo.setText("");
             refInfo.setText(R.string.ACMinfo);
+            refInfo.setTextSize(20);
         }
 
         if (getStyle().equals("Oxford")) {
             refInfo.setText("");
             refInfo.setText(R.string.OxfordInfo);
+            refInfo.setTextSize(20);
         }
 
         if (getStyle().equals("Harvard")) {
             refInfo.setText("");
             refInfo.setText(R.string.HarvardInfo);
+            refInfo.setTextSize(20);
         }
 
         if (getStyle().equals("APA")) {
             refInfo.setText("");
             refInfo.setText(R.string.APAInfo);
+            refInfo.setTextSize(20);
         }
 
     }

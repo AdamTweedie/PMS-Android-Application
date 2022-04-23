@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,7 +38,7 @@ public class References extends Fragment {
         CheckBox styleACM = (CheckBox) view.findViewById(R.id.refACM);
         CheckBox styleHarvard = (CheckBox) view.findViewById(R.id.refHarvard);
         TextView referenceStyle = (TextView) view.findViewById(R.id.tvRefStyle);
-        Button btnGoBack = (Button) view.findViewById(R.id.btnGoBack);
+        ImageButton btnGoBack = (ImageButton) view.findViewById(R.id.btnGoBack);
 
         FragmentManager fm = getChildFragmentManager();
 

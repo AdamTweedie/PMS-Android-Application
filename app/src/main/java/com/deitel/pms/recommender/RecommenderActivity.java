@@ -1,5 +1,6 @@
 package com.deitel.pms.recommender;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -79,7 +81,6 @@ public class RecommenderActivity extends AppCompatActivity {
                         Log.w("LOGGER", "Successfully got additional projects from Firestore");
                         new RecommenderThread().execute(data);
                         LoadingSuggestions(true);
-
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -99,15 +100,10 @@ public class RecommenderActivity extends AppCompatActivity {
         @Override
         protected ArrayList<ArrayList<String>> doInBackground(ArrayList<ArrayList<String>>... arrayLists) {
 
-            // TODO - I think this will fail if there is no additional projects so account for that !!
-
-            // create additional projects array
-            //ArrayList<ArrayList<String>> additional_projects = new ArrayList<>();
-            //ArrayList<String> data_for_recommender = new ArrayList<>();
             String userEntry = arrayLists[0].get(0).get(0);
             arrayLists[0].remove(arrayLists[0].get(0));
             ArrayList<ArrayList<String>> d = new ArrayList<>(arrayLists[0]);
-            ArrayList<Object[]> projectData = new ArrayList<>();
+            final ArrayList<Object[]> projectData = new ArrayList<>();
             for (ArrayList<String> project : d) {
                 projectData.add(project.toArray());
             }
@@ -118,7 +114,6 @@ public class RecommenderActivity extends AppCompatActivity {
 
             Python py = Python.getInstance();
 
-            // TODO - get this working - cannot import random - maybe take that bit out
             PyObject module = py.getModule("Recommender");
             List<PyObject> pyIndexList = module.callAttr("recommender", userEntry, projectData.toArray()).asList();
 
@@ -128,21 +123,7 @@ public class RecommenderActivity extends AppCompatActivity {
             for (PyObject pyObj : pyIndexList) {
                 indexList.add(pyObj.hashCode());
             }
-            Collections.shuffle(indexList);
-
-            if (indexList.size()>6) {
-                int t1=indexList.get(0), t2=indexList.get(1), t3=indexList.get(2),
-                        t4=indexList.get(3), t5=indexList.get(4), t6=indexList.get(5);
-
-                indexList.clear();
-                indexList.add(t1);
-                indexList.add(t2);
-                indexList.add(t3);
-                indexList.add(t4);
-                indexList.add(t5);
-                indexList.add(t6);
-            } // TODO - if not then add a few more projects from neighboring clusters
-
+            System.out.println("INDEX LIST = " + indexList);
 
             for (int index : indexList) {
                 ArrayList<String> project = new ArrayList<>();
@@ -156,7 +137,7 @@ public class RecommenderActivity extends AppCompatActivity {
                 projects.add(project);
             }
 
-            Collections.shuffle(projects);
+            //Collections.shuffle(projects);
             return projects;
 
         }
@@ -168,12 +149,6 @@ public class RecommenderActivity extends AppCompatActivity {
             // do something with result
 
             LoadingSuggestions(false);
-            if (results.size() <= 6) {
-                for (int i = 0; i <= (10 - results.size()); i ++) {
-                    ArrayList<String> arr = new ArrayList<>();
-                    results.add(arr);
-                }
-            }
 
             FragmentTransaction presentProjectSuggestions = getSupportFragmentManager()
                     .beginTransaction()
@@ -191,11 +166,16 @@ public class RecommenderActivity extends AppCompatActivity {
 
     public void LoadingSuggestions(Boolean load) {
         ProgressBar progress = findViewById(R.id.progressBar_cyclic);
-
+        ConstraintLayout cl = (ConstraintLayout) findViewById(R.id.recommender_activity);
         if (load) {
             progress.setVisibility(View.VISIBLE);
+            cl.setBackgroundColor(Color.WHITE);
+            cl.setClickable(true);
         } else {
             progress.setVisibility(View.GONE);
+            cl.setBackgroundColor(0x00000000); // transparent
+            cl.setClickable(false);
+
         }
     }
 }

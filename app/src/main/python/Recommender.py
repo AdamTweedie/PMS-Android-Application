@@ -48,6 +48,13 @@ def clean_data(project_data):
     d = {'d': project}
     df_unclean = pd.DataFrame(data = d)
 
+    # convert all text to lowercase
+    df_unclean.applymap(lambda s: s.lower() if type(s) == str else s)
+    # remove punctuation
+    df_unclean['d'] = df_unclean['d'].str.replace(r'[^\w\s]+', '')
+    # remove unwanted whitespace
+    df_unclean['d'].str.strip()
+
     stop_words = stopwords.words('english')
     df_nsw = []
 
@@ -98,7 +105,7 @@ def recommender(user_entry, list_data):
     X_reduced = pca.fit_transform(X.toarray())
 
     # generify k - i.e. create function which could be used for different datasets
-    k = 18
+    k = 17
     kmeans = KMeans(n_clusters=k, random_state=42)
     y_pred = kmeans.fit_predict(X_reduced)
     df['cluster'] = y_pred
@@ -114,22 +121,21 @@ def recommender(user_entry, list_data):
     else:
         suggestions_index = list(similar_entries_index)
 
-    # obtain less similar entries
-    if user_cluster >= 1 and user_cluster < df['cluster'].max():
-        item1 = random.choice(tuple(get_project_suggestions_index(user_cluster-1, df)))
-        item2 = random.choice(tuple(get_project_suggestions_index(user_cluster+1, df)))
-        suggestions_index.append(item1)
-        suggestions_index.append(item2)
-    elif user_cluster < df['cluster'].max()-2:
-        item1 = random.choice(tuple(get_project_suggestions_index(user_cluster+1, df)))
-        item2 = random.choice(tuple(get_project_suggestions_index(user_cluster+2, df)))
-        suggestions_index.append(item1)
-        suggestions_index.append(item2)
-    elif user_cluster == df['cluster'].max():
-        item1 = random.choice(tuple(get_project_suggestions_index(user_cluster-1, df)))
-        item2 = random.choice(tuple(get_project_suggestions_index(user_cluster-2, df)))
-        suggestions_index.append(item1)
-        suggestions_index.append(item2)
+    while len(suggestions_index) <= 7: # obtain less similar entries and ensure list is <= 7
+        if 1 <= user_cluster < df['cluster'].max():
+            item1 = random.choice(tuple(get_project_suggestions_index(user_cluster-1, df)))
+            item2 = random.choice(tuple(get_project_suggestions_index(user_cluster+1, df)))
+        elif user_cluster < df['cluster'].max()-2:
+            item1 = random.choice(tuple(get_project_suggestions_index(user_cluster+1, df)))
+            item2 = random.choice(tuple(get_project_suggestions_index(user_cluster+2, df)))
+        elif user_cluster == df['cluster'].max():
+            item1 = random.choice(tuple(get_project_suggestions_index(user_cluster-1, df)))
+            item2 = random.choice(tuple(get_project_suggestions_index(user_cluster-2, df)))
+
+        if item1 not in suggestions_index:
+            suggestions_index.append(item1)
+        if item2 not in suggestions_index:
+            suggestions_index.append(item2)
 
     return suggestions_index
 

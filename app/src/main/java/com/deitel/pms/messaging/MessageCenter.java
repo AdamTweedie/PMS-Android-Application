@@ -126,7 +126,6 @@ public class MessageCenter extends Fragment implements MessagesRecyclerViewAdapt
                     uploadToFirebase(message, utils.getUSER_COLLECTION_PATH());
                     typedMessage.setText("");
                 }
-
             }
         });
     }
