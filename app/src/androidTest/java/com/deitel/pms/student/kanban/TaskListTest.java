@@ -1,33 +1,53 @@
 package com.deitel.pms.student.kanban;
 
-import junit.framework.TestCase;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.junit.Assert.*;
 
-public class TaskListTest extends TestCase {
+import androidx.fragment.app.testing.FragmentScenario;
 
-    public void testFillAdapter() {
+import com.deitel.pms.R;
+
+import org.junit.Test;
+
+public class TaskListTest {
+
+    @Test
+    public void onViewCreated() {
+        FragmentScenario.launchInContainer(TaskList.class);
+        onView(withId(R.id.task_recycler_view)).check(matches(isDisplayed()));
     }
 
-    public void testClearAdapter() {
+    @Test
+    public void onItemClick() {
     }
 
-    public void testAddNewTask() {
+    @Test
+    public void fillAdapter() {
     }
 
-    public void testSaveToSharedPrefs() {
+    @Test
+    public void clearAdapter() {
     }
 
-    public void testAddToPrefs() {
+    @Test
+    public void addNewTask() {
     }
 
-    public void testGetTaskListData() {
+    @Test
+    public void saveToSharedPrefs() {
     }
 
-    public void testSetTaskListData() {
+    @Test
+    public void addToPrefs() {
     }
 
-    public void testGetTabPosition() {
+    @Test
+    public void setTabPosition() {
+
     }
 
-    public void testSetTabPosition() {
-    }
+
 }
