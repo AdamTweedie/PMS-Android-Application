@@ -21,6 +21,7 @@ import com.deitel.pms.student.Profile;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -58,11 +59,11 @@ public class SupervisorProfile extends Fragment {
             @Override
             public void onClick(View view) {
                 profile.unsaveUserCredentials(requireActivity());
-                profile.saveAllFragmentState();
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 getActivity().finish();
                 startActivity(intent);
                 Toast.makeText(getContext(), "Goodbye!", Toast.LENGTH_SHORT).show();
+                FirebaseAuth.getInstance().signOut();
             }
         });
 

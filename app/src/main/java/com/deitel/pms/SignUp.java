@@ -26,6 +26,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,6 +38,7 @@ import com.google.firebase.firestore.SetOptions;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
 public class SignUp extends Fragment {
 
@@ -50,6 +54,7 @@ public class SignUp extends Fragment {
     private EditText password;
     private EditText confirmPassword;
     private EditText uniAccessCode;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
 
     @Nullable
@@ -73,111 +78,87 @@ public class SignUp extends Fragment {
         uniAccessCode = (EditText) view.findViewById(R.id.etUniversityAccessCode);
         Context context = getContext();
 
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnSignUp.setOnClickListener(view12 -> {
 
-                final String finalEmail = email.getText().toString();
-                final String finalPassword = password.getText().toString();
-                final String finalConfirmPassword = confirmPassword.getText().toString();
-                final String finalUniAccessCode = uniAccessCode.getText().toString();
-                final String TAG = "Sign-Up";
+            final String finalEmail = email.getText().toString();
+            final String finalPassword = password.getText().toString();
+            final String finalConfirmPassword = confirmPassword.getText().toString();
+            final String finalUniAccessCode = uniAccessCode.getText().toString();
+            final String TAG = "Sign-Up";
 
-                if (finalEmail.isEmpty() ||
-                        finalPassword.isEmpty() ||
-                        finalConfirmPassword.isEmpty() ||
-                        finalUniAccessCode.isEmpty()) {
-                    Toast.makeText(getContext(), "Missing values !", Toast.LENGTH_SHORT).show();
-                } else if (!finalPassword.equals(finalConfirmPassword)) {
-                    Toast.makeText(getContext(), "Passwords do not match !", Toast.LENGTH_SHORT).show();
-                    password.getText().clear();
-                    confirmPassword.getText().clear();
+            if (finalEmail.isEmpty() || finalPassword.isEmpty() || finalConfirmPassword.isEmpty() ||
+                    finalUniAccessCode.isEmpty()) {
+                Toast.makeText(getContext(), "Missing values !", Toast.LENGTH_SHORT).show();
+            } else if (!finalPassword.equals(finalConfirmPassword)) {
+                Toast.makeText(getContext(), "Passwords do not match !", Toast.LENGTH_SHORT).show();
+                password.getText().clear();
+                confirmPassword.getText().clear();
+            } else if (finalPassword.length() < 5){
+                Toast.makeText(getContext(), "Password length too short", Toast.LENGTH_SHORT).show();
+                password.getText().clear();
+                confirmPassword.getText().clear();
+            } else if (validStudentEmailAndAccessCode(finalEmail, finalUniAccessCode)) {
 
-                } else if (validStudentEmailAndAccessCode(finalEmail, finalUniAccessCode)) {
-
-                    // does this user already exist
-                    DocumentReference docRef = db.collection("users").document(finalEmail);
-                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                // if user does exist
-                                if (document.exists()) {
-                                    Log.d(TAG, "DocumentSnapshot data: " + document.getId() + " exists already");
-                                    Toast.makeText(context, "Email already exists", Toast.LENGTH_SHORT).show();
-                                    email.setText("");
-                                    password.setText("");
-                                    confirmPassword.setText("");
-                                    uniAccessCode.setText("");
-                                } else {
-                                    Log.d(TAG, "No such document");
-                                    createStudentAccount(finalEmail, finalUniAccessCode, TAG);
-                                    saveToPrefs(finalEmail, finalPassword, context);
-                                    loadStudentWorkspace(context);
-                                    user.setUserId(requireActivity(), finalEmail);
-                                }
-
-                            } else {
-                                Log.d(TAG, "get failed with ", task.getException());
-                            }
+                // does this user already exist
+                DocumentReference docRef = db.collection("users").document(finalEmail);
+                docRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        // if user does exist
+                        if (document.exists()) {
+                            Log.d(TAG, "DocumentSnapshot data: " + document.getId() + " exists already");
+                            Toast.makeText(context, "Email already exists", Toast.LENGTH_SHORT).show();
+                            email.setText("");
+                            password.setText("");
+                            confirmPassword.setText("");
+                            uniAccessCode.setText("");
+                        } else {
+                            Log.d(TAG, "No such document");
+                            createAuthenticatedAccount(finalEmail, finalPassword, TAG, true, getContext());
+                            user.setUserId(requireActivity(), finalEmail);
                         }
-                    });
-                } else if (validSupervisorEmailAndAccessCode(finalEmail, finalUniAccessCode)) {
 
-                    DocumentReference docRef = db.collection(u.getSUPERVISOR_COLLECTION_PATH()).document(finalEmail);
-                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            DocumentSnapshot document = task.getResult();
-                            if (Objects.equals(document.get(u.getFIELD_SUPERVISOR_ACCOUNT_CREATED()), false)) {
-                                setAccountCreatedTrue(u.getSUPERVISOR_COLLECTION_PATH(), finalEmail, u.getFIELD_SUPERVISOR_ACCOUNT_CREATED());
-                                saveToPrefs(finalEmail, finalPassword, context);
-                                loadSupervisorWorkspace(context);
-                                user.setUserId(requireActivity(), finalEmail);
-                            } else {
-                                Toast.makeText(context, "Account already exists", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("LOGGER", "get failed with " + e);
-                            Toast.makeText(context, "Account already created", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
+                    } else {
+                        Log.d(TAG, "get failed with ", task.getException());
+                    }
+                });
+            } else if (validSupervisorEmailAndAccessCode(finalEmail, finalUniAccessCode)) {
+
+                DocumentReference docRef = db.collection(u.getSUPERVISOR_COLLECTION_PATH()).document(finalEmail);
+                docRef.get().addOnCompleteListener(task -> {
+                    DocumentSnapshot document = task.getResult();
+                    if (Objects.equals(document.get(u.getFIELD_SUPERVISOR_ACCOUNT_CREATED()), false)) {
+                        setAccountCreatedTrue(u.getSUPERVISOR_COLLECTION_PATH(), finalEmail, u.getFIELD_SUPERVISOR_ACCOUNT_CREATED());
+                        createAuthenticatedAccount(finalEmail, finalPassword, TAG, false, getContext());
+                        user.setUserId(requireActivity(), finalEmail);
+                    } else {
+                        Toast.makeText(context, "Account already exists", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(e -> {
+                    Log.d("LOGGER", "get failed with " + e);
+                    Toast.makeText(context, "Account already created", Toast.LENGTH_SHORT).show();
+                });
             }
         });
 
-        btnAlreadyMember.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Change button color onClick
-                ButtonUtils.textButtonColorChange(btnAlreadyMember);
-                replaceFragment(new SignIn());
-            }
+        btnAlreadyMember.setOnClickListener(view1 -> {
+            // Change button color onClick
+            ButtonUtils.textButtonColorChange(btnAlreadyMember);
+            replaceFragment(new SignIn());
         });
     }
 
-    private void setAccountCreatedTrue(String supervisor_collection_path, String finalEmail, String field_supervisor_account_created) {
+    private void setAccountCreatedTrue(String supervisor_collection_path, String finalEmail,
+                                       String field_supervisor_account_created) {
 
         Map<String, Object> project = new HashMap<>();
         project.put(field_supervisor_account_created, true);
 
         db.collection(supervisor_collection_path)
                 .document(finalEmail)
-                .set(project, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Log.d("LOGGER", "DocumentSnapshot added with ID: " + finalEmail);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w("LOGGER", "Error adding document", e);
-            }
-        });
+                .set(project, SetOptions.merge())
+                .addOnSuccessListener(unused -> Log.d("LOGGER", "DocumentSnapshot added with ID: " + finalEmail))
+                .addOnFailureListener(e -> Log.w("LOGGER", "Error adding document", e));
     }
 
     private boolean validStudentEmailAndAccessCode(String email, String accessCode) {
@@ -211,15 +192,14 @@ public class SignUp extends Fragment {
         return false;
     }
 
-    private void createStudentAccount(String email, String uniCode, String TAG) {
-        // Create user info
+    private void createStudentAccount(String email, String TAG) {
 
+        // Create user info
         User newUser = new User();
         newUser.clearIdPreferences(requireActivity());
         newUser.setUserId(requireActivity(), email);
 
         Map<String, Object> user = new HashMap<>();
-        user.put("uni id", uniCode);
         user.put("project title", null);
         user.put("project description", null);
         user.put("supervisor name", null);
@@ -228,17 +208,9 @@ public class SignUp extends Fragment {
 
         db.collection("users")
                 .document(email)
-                .set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Log.d(TAG, "DocumentSnapshot added with ID: " + email);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Error adding document", e);
-            }
-        });
+                .set(user, SetOptions.merge())
+                .addOnSuccessListener(unused -> Log.d(TAG, "DocumentSnapshot added with ID: " + email))
+                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
     }
 
     private void saveToPrefs(String email, String password, Context context) {
@@ -280,5 +252,41 @@ public class SignUp extends Fragment {
             fragmentTransaction.add(R.id.placeholder_main, (Fragment) object);
             fragmentTransaction.commit();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            // TODO - reload main activity
+        }
+    }
+
+    private void createAuthenticatedAccount(String userEmail, String userPassword, String TAG,
+                                            Boolean student, Context context) {
+        mAuth.createUserWithEmailAndPassword(userEmail, userPassword)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "createUserWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if ( !student ) {
+                            loadSupervisorWorkspace(context);
+                            saveToPrefs(userEmail, userPassword, context);
+                            loadSupervisorWorkspace(context);
+                        }
+                        if ( student ) {
+                            loadStudentWorkspace(context);
+                            createStudentAccount(userEmail, TAG);
+                            saveToPrefs(userEmail, userPassword, context);
+                            loadStudentWorkspace(context);
+                        }
+                    } else {
+                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                        Toast.makeText(getContext(), "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

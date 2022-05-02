@@ -26,6 +26,7 @@ import com.deitel.pms.recommender.RecommenderActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -80,18 +81,13 @@ public class Profile extends Fragment {
             @Override
             public void onClick(View view) {
                 unsaveUserCredentials(requireActivity());
-                saveAllFragmentState();
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 getActivity().finish();
                 startActivity(intent);
                 Toast.makeText(context, "Goodbye!", Toast.LENGTH_SHORT).show();
+                FirebaseAuth.getInstance().signOut();
             }
         });
-    }
-
-    public void getUserProjectInformation(String userId) {
-
-
     }
 
     public void unsaveUserCredentials(Activity activity) {
@@ -100,8 +96,5 @@ public class Profile extends Fragment {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("rememberMe", "no");
         editor.apply();
-    }
-
-    public void saveAllFragmentState() {
     }
 }

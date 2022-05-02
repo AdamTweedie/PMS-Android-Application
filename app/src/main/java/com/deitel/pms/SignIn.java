@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +23,18 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.security.crypto.MasterKey;
 
 import com.deitel.pms.supervisor.SupervisorActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class SignIn extends Fragment {
 
     private Button btnResetPassword;
     private EditText email;
     private EditText password;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     @Nullable
     @Override
@@ -65,60 +72,87 @@ public class SignIn extends Fragment {
                 final String userPassword = password.getText().toString();
                 final String errorMsg = "Username or Password is Incorrect";
 
-                if (!validDetails(context, userEmail, userPassword, errorMsg)) {
-                    Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show();
-
-                } else if (validDetails(context, userEmail, userPassword, errorMsg)) { // TODO - && account created = true
-                    user.clearIdPreferences(requireActivity());
-                    user.setUserId(requireActivity(), userEmail);
-                    if (user.getUserId(requireActivity()).contains("supervisor")) { // and is a supervisor account
-                        if (rememberCredentials.isChecked()) {
-                            saveUserCredentials();
-                        }
-                        loadSupervisorActivity(context);
-                        System.out.println("Logged in with ID - " + user.getUserId(requireActivity()));
-                    } else {
-                        user.clearIdPreferences(requireActivity());
-                        user.setUserId(requireActivity(), userEmail);
-                        if (rememberCredentials.isChecked()) {
-                            saveUserCredentials();
-                        }
-                        System.out.println("Logged in with ID - " + user.getUserId(requireActivity()));
-                        loadHomeActivity(context);
-                    }
+                if (userEmail.length() == 0 && userPassword.length() == 0) {
+                    Toast.makeText(getContext(), "Invalid details", Toast.LENGTH_SHORT);
+                } else {
+                    mAuth.signInWithEmailAndPassword(userEmail, userPassword)
+                            .addOnCompleteListener(task -> {
+                                User currentUser = new User();
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d("LOGGER", "signInWithEmail:success");
+                                    FirebaseUser user1 = mAuth.getCurrentUser();
+                                    // todo - merge above code into this.......
+                                    currentUser.clearIdPreferences(requireActivity());
+                                    currentUser.setUserId(requireActivity(), userEmail);
+                                    signInUser(currentUser, context, userEmail, rememberCredentials.isChecked());
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w("LOGGER", "signInWithEmail:failure", task.getException());
+                                    Toast.makeText(getContext(), "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                    signInUserWithNoInternet(context, userEmail, userPassword,
+                                            errorMsg, currentUser, rememberCredentials.isChecked());
+                                }
+                            });
                 }
             }
         });
 
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println("Click Success!!");
+        btnSignUp.setOnClickListener(view1 -> {
+            System.out.println("Click Success!!");
 
-                final FragmentTransaction fragmentTransaction;
-                final FragmentManager fragmentManager = getParentFragmentManager();
+            final FragmentTransaction fragmentTransaction;
+            final FragmentManager fragmentManager = getParentFragmentManager();
 
-                final Fragment fragment = getParentFragmentManager()
-                        .findFragmentById(R.id.placeholder_main);
+            final Fragment fragment = getParentFragmentManager()
+                    .findFragmentById(R.id.placeholder_main);
 
-                if (fragment!=null) {
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.remove(fragment);
-                    //fragmentTransaction.commit();
-                    fragmentTransaction.add(R.id.placeholder_main, new SignUp());
-                    fragmentTransaction.commit();
-                }
+            if (fragment!=null) {
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.remove(fragment);
+                //fragmentTransaction.commit();
+                fragmentTransaction.add(R.id.placeholder_main, new SignUp());
+                fragmentTransaction.commit();
             }
         });
 
-        btnResetPassword.setOnClickListener(new View.OnClickListener() {
-            // TODO - add functionality to this
-            @Override
-            public void onClick(View view) {
-                // Change button color onclick
-                ButtonUtils.textButtonColorChange(btnResetPassword);
-            }
+        // TODO - add functionality to this
+        btnResetPassword.setOnClickListener(view12 -> {
+            // Change button color onclick
+            ButtonUtils.textButtonColorChange(btnResetPassword);
         });
+    }
+
+    private void signInUser(User currentUser, Context context, String userEmail, boolean rememberDetails) {
+
+        if (currentUser.getUserId(requireActivity()).contains("supervisor")) { // and is a supervisor account
+            if (rememberDetails) {
+                saveUserCredentials();
+            }
+            loadSupervisorActivity(context);
+            System.out.println("Logged in with ID - " + currentUser.getUserId(requireActivity()));
+        } else {
+            currentUser.clearIdPreferences(requireActivity());
+            currentUser.setUserId(requireActivity(), userEmail);
+            if (rememberDetails) {
+                saveUserCredentials();
+            }
+            System.out.println("Logged in with ID - " + currentUser.getUserId(requireActivity()));
+            loadHomeActivity(context);
+        }
+    }
+
+    private void signInUserWithNoInternet(Context context, String userEmail, String userPassword,
+                                          String errorMsg, User user, boolean rememberDetails) {
+        if (!validDetails(context, userEmail, userPassword, errorMsg)) {
+            Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show();
+
+        } else if (validDetails(context, userEmail, userPassword, errorMsg)) { // TODO - && account created = true
+            user.clearIdPreferences(requireActivity());
+            user.setUserId(requireActivity(), userEmail);
+            signInUser(user, context, userEmail, rememberDetails);
+        }
     }
 
     private void saveUserCredentials() {
@@ -177,4 +211,5 @@ public class SignIn extends Fragment {
             return false;
         } else return true;
     }
+
 }
