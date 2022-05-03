@@ -64,17 +64,8 @@ public class FirestoreUtils {
         dbInstance.collection(USER_COLLECTION_PATH)
                 .document(userId)
                 .update(project)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Log.d(TAG, "DocumentSnapshot added with ID: " + userId);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Error adding document", e);
-            }
-        });
+                .addOnSuccessListener(unused -> Log.d(TAG, "DocumentSnapshot added with ID: " + userId))
+                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
     }
 
     public void studentSuggestedProjectRequest(String userId, String projectTitle, String projectDescription) {
@@ -85,17 +76,8 @@ public class FirestoreUtils {
         dbInstance.collection("student suggested projects")
                 .document(userId)
                 .set(projectRequestInfo)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.w(TAG, "Successfully added suggested project!");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Failed to add suggested project!");
-            }
-        });
+                .addOnSuccessListener(unused -> Log.w(TAG, "Successfully added suggested project!"))
+                .addOnFailureListener(e -> Log.w(TAG, "Failed to add suggested project!"));
     }
 
     public void standardProjectRequest(String userId, String supervisorId,
@@ -110,17 +92,8 @@ public class FirestoreUtils {
                 .collection(SUPERVISOR_REQUESTS_COLLECTION_PATH)
                 .document(userId)
                 .set(projectRequestInfo)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Log.w(TAG, "Successfully requested project");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Failed to request project");
-            }
-        });
+                .addOnSuccessListener(unused -> Log.w(TAG, "Successfully requested project"))
+                .addOnFailureListener(e -> Log.w(TAG, "Failed to request project"));
     }
 
     public void deleteProjectRequest(String supervisorId, String studentId) {
@@ -134,17 +107,22 @@ public class FirestoreUtils {
                 .collection(SUPERVISOR_REQUESTS_COLLECTION_PATH)
                 .document(studentId)
                 .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.w(TAG, "Successfully deleted project request");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Failed to delete project request due to exception: " + e);
-            }
-        });
+                .addOnSuccessListener(unused -> Log.w(TAG, "Successfully deleted project request"))
+                .addOnFailureListener(e -> Log.w(TAG, "Failed to delete project request due to exception: " + e));
+    }
+
+    public static void createNotification(String collection, String senderId, String recipientId, String title, String body) {
+        final FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
+        Map<String, Object> notification = new HashMap<>();
+        notification.put("sender", senderId);
+        notification.put("title", title);
+        notification.put("description", body);
+        dbInstance.collection(collection)
+                .document(recipientId)
+                .collection("notifications")
+                .add(notification)
+                .addOnSuccessListener(documentReference -> Log.w("LOGGER", "Successfully added notification to recipient " + recipientId))
+                .addOnFailureListener(e -> Log.w("LOGGER", "Failed to add notification with exception: " + e));
     }
 
     public void createAccount() {

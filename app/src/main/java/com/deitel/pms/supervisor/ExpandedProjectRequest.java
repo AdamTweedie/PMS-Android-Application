@@ -40,9 +40,17 @@ public class ExpandedProjectRequest extends Fragment {
     final FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
 
     ArrayList<String> projectData;
+    private final String studentId;
+    private final String projectTitle;
+    private final String projectDescription;
+    private final String projectSupervisor;
 
     public ExpandedProjectRequest(ArrayList<String> data) {
         this.projectData = data;
+        this.studentId = data.get(0);
+        this.projectTitle = data.get(1);
+        this.projectDescription = data.get(2);
+        this.projectSupervisor = data.get(3);
     }
 
     @Nullable
@@ -63,9 +71,9 @@ public class ExpandedProjectRequest extends Fragment {
         Button btnAcceptRequest = (Button) view.findViewById(R.id.btnAcceptProjectRequest);
         Button btnDeclineRequest = (Button) view.findViewById(R.id.btnDeclineProjectRequest);
 
-        tvStudentId.setText(this.projectData.get(0) + " would like you to supervise: ");
-        tvProjTitle.setText(this.projectData.get(1));
-        tvProjDescription.setText(this.projectData.get(2));
+        tvStudentId.setText(this.studentId + " would like you to supervise: ");
+        tvProjTitle.setText(this.projectTitle);
+        tvProjDescription.setText(this.projectDescription);
 
         collapseRequest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,10 +111,14 @@ public class ExpandedProjectRequest extends Fragment {
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        // delete student suggested project from requests
-                                        deleteUserSuggestedProject();
-                                        // delete supervisor recommended project from requests
-                                        deleteSupervisorRecommendedProject();
+                                        // if project request is not attached to specific supervisor
+                                        if (getProjectData().get(3)==null) {
+                                            // delete student suggested project from requests
+                                            deleteUserSuggestedProject();
+                                        } else {
+                                            // delete supervisor recommended project from requests
+                                            deleteSupervisorRecommendedProject();
+                                        }
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -129,13 +141,43 @@ public class ExpandedProjectRequest extends Fragment {
         });
 
 
-        if (getProjectData().get(3)==null) {
+        if (this.projectSupervisor==null) {
             btnDeclineRequest.setVisibility(View.GONE);
         }
         btnDeclineRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // suggest new supervisor
+                final String title = "Project Request Update!";
+                final String description = "You project request has been declined by the original supervisor," +
+                        " it has been passed to all other supervisors to review for approval! ";
+
+                // todo - update student project info
+                // Delete Project Request
+                utils.deleteProjectRequest(user.getUserId(requireActivity()), getProjectData().get(0));
+                // add project request to user suggested
+                utils.studentSuggestedProjectRequest(getProjectData().get(0), getProjectData().get(1),
+                        getProjectData().get(2));
+                // send notification to student
+                FirestoreUtils.createNotification(utils.getUSER_COLLECTION_PATH(),
+                        user.getUserId(requireActivity()), getProjectData().get(0), title, description);
+
+                // update user current info
+                Map<String, Object> updatesToStudent = new HashMap<>();
+                updatesToStudent.put("supervisor email", null);
+                updatesToStudent.put("supervisor name", null);
+                dbInstance.collection(utils.getUSER_COLLECTION_PATH())
+                        .document(getProjectData().get(0))
+                        .update(updatesToStudent)
+                        .addOnSuccessListener(unused -> {
+                            Log.w("LOGGER", "successfully altered student project supervisor info to null");
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.w("LOGGER", "failed to turn student project info to null: " + e);
+                        });
+
+
+
+
             }
         });
     }
