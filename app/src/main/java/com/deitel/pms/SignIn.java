@@ -88,7 +88,7 @@ public class SignIn extends Fragment {
                                     currentUser.clearIdPreferences(requireActivity());
                                     currentUser.setUserId(requireActivity(), userEmail);
                                     if (!validDetails(getContext(), userEmail, userPassword,
-                                            "Account created but not saved to prefs")) {
+                                            "Enabling offline access!")) {
                                         // if this is a new device but valid account, save to prefs
                                         signUp.saveToPrefs(userEmail, userPassword, getContext());
                                     }
@@ -96,8 +96,7 @@ public class SignIn extends Fragment {
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("LOGGER", "signInWithEmail:failure", task.getException());
-                                    Toast.makeText(getContext(), "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
+                                    validDetails(getContext(), userEmail, userPassword, "Authentication failed.");
                                     signInUserWithNoInternet(context, userEmail, userPassword,
                                             errorMsg, currentUser, rememberCredentials.isChecked());
                                 }
