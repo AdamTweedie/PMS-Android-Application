@@ -26,16 +26,20 @@ public class ProjectRequests extends Fragment implements ProjectRequestsRecycler
 
     ArrayList<ArrayList<String>> supervisorRecommendedProjectRequests;
     ArrayList<ArrayList<String>> studentSuggestedProjectRequests;
+    boolean flag;
 
     public ProjectRequests(ArrayList<ArrayList<String>> recommendedProjects,
                            ArrayList<ArrayList<String>> suggestedProjects) {
         this.supervisorRecommendedProjectRequests = recommendedProjects;
         this.studentSuggestedProjectRequests = suggestedProjects;
+        this.flag = true;
     }
+
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.supervisor_project_requests, container, false);
     }
 
@@ -63,6 +67,7 @@ public class ProjectRequests extends Fragment implements ProjectRequestsRecycler
                 adapter.setmData(getSupervisorRecommendedProjects());
                 adapter.setClickListener(ProjectRequests.this);
                 recyclerView.setAdapter(adapter);
+                setFlag(true);
             }
         });
 
@@ -73,20 +78,31 @@ public class ProjectRequests extends Fragment implements ProjectRequestsRecycler
                 adapter.setmData(getStudentRecommendedProjects());
                 adapter.setClickListener(ProjectRequests.this);
                 recyclerView.setAdapter(adapter);
+                setFlag(false);
             }
         });
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getContext(), "You clicked on row number " + position, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "You clicked on row number " + position,
+                Toast.LENGTH_SHORT).show();
         ArrayList<String> projectRequestData = adapter.getItem(position);
-
         requireActivity().getSupportFragmentManager().beginTransaction()
                 .add(R.id.supervisor_nav_bar_fragment,
-                        new ExpandedProjectRequest(projectRequestData))
+                        new ExpandedProjectRequest(projectRequestData,
+                                ProjectRequests.this, position))
                 .addToBackStack("workspace")
                 .commit();
+    }
+
+    public void removeProjectRequestFromAdapter(int index) {
+        if (getFlag()) {
+            this.supervisorRecommendedProjectRequests.remove(index);
+        } else {
+            this.studentSuggestedProjectRequests.remove(index);
+        }
+        adapter.notifyItemRemoved(index);
     }
 
     private ArrayList<ArrayList<String>> getSupervisorRecommendedProjects() {
@@ -95,5 +111,13 @@ public class ProjectRequests extends Fragment implements ProjectRequestsRecycler
 
     private ArrayList<ArrayList<String>> getStudentRecommendedProjects() {
         return this.studentSuggestedProjectRequests;
+    }
+
+    private void setFlag(boolean b) {
+        this.flag = b;
+    }
+
+    private boolean getFlag() {
+        return this.flag;
     }
 }

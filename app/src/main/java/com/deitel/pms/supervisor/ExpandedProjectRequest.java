@@ -44,13 +44,18 @@ public class ExpandedProjectRequest extends Fragment {
     private final String projectTitle;
     private final String projectDescription;
     private final String projectSupervisor;
+    private final ProjectRequests list;
+    private final int index;
 
-    public ExpandedProjectRequest(ArrayList<String> data) {
+    public ExpandedProjectRequest(ArrayList<String> data, ProjectRequests projectRequests,
+                                  int listIndex) {
         this.projectData = data;
         this.studentId = data.get(0);
         this.projectTitle = data.get(1);
         this.projectDescription = data.get(2);
         this.projectSupervisor = data.get(3);
+        this.list = projectRequests;
+        this.index = listIndex;
     }
 
     @Nullable
@@ -119,6 +124,7 @@ public class ExpandedProjectRequest extends Fragment {
                                             // delete supervisor recommended project from requests
                                             deleteSupervisorRecommendedProject();
                                         }
+                                        list.removeProjectRequestFromAdapter(getIndex());
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -151,7 +157,9 @@ public class ExpandedProjectRequest extends Fragment {
                 final String description = "You project request has been declined by the original supervisor," +
                         " it has been passed to all other supervisors to review for approval! ";
 
-                // todo - update student project info
+
+                // TODO - check this works
+
                 // Delete Project Request
                 utils.deleteProjectRequest(user.getUserId(requireActivity()), getProjectData().get(0));
                 // add project request to user suggested
@@ -175,9 +183,8 @@ public class ExpandedProjectRequest extends Fragment {
                             Log.w("LOGGER", "failed to turn student project info to null: " + e);
                         });
 
-
-
-
+                list.removeProjectRequestFromAdapter(getIndex());
+                Toast.makeText(getContext(), "Project passed to other supervisors", Toast.LENGTH_SHORT);
             }
         });
     }
@@ -244,6 +251,10 @@ public class ExpandedProjectRequest extends Fragment {
 
     public ArrayList<String> getProjectData() {
         return this.projectData;
+    }
+
+    private int getIndex() {
+        return this.index;
     }
 
 }
