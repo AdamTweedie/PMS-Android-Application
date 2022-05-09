@@ -93,12 +93,11 @@ public class SignUp extends Fragment {
                 Toast.makeText(getContext(), "Passwords do not match !", Toast.LENGTH_SHORT).show();
                 password.getText().clear();
                 confirmPassword.getText().clear();
-            } else if (finalPassword.length() < 5){
+            } else if (finalPassword.length() < 6){
                 Toast.makeText(getContext(), "Password length too short", Toast.LENGTH_SHORT).show();
                 password.getText().clear();
                 confirmPassword.getText().clear();
             } else if (validStudentEmailAndAccessCode(finalEmail, finalUniAccessCode)) {
-
                 // does this user already exist
                 DocumentReference docRef = db.collection("users").document(finalEmail);
                 docRef.get().addOnCompleteListener(task -> {
@@ -123,21 +122,8 @@ public class SignUp extends Fragment {
                     }
                 });
             } else if (validSupervisorEmailAndAccessCode(finalEmail, finalUniAccessCode)) {
-
-                DocumentReference docRef = db.collection(u.getSUPERVISOR_COLLECTION_PATH()).document(finalEmail);
-                docRef.get().addOnCompleteListener(task -> {
-                    DocumentSnapshot document = task.getResult();
-                    if (Objects.equals(document.get(u.getFIELD_SUPERVISOR_ACCOUNT_CREATED()), false)) {
-                        setAccountCreatedTrue(u.getSUPERVISOR_COLLECTION_PATH(), finalEmail, u.getFIELD_SUPERVISOR_ACCOUNT_CREATED());
-                        createAuthenticatedAccount(finalEmail, finalPassword, TAG, false, getContext());
-                        user.setUserId(requireActivity(), finalEmail);
-                    } else {
-                        Toast.makeText(context, "Account already exists", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(e -> {
-                    Log.d("LOGGER", "get failed with " + e);
-                    Toast.makeText(context, "Account already created", Toast.LENGTH_SHORT).show();
-                });
+                createAuthenticatedAccount(finalEmail, finalPassword, TAG, false, getContext());
+                user.setUserId(requireActivity(), finalEmail);
             }
         });
 
@@ -151,12 +137,12 @@ public class SignUp extends Fragment {
     private void setAccountCreatedTrue(String supervisor_collection_path, String finalEmail,
                                        String field_supervisor_account_created) {
 
-        Map<String, Object> project = new HashMap<>();
-        project.put(field_supervisor_account_created, true);
+        Map<String, Object> accountCreated = new HashMap<>();
+        accountCreated.put(field_supervisor_account_created, true);
 
         db.collection(supervisor_collection_path)
                 .document(finalEmail)
-                .set(project, SetOptions.merge())
+                .set(accountCreated)
                 .addOnSuccessListener(unused -> Log.d("LOGGER", "DocumentSnapshot added with ID: " + finalEmail))
                 .addOnFailureListener(e -> Log.w("LOGGER", "Error adding document", e));
     }
@@ -213,7 +199,7 @@ public class SignUp extends Fragment {
                 .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
     }
 
-    private void saveToPrefs(String email, String password, Context context) {
+    public void saveToPrefs(String email, String password, Context context) {
         SharedPrefUtils utils = new SharedPrefUtils();
         MasterKey masterKeyAlias = utils.getMasterKey(context);
         SharedPreferences encryptedPreferences = utils.getEncryptedPreferences(masterKeyAlias, context);
@@ -270,14 +256,12 @@ public class SignUp extends Fragment {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "createUserWithEmail:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
                         if ( !student ) {
-                            loadSupervisorWorkspace(context);
+                            setAccountCreatedTrue(u.getSUPERVISOR_COLLECTION_PATH(), userEmail, u.getFIELD_SUPERVISOR_ACCOUNT_CREATED());
                             saveToPrefs(userEmail, userPassword, context);
                             loadSupervisorWorkspace(context);
                         }
                         if ( student ) {
-                            loadStudentWorkspace(context);
                             createStudentAccount(userEmail, TAG);
                             saveToPrefs(userEmail, userPassword, context);
                             loadStudentWorkspace(context);

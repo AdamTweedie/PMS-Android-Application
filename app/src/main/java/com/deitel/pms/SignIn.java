@@ -51,11 +51,13 @@ public class SignIn extends Fragment {
         // TODO - sort if user account is student or supervisor and add the relevant activity following
 
         Context context = getContext();
-        if (detailsSaved()) {
+        User user = new User();
+        if (detailsSaved() && user.getUserId(requireActivity()).contains("supervisor")) {
+            loadSupervisorActivity(context);
+        } else if (detailsSaved() && !user.getUserId(requireActivity()).contains("supervisor")){
             loadHomeActivity(context);
         }
 
-        User user = new User();
         Button btnSignUp = (Button) view.findViewById(R.id.btnSignUp);
         Button btnSignIn = (Button) view.findViewById(R.id.btnSignIn);
         btnResetPassword = (Button) view.findViewById(R.id.btnResetPassword);
@@ -75,16 +77,21 @@ public class SignIn extends Fragment {
                 if (userEmail.length() == 0 && userPassword.length() == 0) {
                     Toast.makeText(getContext(), "Invalid details", Toast.LENGTH_SHORT);
                 } else {
+                    SignUp signUp = new SignUp();
                     mAuth.signInWithEmailAndPassword(userEmail, userPassword)
                             .addOnCompleteListener(task -> {
                                 User currentUser = new User();
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d("LOGGER", "signInWithEmail:success");
-                                    FirebaseUser user1 = mAuth.getCurrentUser();
                                     // todo - merge above code into this.......
                                     currentUser.clearIdPreferences(requireActivity());
                                     currentUser.setUserId(requireActivity(), userEmail);
+                                    if (!validDetails(getContext(), userEmail, userPassword,
+                                            "Account created but not saved to prefs")) {
+                                        // if this is a new device but valid account, save to prefs
+                                        signUp.saveToPrefs(userEmail, userPassword, getContext());
+                                    }
                                     signInUser(currentUser, context, userEmail, rememberCredentials.isChecked());
                                 } else {
                                     // If sign in fails, display a message to the user.
