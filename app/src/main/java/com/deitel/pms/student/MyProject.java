@@ -46,7 +46,7 @@ public class MyProject extends Fragment {
 
         final String userId = user.getUserId(requireActivity());
 
-        ImageButton btnPopFragment = (ImageButton) view.findViewById(R.id.btnPopFragment);
+        ImageButton btnPopFragment = (ImageButton) view.findViewById(R.id.btnPopMyProjectFragment);
         Button btnChangeProject = (Button) view.findViewById(R.id.btnChangeProject);
         TextView projectTitle = (TextView) view.findViewById(R.id.mpdProjectTitle);
         TextView projectDescription = (TextView) view.findViewById(R.id.mpdProjectDescription);

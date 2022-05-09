@@ -97,11 +97,12 @@ public class MessageCenter extends Fragment implements MessagesRecyclerViewAdapt
 
         // load messages
         if (senderId.contains("supervisor")) {
-            loadMessages(utils.getSUPERVISOR_COLLECTION_PATH(), utils.getUSER_COLLECTION_PATH(), senderId, getRecipient());
+            loadMessages(utils.getSUPERVISOR_COLLECTION_PATH(), utils.getUSER_COLLECTION_PATH(),
+                    senderId, getRecipient());
         } else {
-            loadMessages(utils.getUSER_COLLECTION_PATH(), utils.getSUPERVISOR_COLLECTION_PATH(), senderId, getRecipient());
+            loadMessages(utils.getUSER_COLLECTION_PATH(), utils.getSUPERVISOR_COLLECTION_PATH(),
+                    senderId, getRecipient());
         }
-
 
         // send message
         sendMessage.setOnClickListener(new View.OnClickListener() {

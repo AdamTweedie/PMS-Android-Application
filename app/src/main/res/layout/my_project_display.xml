@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/myProjectParent">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -28,7 +29,7 @@
             android:paddingHorizontal="5dp">
 
             <ImageButton
-                android:id="@+id/btnPopFragment"
+                android:id="@+id/btnPopMyProjectFragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/undo"
@@ -48,7 +49,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginStart="20dp"
                 android:textSize="20sp"
-                app:layout_constraintStart_toEndOf="@id/btnPopFragment" />
+                app:layout_constraintStart_toEndOf="@id/btnPopMyProjectFragment" />
 
             <TextView
                 android:id="@+id/mpdProjectTitle"
@@ -57,7 +58,7 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                app:layout_constraintTop_toBottomOf="@id/btnPopFragment" />
+                app:layout_constraintTop_toBottomOf="@id/btnPopMyProjectFragment" />
 
             <ScrollView
                 android:id="@+id/scrolly"

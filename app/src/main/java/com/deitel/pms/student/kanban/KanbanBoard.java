@@ -59,7 +59,8 @@ public class KanbanBoard extends Fragment {
         thirdTab.setText("Done");
 
         tabLayout.addTab(firstTab, 0, true);
-        kanbanLists = new TaskList(getDataFromSharedPrefs(0, requireActivity(), user_kanban_prefs_id), 0, user_kanban_prefs_id);
+        kanbanLists = new TaskList(getDataFromSharedPrefs(0, requireActivity(),
+                user_kanban_prefs_id), 0, user_kanban_prefs_id);
         ft.add(R.id.view_pager, kanbanLists).commit();
         tabLayout.addTab(secondTab,1);
         tabLayout.addTab(thirdTab, 2);
@@ -76,17 +77,20 @@ public class KanbanBoard extends Fragment {
                 switch(tab.getPosition()) {
                     case 0:
                         kanbanLists.clearAdapter();
-                        kanbanLists.fillAdapter(getDataFromSharedPrefs(0, requireActivity(), user_kanban_prefs_id));
+                        kanbanLists.fillAdapter(getDataFromSharedPrefs(0,
+                                requireActivity(), user_kanban_prefs_id));
                         kanbanLists.setTabPosition(0);
                         break;
                     case 1:
                         kanbanLists.clearAdapter();
-                        kanbanLists.fillAdapter(getDataFromSharedPrefs(1, requireActivity(), user_kanban_prefs_id));
+                        kanbanLists.fillAdapter(getDataFromSharedPrefs(1,
+                                requireActivity(), user_kanban_prefs_id));
                         kanbanLists.setTabPosition(1);
                         break;
                     case 2:
                         kanbanLists.clearAdapter();
-                        kanbanLists.fillAdapter(getDataFromSharedPrefs(2, requireActivity(), user_kanban_prefs_id));
+                        kanbanLists.fillAdapter(getDataFromSharedPrefs(2,
+                                requireActivity(), user_kanban_prefs_id));
                         kanbanLists.setTabPosition(2);
                         break;
                 }
@@ -95,7 +99,8 @@ public class KanbanBoard extends Fragment {
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 // called when tab unselected
-                System.out.println("tab " + tab.getPosition() + " data: " +  kanbanLists.getTaskListData());
+                System.out.println("tab " + tab.getPosition() +
+                        " data: " +  kanbanLists.getTaskListData());
                 kanbanLists.saveToSharedPrefs(tab.getPosition());
 
             }
@@ -128,7 +133,8 @@ public class KanbanBoard extends Fragment {
         });
     }
 
-    public ArrayList<String> getDataFromSharedPrefs(int tabPosition, Activity activity, String user_kanban_prefs_id) {
+    public ArrayList<String> getDataFromSharedPrefs(int tabPosition, Activity activity,
+                                                    String user_kanban_prefs_id) {
         ArrayList<String> dataHolder = new ArrayList<>();
         String key;
         SharedPreferences sharedPreferences = (SharedPreferences) activity

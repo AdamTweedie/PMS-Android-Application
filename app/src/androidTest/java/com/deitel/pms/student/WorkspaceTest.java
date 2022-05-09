@@ -34,7 +34,6 @@ public class WorkspaceTest {
         DateTimeFormatter dtfMonth = DateTimeFormatter.ofPattern("MMM");
         DateTimeFormatter dtfDay = DateTimeFormatter.ofPattern("dd");
         LocalDateTime now = LocalDateTime.now();
-
         onView(withId(R.id.tvCurrentDateDay)).check(matches(withText(dtfDay.format(now))));
         onView(withId(R.id.tvCurrentDateMonth)).check(matches(withText(dtfMonth.format(now))));
     }

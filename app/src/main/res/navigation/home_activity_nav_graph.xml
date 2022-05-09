@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/home_activity_nav_graph"
+    app:startDestination="@id/homeActivity">
+
+    <activity
+        android:id="@+id/homeActivity"
+        android:name="com.deitel.pms.student.HomeActivity"
+        android:label="HomeActivity"
+        app:action="@string/nav_bar_notifications" />
+    <fragment
+        android:id="@+id/profile"
+        android:name="com.deitel.pms.student.Profile"
+        android:label="Profile" >
+        <action
+            android:id="@+id/action_profile_to_homeActivity"
+            app:destination="@id/homeActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/workspace"
+        android:name="com.deitel.pms.student.Workspace"
+        android:label="Workspace" >
+        <action
+            android:id="@+id/action_workspace_to_calendar"
+            app:destination="@id/calendar" />
+        <action
+            android:id="@+id/action_workspace_to_references"
+            app:destination="@id/references" />
+        <action
+            android:id="@+id/action_workspace_to_myProject"
+            app:destination="@id/myProject" />
+        <action
+            android:id="@+id/action_workspace_to_kanbanBoard"
+            app:destination="@id/kanbanBoard" />
+        <action
+            android:id="@+id/action_workspace_to_homeActivity"
+            app:destination="@id/homeActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/notifications"
+        android:name="com.deitel.pms.student.Notifications"
+        android:label="Notifications" >
+        <action
+            android:id="@+id/action_notifications_to_expandedNotification"
+            app:destination="@id/expandedNotification" />
+        <action
+            android:id="@+id/action_notifications_to_homeActivity"
+            app:destination="@id/homeActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/calendar"
+        android:name="com.deitel.pms.student.Calendar"
+        android:label="Calendar" />
+    <fragment
+        android:id="@+id/references"
+        android:name="com.deitel.pms.student.References"
+        android:label="References" >
+        <action
+            android:id="@+id/action_references_to_subReferences"
+            app:destination="@id/subReferences" />
+    </fragment>
+    <fragment
+        android:id="@+id/myProject"
+        android:name="com.deitel.pms.student.MyProject"
+        android:label="MyProject" />
+    <fragment
+        android:id="@+id/subReferences"
+        android:name="com.deitel.pms.student.SubReferences"
+        android:label="subReferences" />
+    <fragment
+        android:id="@+id/kanbanBoard"
+        android:name="com.deitel.pms.student.kanban.KanbanBoard"
+        android:label="KanbanBoard" />
+    <fragment
+        android:id="@+id/messageCenter"
+        android:name="com.deitel.pms.messaging.MessageCenter"
+        android:label="MessageCenter" >
+        <action
+            android:id="@+id/action_messageCenter_to_homeActivity"
+            app:destination="@id/homeActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/expandedNotification"
+        android:name="com.deitel.pms.student.ExpandedNotification"
+        android:label="ExpandedNotification" />
+</navigation>

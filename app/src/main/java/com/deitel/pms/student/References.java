@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -38,7 +37,7 @@ public class References extends Fragment {
         CheckBox styleACM = (CheckBox) view.findViewById(R.id.refACM);
         CheckBox styleHarvard = (CheckBox) view.findViewById(R.id.refHarvard);
         TextView referenceStyle = (TextView) view.findViewById(R.id.tvRefStyle);
-        ImageButton btnGoBack = (ImageButton) view.findViewById(R.id.btnGoBack);
+        ImageButton btnGoBack = (ImageButton) view.findViewById(R.id.refBtnGoBack);
 
         FragmentManager fm = getChildFragmentManager();
 
@@ -54,7 +53,7 @@ public class References extends Fragment {
 
                 fm.popBackStack();
                 fm.beginTransaction()
-                        .add(R.id.refStyleFragment, new subReferences("APA"))
+                        .add(R.id.refStyleFragment, new SubReferences("APA"))
                         .addToBackStack(null).commit();
 
             }
@@ -71,7 +70,7 @@ public class References extends Fragment {
 
                 fm.popBackStack();
                 fm.beginTransaction()
-                        .add(R.id.refStyleFragment, new subReferences("Oxford"))
+                        .add(R.id.refStyleFragment, new SubReferences("Oxford"))
                         .addToBackStack(null).commit();
 
             }
@@ -88,7 +87,7 @@ public class References extends Fragment {
 
                 fm.popBackStack();
                 fm.beginTransaction()
-                        .add(R.id.refStyleFragment, new subReferences("ACM"))
+                        .add(R.id.refStyleFragment, new SubReferences("ACM"))
                         .addToBackStack(null).commit();
             }
         });
@@ -104,7 +103,7 @@ public class References extends Fragment {
 
                 fm.popBackStack();
                 fm.beginTransaction()
-                        .add(R.id.refStyleFragment, new subReferences("Harvard"))
+                        .add(R.id.refStyleFragment, new SubReferences("Harvard"))
                         .addToBackStack(null).commit();
             }
         });

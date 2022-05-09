@@ -29,7 +29,6 @@ public class TaskList extends Fragment implements KanbanRecyclerViewAdapter.Item
 
     KanbanRecyclerViewAdapter adapter;
 
-
     String user_kanban_prefs_id;
     ArrayList<String> taskListData;
     int tabPosition;

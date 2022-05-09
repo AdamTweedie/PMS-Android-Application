@@ -7,6 +7,17 @@ import org.junit.Test;
 public class KanbanBoardTest {
 
     @Test
+    public void onCreateView() {
+
+    }
+
+    @Test
+    public void onViewCreated() {
+
+    }
+
+    @Test
     public void getDataFromSharedPrefs() {
+
     }
 }

@@ -12,11 +12,11 @@ import androidx.fragment.app.Fragment;
 
 import com.deitel.pms.R;
 
-public class subReferences extends Fragment {
+public class SubReferences extends Fragment {
 
     String style;
 
-    public subReferences(String refStyle) {
+    public SubReferences(String refStyle) {
         this.style = refStyle;
     }
 

@@ -13,17 +13,18 @@ import org.junit.Test;
 
 public class SharedPrefUtilsTest {
 
-    Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+    Context appContext = InstrumentationRegistry
+            .getInstrumentation().getTargetContext();
     SharedPrefUtils utils = new SharedPrefUtils();
-
     @Test
     public void getEncryptedPreferences() {
-        assertThat(utils.getEncryptedPreferences(utils.getMasterKey(appContext), appContext),
+        assertThat(utils.getEncryptedPreferences
+                        (utils.getMasterKey(appContext), appContext),
                 instanceOf(SharedPreferences.class));
     }
-
     @Test
     public void getMasterKey() {
-        assertThat(utils.getMasterKey(appContext), instanceOf(MasterKey.class));
+        assertThat(utils.getMasterKey(appContext),
+                instanceOf(MasterKey.class));
     }
 }
