@@ -1,11 +1,15 @@
 package com.deitel.pms.recommender;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -33,6 +37,8 @@ import java.util.List;
 public class FullProjectList extends Fragment implements FullProjectListRecyclerViewAdapter.ItemClickListener{
 
     FullProjectListRecyclerViewAdapter adapter;
+    ArrayList<ArrayList<String>> projectsArray = new ArrayList<>();
+    ArrayList<ArrayList<String>> completeProjectSet = new ArrayList<>();
 
     @Nullable
     @Override
@@ -44,7 +50,16 @@ public class FullProjectList extends Fragment implements FullProjectListRecycler
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        final EditText keywordEnter = (EditText) view.findViewById(R.id.fplEditTextKeywordSearch);
+        final Button searchButton = (Button) view.findViewById(R.id.fplBtnSearchKeyword);
+        final ImageButton refreshProjects = (ImageButton) view.findViewById(R.id.fplBtnRefreshProjects);
         final ImageButton undo = (ImageButton) view.findViewById(R.id.fplBtnUndo);
+
+        final FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
+        RecyclerView recyclerView;
+
+        LoadingSuggestions(true);
+
         undo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,10 +76,19 @@ public class FullProjectList extends Fragment implements FullProjectListRecycler
             }
         });
 
-        FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
-        RecyclerView recyclerView;
-        ArrayList<ArrayList<String>> projectsArray = new ArrayList<>();
-        LoadingSuggestions(true);
+        searchButton.setOnClickListener(view1 -> {
+            String keyword = keywordEnter.getText().toString();
+            ArrayList<Integer> searchResults = KeyWordProjectSearch.Search(completeProjectSet, keyword);
+            System.out.println("KEYWORD SEARCH RESULTS - " + searchResults);
+            ArrayList<ArrayList<String>> newProjectsList = new ArrayList<>();
+            if (searchResults != null) {
+                for (int projectIndex : searchResults) {
+                    newProjectsList.add(completeProjectSet.get(projectIndex));
+                }
+                updateAdapter(newProjectsList);
+            }
+        });
+
         try {
             recyclerView = requireView().findViewById(R.id.fullProjectListRecyclerView);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -83,6 +107,7 @@ public class FullProjectList extends Fragment implements FullProjectListRecycler
                                 project.add((String) document.get("other info"));
 
                                 projectsArray.add(project);
+                                completeProjectSet.add(project);
                             }
                             LoadingSuggestions(false);
                             adapter = new FullProjectListRecyclerViewAdapter(getContext(), projectsArray);
@@ -102,7 +127,6 @@ public class FullProjectList extends Fragment implements FullProjectListRecycler
         } catch (Exception e) {
             Log.e("LOGGER", "Failed to create recycler view with exception" + e);
         }
-
     }
 
     @Override
@@ -124,5 +148,11 @@ public class FullProjectList extends Fragment implements FullProjectListRecycler
         } else {
             progress.setVisibility(View.GONE);
         }
+    }
+
+    public void updateAdapter(ArrayList<ArrayList<String>> projects) {
+        this.projectsArray.clear();
+        this.projectsArray.addAll(projects);
+        adapter.notifyDataSetChanged();
     }
 }
