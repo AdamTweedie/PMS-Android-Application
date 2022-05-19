@@ -8,47 +8,46 @@ import java.util.ArrayList;
 
 public class KeyWordProjectSearchTest {
 
-
-
     @Test
-    public void search() {
+    public void arraySizeSearchTest() {
         ArrayList<ArrayList<String>> projects = getTestArray();
-        ArrayList<Integer> indexArray = KeyWordProjectSearch.Search(projects, "virtue");
+
+        ArrayList<Integer> indexArray = KeyWordProjectSearch.Search(projects, "mobile");
+        assertEquals(1, indexArray.size());
+
+        indexArray = KeyWordProjectSearch.Search(projects, "machine");
         assertEquals(2, indexArray.size());
 
+    }
 
+    @Test
+    public void correctIndexSearchTest() {
+        ArrayList<ArrayList<String>> projects = getTestArray();
+        ArrayList<Integer> indexArray = KeyWordProjectSearch.Search(projects, "fun");
+
+        int firstIndex = indexArray.get(0);
+        int secondIndex = indexArray.get(1);
+        assertEquals(0, firstIndex);
+        assertEquals(2, secondIndex);
     }
 
     private ArrayList<ArrayList<String>> getTestArray() {
         ArrayList<ArrayList<String>> testProjectArray = new ArrayList<>();
-        ArrayList<String> testProject = new ArrayList<>();
-        String s1 = "The virtue of humility";
-        testProject.add(s1);
-        testProjectArray.add(testProject);
-        testProject.clear();
-        String s2 = "virtue within itself is to show a high degree of moral standards" ;
-        testProject.add(s2);
-        testProjectArray.add(testProject);
-        testProject.clear();
-        String s3 = "I believe the benefits across the scope of future leadership are far more prevalent.";
-        testProject.add(s3);
-        testProjectArray.add(testProject);
-        testProject.clear();
-        String s4 = "Humans in nature are imperfect and prone to mistakes, nor should they\n" +
-                "hide from them.";
-        testProject.add(s4);
-        testProjectArray.add(testProject);
-        testProject.clear();
-        String s5 = "However, the traits a leader shows will have a paramount of\n" +
-                "influence to a followers views of such errors.";
-        testProject.add(s5);
-        testProjectArray.add(testProject);
-        testProject.clear();
-        String s6 = "Accepting failure with prag-\n" +
-                "matism and acknowledging ones limitations and weaknesses are key features\n" +
-                "of a humble leader";
-        testProject.add(s6);
-        testProjectArray.add(testProject);
+        ArrayList<String> a1 = new ArrayList<>();
+        a1.add("machine learning is fun");
+        ArrayList<String> a2 = new ArrayList<>();
+        a2.add("Web dev for the win");
+        ArrayList<String> a3 = new ArrayList<>();
+        a3.add("not as fun as making mobile apps though");
+        ArrayList<String> a4 = new ArrayList<>();
+        a4.add("Dont forget social media applications");
+        ArrayList<String> a5 = new ArrayList<>();
+        a5.add("data science and machine learning are the best");
+        testProjectArray.add(a1);
+        testProjectArray.add(a2);
+        testProjectArray.add(a3);
+        testProjectArray.add(a4);
+        testProjectArray.add(a5);
 
         return testProjectArray;
     }

@@ -15,19 +15,19 @@ public class KeyWordProjectSearch {
 
         Thread t1 = new Thread(() -> {
             for (ArrayList<String> project : list1) {
-                String projectAsString = project.toString();
+                String projectAsString = project.toString().toLowerCase();
                 int index = list1.indexOf(project);
-                if (projectAsString.contains(keyWord)) {
+                if (projectAsString.contains(keyWord.toLowerCase())) {
                     indexList.add(index);
                 }
             }
         });
         Thread t2 = new Thread(() -> {
             for (ArrayList<String> project : list2) {
-                String projectAsString = project.toString();
+                String projectAsString = project.toString().toLowerCase();
                 // get original index of project list
                 int index = list1.size() + list2.indexOf(project);
-                if (projectAsString.contains(keyWord)) {
+                if (projectAsString.contains(keyWord.toLowerCase())) {
                     indexList.add(index);
                 }
             }
