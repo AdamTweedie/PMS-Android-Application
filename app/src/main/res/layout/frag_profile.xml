@@ -6,6 +6,8 @@
     android:background="#E9ECEF"
     android:paddingVertical="15sp"
     android:id="@+id/profile_parent"
+    android:clickable="true"
+    android:focusable="true"
     >
 
     <TextView
