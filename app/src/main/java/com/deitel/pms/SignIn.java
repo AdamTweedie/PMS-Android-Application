@@ -1,5 +1,6 @@
 package com.deitel.pms;
 
+import com.deitel.pms.admin.AdminMainActivity;
 import com.deitel.pms.student.HomeActivity;
 
 import android.content.Context;
@@ -24,10 +25,15 @@ import androidx.security.crypto.MasterKey;
 
 import com.deitel.pms.supervisor.SupervisorActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Objects;
 
 public class SignIn extends Fragment {
 
@@ -35,6 +41,7 @@ public class SignIn extends Fragment {
     private EditText email;
     private EditText password;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
 
     @Nullable
     @Override
@@ -92,11 +99,12 @@ public class SignIn extends Fragment {
                                         // if this is a new device but valid account, save to prefs
                                         signUp.saveToPrefs(userEmail, userPassword, getContext());
                                     }
-                                    signInUser(currentUser, context, userEmail, rememberCredentials.isChecked());
+                                    
+                                    checkAdminAndSignIn(currentUser, context, userEmail, rememberCredentials.isChecked());
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("LOGGER", "signInWithEmail:failure", task.getException());
-                                    validDetails(getContext(), userEmail, userPassword, "Authentication failed.");
+                                    //validDetails(getContext(), userEmail, userPassword, "Authentication failed.");
                                     signInUserWithNoInternet(context, userEmail, userPassword,
                                             errorMsg, currentUser, rememberCredentials.isChecked());
                                 }
@@ -130,8 +138,38 @@ public class SignIn extends Fragment {
         });
     }
 
-    private void signInUser(User currentUser, Context context, String userEmail, boolean rememberDetails) {
+    private void checkAdminAndSignIn(User currentUser, Context context, String userEmail, boolean rememberDetails) {
 
+        // check is admin
+        dbInstance.collection("admin")
+                .document(userEmail)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.getResult().get("adminId")==null) {
+                            signInUser(currentUser, context, userEmail, rememberDetails);
+                        } else {
+                            if (task.getResult().get("adminId").toString().equals(ActiveUniAdmin.EXETER_ADMIN.getValue().toString())) {
+                                System.out.println(task.getResult().get("adminId").toString());
+                                currentUser.clearIdPreferences(requireActivity());
+                                currentUser.setUserId(requireActivity(), userEmail+"-"+ActiveUniAdmin.EXETER_ADMIN.getValue());
+                                loadAdminActivity(context);
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //signInUser(currentUser, context, userEmail, rememberDetails);
+                        //TODO - create toast
+                        Toast.makeText(context, "Failed to log in.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    
+    public void signInUser(User currentUser, Context context, String userEmail, boolean rememberDetails) {
         if (currentUser.getUserId(requireActivity()).contains("supervisor")) { // and is a supervisor account
             if (rememberDetails) {
                 saveUserCredentials();
@@ -183,6 +221,13 @@ public class SignIn extends Fragment {
         Intent supervisorHomeActivity = new Intent(getActivity(), SupervisorActivity.class);
         getActivity().finish();
         startActivity(supervisorHomeActivity);
+        Toast.makeText(context, "Welcome back !", Toast.LENGTH_SHORT).show();
+    }
+    
+    private void loadAdminActivity(Context context) {
+        Intent adminIntent = new Intent(getActivity(), AdminMainActivity.class);
+        getActivity().finish();
+        startActivity(adminIntent);
         Toast.makeText(context, "Welcome back !", Toast.LENGTH_SHORT).show();
     }
 

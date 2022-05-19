@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.security.crypto.MasterKey;
 
+import com.deitel.pms.admin.AdminMainActivity;
 import com.deitel.pms.recommender.RecommenderActivity;
 import com.deitel.pms.student.HomeActivity;
 import com.deitel.pms.supervisor.SupervisorActivity;
@@ -98,32 +99,14 @@ public class SignUp extends Fragment {
                 password.getText().clear();
                 confirmPassword.getText().clear();
             } else if (validStudentEmailAndAccessCode(finalEmail, finalUniAccessCode)) {
-                // does this user already exist
-                DocumentReference docRef = db.collection("users").document(finalEmail);
-                docRef.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        // if user does exist
-                        if (document.exists()) {
-                            Log.d(TAG, "DocumentSnapshot data: " + document.getId() + " exists already");
-                            Toast.makeText(context, "Email already exists", Toast.LENGTH_SHORT).show();
-                            email.setText("");
-                            password.setText("");
-                            confirmPassword.setText("");
-                            uniAccessCode.setText("");
-                        } else {
-                            Log.d(TAG, "No such document");
-                            createAuthenticatedAccount(finalEmail, finalPassword, TAG, true, getContext());
-                            user.setUserId(requireActivity(), finalEmail);
-                        }
-
-                    } else {
-                        Log.d(TAG, "get failed with ", task.getException());
-                    }
-                });
-            } else if (validSupervisorEmailAndAccessCode(finalEmail, finalUniAccessCode)) {
-                createAuthenticatedAccount(finalEmail, finalPassword, TAG, false, getContext());
+                createAuthenticatedAccount(finalEmail, finalPassword, TAG, true, false, getContext());
                 user.setUserId(requireActivity(), finalEmail);
+            } else if (validSupervisorEmailAndAccessCode(finalEmail, finalUniAccessCode)) {
+                createAuthenticatedAccount(finalEmail, finalPassword, TAG, false, false, getContext());
+                user.setUserId(requireActivity(), finalEmail);
+            } else if (validAdminEmailAndAccessCode(finalEmail, finalUniAccessCode)) {
+                createAuthenticatedAccount(finalEmail, finalPassword, TAG, false, true, getContext());
+                user.setUserId(requireActivity(), finalEmail+"-"+ActiveUniAdmin.EXETER_ADMIN.getValue());
             }
         });
 
@@ -145,6 +128,20 @@ public class SignUp extends Fragment {
                 .set(accountCreated)
                 .addOnSuccessListener(unused -> Log.d("LOGGER", "DocumentSnapshot added with ID: " + finalEmail))
                 .addOnFailureListener(e -> Log.w("LOGGER", "Error adding document", e));
+    }
+
+    private boolean validAdminEmailAndAccessCode(String finalEmail, String finalUniAccessCode) {
+        String[] parts = finalEmail.split("@");
+        for (ActiveUniAdmin uni : ActiveUniAdmin.values()) {
+            try {
+                if (uni.getKey().equals(parts[1]) && uni.getValue().equals(Integer.parseInt(finalUniAccessCode))) {
+                    return true;
+                }
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return false;
     }
 
     private boolean validStudentEmailAndAccessCode(String email, String accessCode) {
@@ -199,6 +196,21 @@ public class SignUp extends Fragment {
                 .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
     }
 
+    private void createAdminAccount(String email, String TAG) {
+        User newUser = new User();
+        newUser.clearIdPreferences(requireActivity());
+        newUser.setUserId(requireActivity(), email+"-"+ActiveUniAdmin.EXETER_ADMIN.getValue());
+
+        Map<String, Object> user = new HashMap<>();
+        user.put("adminId", ActiveUniAdmin.EXETER_ADMIN.getValue());
+
+        db.collection("admin")
+                .document(email)
+                .set(user)
+                .addOnSuccessListener(unused -> Log.d(TAG, "DocumentSnapshot added with ID: " + email))
+                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+    }
+
     public void saveToPrefs(String email, String password, Context context) {
         SharedPrefUtils utils = new SharedPrefUtils();
         MasterKey masterKeyAlias = utils.getMasterKey(context);
@@ -223,6 +235,13 @@ public class SignUp extends Fragment {
         startActivity(workspace);
         getActivity().finish();
         Toast.makeText(context, "Account created!", Toast.LENGTH_SHORT).show();
+    }
+
+    private void loadAdminWorkspace(Context context) {
+        Intent workspace = new Intent(getActivity(), AdminMainActivity.class);
+        startActivity(workspace);
+        getActivity().finish();
+        Toast.makeText(context, "Account created !", Toast.LENGTH_SHORT).show();
     }
 
     private void replaceFragment(Object object) {
@@ -251,20 +270,26 @@ public class SignUp extends Fragment {
     }
 
     private void createAuthenticatedAccount(String userEmail, String userPassword, String TAG,
-                                            Boolean student, Context context) {
+                                            Boolean student, Boolean admin, Context context) {
         mAuth.createUserWithEmailAndPassword(userEmail, userPassword)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "createUserWithEmail:success");
-                        if ( !student ) {
+                        if ( !student && !admin ) {
                             setAccountCreatedTrue(u.getSUPERVISOR_COLLECTION_PATH(), userEmail, u.getFIELD_SUPERVISOR_ACCOUNT_CREATED());
                             saveToPrefs(userEmail, userPassword, context);
                             loadSupervisorWorkspace(context);
+                            sendWelcomeMessage("supervisors", userEmail);
                         }
-                        if ( student ) {
+                        if ( student && !admin) {
                             createStudentAccount(userEmail, TAG);
                             saveToPrefs(userEmail, userPassword, context);
                             loadStudentWorkspace(context);
+                            sendWelcomeMessage("users", userEmail);
+                        }
+                        if ( !student && admin) {
+                            createAdminAccount(userEmail, TAG);
+                            loadAdminWorkspace(context);
                         }
                     } else {
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -272,5 +297,14 @@ public class SignUp extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void sendWelcomeMessage(String collectionId, String userId) {
+        FirestoreUtils.createNotification(collectionId,
+                "Adam (Dev Team)", userId,
+                "Welcome !",
+                "Hello and warm welcome to the best project " +
+                        "management app for final year project students and supervisors." +
+                        " Make yourself at home.");
     }
 }
