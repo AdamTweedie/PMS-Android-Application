@@ -89,6 +89,10 @@ public class FullProjectList extends Fragment implements FullProjectListRecycler
             }
         });
 
+        refreshProjects.setOnClickListener(view2 -> {
+            updateAdapter(completeProjectSet);
+        });
+
         try {
             recyclerView = requireView().findViewById(R.id.fullProjectListRecyclerView);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
