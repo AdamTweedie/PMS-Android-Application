@@ -24,7 +24,7 @@ android {
             // "armeabi-v7a", "arm64-v8a"
             // for emulated devices:
             // "x86", "x86_64"
-            abiFilters "armeabi-v7a", "arm64-v8a"
+            abiFilters "x86", "x86_64"
         }
 
         python {
@@ -75,6 +75,9 @@ dependencies {
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
     implementation 'androidx.preference:preference:1.2.0'
     implementation 'com.google.firebase:firebase-storage:20.0.0'
+    //testImplementation 'org.junit.jupiter:junit-jupiter'
+    //testImplementation 'org.junit.jupiter:junit-jupiter'
+    //testImplementation 'org.testng:testng:6.9.6'
     debugImplementation 'androidx.fragment:fragment-testing:1.4.1'
     implementation 'androidx.navigation:navigation-fragment:2.4.2'
     implementation 'androidx.navigation:navigation-ui:2.4.2'
@@ -84,6 +87,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation 'androidx.test:rules:1.4.0'
-
 
 }

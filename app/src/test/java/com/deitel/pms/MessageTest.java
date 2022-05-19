@@ -3,7 +3,6 @@ package com.deitel.pms;
 import static org.junit.Assert.*;
 
 import com.deitel.pms.messaging.Message;
-
 import org.junit.Test;
 
 public class MessageTest {
