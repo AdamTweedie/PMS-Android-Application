@@ -60,6 +60,7 @@ public class AdminWorkspace extends Fragment {
                     for (DocumentSnapshot document : task.getResult()) {
                         data.add(document.getId());
                     }
+                    System.out.println(data);
                     Fragment fragment = getParentFragmentManager()
                             .findFragmentById(R.id.admin_nav_bar_fragment);
                     if (fragment!=null) {

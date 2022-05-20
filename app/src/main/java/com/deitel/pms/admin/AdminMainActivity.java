@@ -16,11 +16,17 @@ public class AdminMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_home_activity);
 
+        Button navWorkspace = findViewById(R.id.btnNavAdminWorkspace);
+
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         if (fm.getFragments().isEmpty()) {
             fragmentTransaction.add(R.id.admin_nav_bar_fragment, new AdminWorkspace()).commit();
         }
 
+        navWorkspace.setOnClickListener(view -> {
+            fm.popBackStack();
+            fragmentTransaction.add(R.id.admin_nav_bar_fragment, new AdminWorkspace()).commit();
+        });
     }
 }

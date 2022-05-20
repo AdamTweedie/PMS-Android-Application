@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    android:focusable="true">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="40dp"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp"
+        app:cardMaxElevation="12dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="10dp">
+
+            <ImageButton
+                android:id="@+id/btnCollapseExpandedStudent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/undo"
+                android:scaleX="0.15"
+                android:scaleY="0.15"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="-40dp"
+                android:layout_marginStart="-25dp"/>
+
+            <TextView
+                android:id="@+id/adminEtStudentEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#6247AA"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/tv1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Project Title"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/adminEtStudentEmail"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="20dp"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/adminESProjectTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="project title here....."
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/tv1" />
+
+            <TextView
+                android:id="@+id/tv2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Supervisor"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/adminESProjectTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="10dp"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/adminESSupervisorName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="supervisor here ...."
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/tv2" />
+
+            <TextView
+                android:id="@+id/tv3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Project approved"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/adminESSupervisorName"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="10dp"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/adminESProjectApproved"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="supervisor here ...."
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/tv3" />
+
+            <Button
+                android:id="@+id/adminDeleteStudentAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#F94144"
+                android:text="Delete account"
+                android:textAllCaps="false"
+                android:layout_marginStart="15dp"
+                app:cornerRadius="60dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+            <Button
+                android:id="@+id/adminRemoveStudentSupervisor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#6247AA"
+                android:text="Delete student project"
+                android:textAllCaps="false"
+                android:layout_marginStart="15dp"
+                app:cornerRadius="60dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/adminDeleteStudentAccount"
+                android:layout_marginBottom="15dp"
+                />
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

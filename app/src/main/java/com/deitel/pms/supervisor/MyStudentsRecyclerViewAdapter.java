@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.deitel.pms.R;
+import com.deitel.pms.admin.AdminStudentSupervisorView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +82,10 @@ public class MyStudentsRecyclerViewAdapter extends RecyclerView.Adapter<MyStuden
     }
 
     public void setClickListener(SupervisorMessages itemClickListener) {
+        this.mClickListener = itemClickListener;
+    }
+
+    public void setClickListener(AdminStudentSupervisorView itemClickListener) {
         this.mClickListener = itemClickListener;
     }
 
