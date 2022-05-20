@@ -11,8 +11,8 @@ public class KeyWordProjectSearch {
         // split the project list twice to speed up computation
         // rounded to integer automatically by Java "/"
         List<ArrayList<String>> list1 = projectData.subList(0, projectData.size()/2);
-        List<ArrayList<String>> list2 = projectData.subList(projectData.size()/2, projectData.size());
-
+        List<ArrayList<String>> list2 = projectData.subList(projectData.size()/2,
+                projectData.size());
         Thread t1 = new Thread(() -> {
             for (ArrayList<String> project : list1) {
                 String projectAsString = project.toString().toLowerCase();
@@ -32,10 +32,8 @@ public class KeyWordProjectSearch {
                 }
             }
         });
-
         t1.start();
         t2.start();
-
         try {
             // wait for both threads to finish
             t2.join();
