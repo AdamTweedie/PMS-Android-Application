@@ -14,28 +14,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.annotation.WorkerThread;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.deitel.pms.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
 
 public class StudentExpandedView extends Fragment {
 
@@ -71,78 +59,58 @@ public class StudentExpandedView extends Fragment {
         TextView projectApproved = view.findViewById(R.id.adminESProjectApproved);
 
         ImageButton collapseStudentRequest = view.findViewById(R.id.btnCollapseExpandedStudent);
-        Button deleteStudentAccount = view.findViewById(R.id.adminDeleteStudentAccount);
-        Button removeStudentSupervisor = view.findViewById(R.id.adminRemoveStudentSupervisor);
+        Button sendNotification = view.findViewById(R.id.adminSendNotification);
+        Button resetProject = view.findViewById(R.id.adminResetStudentProject);
 
         studentEmail.setText(this.email);
-        if (title == null) {
-            projectTitle.setText("Student yet to choose a project");
-        } else {
+        if (title != null) {
             projectTitle.setText(this.title);
-        }
-        if (supervisor == null) {
-            supervisorEmail.setText("Student does not yet have a supervisor");
         } else {
+            projectTitle.setText("Student yet to choose a project");
+        }
+        if (supervisor != null) {
             supervisorEmail.setText(this.supervisor);
-        }
-        if (!approved) {
-            removeStudentSupervisor.setVisibility(View.GONE);
-            removeStudentSupervisor.setClickable(false);
-            projectApproved.setText(this.approved.toString());
         } else {
-            projectApproved.setText(this.approved.toString());
+            supervisorEmail.setText("Student does not yet have a supervisor");
         }
 
-        if (removeStudentSupervisor.isClickable()) {
-            removeStudentSupervisor.setOnClickListener(view1 -> {
-                removeSupervisorFromStudent();
-            });
-        }
+        projectApproved.setText(this.approved.toString());
+
+        resetProject.setOnClickListener(view1 -> {
+            if (this.supervisor!=null) {
+                removeStudentFromSupervisor();
+                deleteSupervisorStudentMessages("users", this.email, this.supervisor);
+                deleteSupervisorStudentMessages("supervisors", this.supervisor, this.email);
+            }
+            resetStudentProject();
+        } );
 
         if (collapseStudentRequest.isClickable()) {
             collapseStudentRequest.setOnClickListener(view1 ->
                     requireActivity().getSupportFragmentManager().popBackStack());
         }
 
-        deleteStudentAccount.setOnClickListener(view2 -> {
-            // enable confirm delete
-            view.findViewById(R.id.adminAreYouSureToDelete).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.adminAreYouSureToDelete).setClickable(true);
-            // disable all other functionality
-            deleteStudentAccount.setVisibility(View.GONE);
-            deleteStudentAccount.setClickable(false);
-            removeStudentSupervisor.setVisibility(View.GONE);
-            removeStudentSupervisor.setClickable(false);
-            collapseStudentRequest.setClickable(false);
-
-            view.findViewById(R.id.adminCancelDelete).setOnClickListener(view4 -> {
-                // disable confirm delete
-                view.findViewById(R.id.adminAreYouSureToDelete).setVisibility(View.GONE);
-                view.findViewById(R.id.adminAreYouSureToDelete).setClickable(false);
-                // enable all other activity
-                deleteStudentAccount.setVisibility(View.VISIBLE);
-                deleteStudentAccount.setClickable(true);
-                removeStudentSupervisor.setVisibility(View.VISIBLE);
-                removeStudentSupervisor.setClickable(true);
-                collapseStudentRequest.setClickable(true);
-            });
-
-            view.findViewById(R.id.adminConfirmDelete).setOnClickListener(view3 -> {
-                deleteStudentAccount();
-                removeStudentFromSupervisor();
-                deleteSupervisorStudentMessages();
-            });
+        sendNotification.setOnClickListener(view2 -> {
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.admin_nav_bar_fragment, new AdminCreateNotification(this.email, "users"))
+                    .addToBackStack("new notification")
+                    .commit();
         });
     }
 
-    private void removeSupervisorFromStudent() {
+    private void resetStudentProject() {
         // alter students account
-        Map<String, Object> noLongerApproved = new HashMap<>();
-        noLongerApproved.put("project approved", false);
+        Map<String, Object> updateStudent = new HashMap<>();
+        updateStudent.put("approved project", false);
+        updateStudent.put("supervisor email", null);
+        updateStudent.put("supervisor name", null);
+        updateStudent.put("project title", null);
+        updateStudent.put("project description", null);
         FirebaseFirestore.getInstance()
                 .collection("users")
                 .document(this.email)
-                .update(noLongerApproved)
+                .update(updateStudent)
                 .addOnSuccessListener(unused -> {
                     Log.w("LOGGER", "Successfully marked project approval as false");
                     removeStudentFromSupervisor();
@@ -152,8 +120,6 @@ public class StudentExpandedView extends Fragment {
     }
 
     private void removeStudentFromSupervisor() {
-        // TODO - this wont work if the students does have a supervisor so fix it above before this is called
-        // alter supervisors account
         FirebaseFirestore.getInstance()
                 .collection("supervisors")
                 .document(this.supervisor)
@@ -169,20 +135,11 @@ public class StudentExpandedView extends Fragment {
                         "Failed to remove student from supervisor"));
     }
 
-    private void deleteStudentAccount() {
+    private void deleteSupervisorStudentMessages(String collectionPath, String firstUser, String secondUser) {
         FirebaseFirestore.getInstance()
-                .collection("users")
-                .document(this.email)
-                .delete()
-                .addOnSuccessListener(unused -> Log.w("LOGGER", "successfully deleted students account"))
-                .addOnFailureListener(e -> Log.e("LOGGER", "failed to delete student account"));
-    }
-
-    private void deleteSupervisorStudentMessages() {
-        FirebaseFirestore.getInstance()
-                .collection("supervisors")
-                .document(this.supervisor)
-                .collection(this.email+" "+"messages")
+                .collection(collectionPath)
+                .document(firstUser)
+                .collection(secondUser+" "+"messages")
                 .get()
                 .addOnCompleteListener(task -> {
                     QuerySnapshot querySnapshot = task.getResult();
@@ -192,22 +149,14 @@ public class StudentExpandedView extends Fragment {
                     }
                     for (String id : idList) {
                         FirebaseFirestore.getInstance()
-                                .collection("supervisors")
-                                .document(getSupervisor())
-                                .collection(getEmail()+" "+"messages")
+                                .collection(collectionPath)
+                                .document(firstUser)
+                                .collection(secondUser+" "+"messages")
                                 .document(id)
                                 .delete()
                                 .addOnSuccessListener(unused -> Log.w("LOGGER", "successfully deleted document"))
                                 .addOnFailureListener(e -> Log.e("LOGGER", "failed to delete document"));
                     }
                 }).addOnFailureListener(e -> Log.e("LOGGER", "Failed to access notification collection"));
-    }
-
-    private String getSupervisor() {
-        return this.supervisor;
-    }
-
-    private String getEmail() {
-        return this.email;
     }
 }

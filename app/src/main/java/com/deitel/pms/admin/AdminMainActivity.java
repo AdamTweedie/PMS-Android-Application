@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.deitel.pms.R;
+import com.deitel.pms.User;
 
 public class AdminMainActivity extends AppCompatActivity {
 
@@ -24,9 +25,20 @@ public class AdminMainActivity extends AppCompatActivity {
             fragmentTransaction.add(R.id.admin_nav_bar_fragment, new AdminWorkspace()).commit();
         }
 
+        User user = new User();
+        System.out.println("ADMIN ID" + user.getUserId(this));
         navWorkspace.setOnClickListener(view -> {
-            fm.popBackStack();
-            fragmentTransaction.add(R.id.admin_nav_bar_fragment, new AdminWorkspace()).commit();
+            clearBackStack(fm.getBackStackEntryCount());
+            fm.beginTransaction()
+                    .add(R.id.admin_nav_bar_fragment, new AdminWorkspace())
+                    .addToBackStack("Admin-Workspace")
+                    .commit();
         });
+    }
+
+    private void clearBackStack(int stackCount) {
+        for (int i = 0; i < stackCount; ++i) {
+            getSupportFragmentManager().popBackStack();
+        }
     }
 }

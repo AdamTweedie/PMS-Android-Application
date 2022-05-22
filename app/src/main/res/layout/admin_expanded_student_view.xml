@@ -29,62 +29,6 @@
             android:layout_marginHorizontal="10dp"
             android:layout_marginVertical="10dp">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/adminAreYouSureToDelete"
-                android:layout_width="300dp"
-                android:layout_marginHorizontal="40dp"
-                android:layout_height="400dp"
-                android:layout_margin="10dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="10dp"
-                app:cardMaxElevation="12dp"
-                app:cardPreventCornerOverlap="true"
-                app:cardUseCompatPadding="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:visibility="gone"
-                android:clickable="false"
-                >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|top"
-                    android:textSize="30sp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginVertical="20dp"
-                    android:text="Are you sure you want to delete account?" />
-
-                <Button
-                    android:id="@+id/adminConfirmDelete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#F94144"
-                    android:text="Delete"
-                    android:textAllCaps="false"
-                    android:layout_marginStart="15dp"
-                    app:cornerRadius="60dp"
-                    android:layout_gravity="bottom|start"
-                    android:layout_marginBottom="20dp"
-                    />
-
-                <Button
-                    android:id="@+id/adminCancelDelete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#43AA8B"
-                    android:text="Cancel"
-                    android:textAllCaps="false"
-                    android:layout_marginStart="15dp"
-                    app:cornerRadius="60dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_marginBottom="20dp"
-                    />
-            </androidx.cardview.widget.CardView>
-
             <ImageButton
                 android:id="@+id/btnCollapseExpandedStudent"
                 android:layout_width="wrap_content"
@@ -167,11 +111,11 @@
                 app:layout_constraintTop_toBottomOf="@id/tv3" />
 
             <Button
-                android:id="@+id/adminDeleteStudentAccount"
+                android:id="@+id/adminSendNotification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#F94144"
-                android:text="Delete account"
+                android:backgroundTint="#6247AA"
+                android:text="Send notification"
                 android:textAllCaps="false"
                 android:layout_marginStart="15dp"
                 app:cornerRadius="60dp"
@@ -180,16 +124,16 @@
                 />
 
             <Button
-                android:id="@+id/adminRemoveStudentSupervisor"
+                android:id="@+id/adminResetStudentProject"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#6247AA"
-                android:text="Delete student project"
+                android:text="Reset student project"
                 android:textAllCaps="false"
                 android:layout_marginStart="15dp"
                 app:cornerRadius="60dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/adminDeleteStudentAccount"
+                app:layout_constraintBottom_toTopOf="@id/adminSendNotification"
                 android:layout_marginBottom="15dp"
                 />
 
