@@ -11,7 +11,8 @@
         <entry key="..\:/Android Applications/PMS/app/src/main/res/drawable/spinner_corner_radius.xml" value="0.166" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/activity_home_navbar.xml" value="0.12" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/activity_recommender.xml" value="0.24947916666666667" />
-        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/admin_expanded_student_view.xml" value="0.1" />
+        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/admin_expanded_student_view.xml" value="0.16" />
+        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/admin_expanded_supervisor_view.xml" value="0.16983695652173914" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/admin_home_activity.xml" value="0.25" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/admin_workspace_fragment.xml" value="0.25" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/child_fragment_reference.xml" value="0.25" />

@@ -58,7 +58,7 @@ public class StudentExpandedView extends Fragment {
         TextView supervisorEmail = view.findViewById(R.id.adminESSupervisorName);
         TextView projectApproved = view.findViewById(R.id.adminESProjectApproved);
 
-        ImageButton collapseStudentRequest = view.findViewById(R.id.btnCollapseExpandedStudent);
+        ImageButton collapseStudent = view.findViewById(R.id.btnCollapseExpandedStudent);
         Button sendNotification = view.findViewById(R.id.adminSendNotification);
         Button resetProject = view.findViewById(R.id.adminResetStudentProject);
 
@@ -85,8 +85,8 @@ public class StudentExpandedView extends Fragment {
             resetStudentProject();
         } );
 
-        if (collapseStudentRequest.isClickable()) {
-            collapseStudentRequest.setOnClickListener(view1 ->
+        if (collapseStudent.isClickable()) {
+            collapseStudent.setOnClickListener(view1 ->
                     requireActivity().getSupportFragmentManager().popBackStack());
         }
 

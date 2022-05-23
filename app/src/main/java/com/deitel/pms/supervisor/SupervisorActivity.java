@@ -4,6 +4,7 @@ import com.deitel.pms.R;
 import com.deitel.pms.User;
 import com.deitel.pms.messaging.MessageCenter;
 import com.deitel.pms.student.HomeActivity;
+import com.deitel.pms.student.Notifications;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -42,44 +43,38 @@ public class SupervisorActivity extends AppCompatActivity {
             fragmentTransaction.add(R.id.supervisor_nav_bar_fragment, new SupervisorWorkspace()).commit();
         }
 
-        btnWorkspace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearBackStack(fm.getBackStackEntryCount());
-                fm.beginTransaction()
-                        .add(R.id.supervisor_nav_bar_fragment, new SupervisorWorkspace())
-                        .addToBackStack("workspace")
-                        .commit();
-            }
+        btnWorkspace.setOnClickListener(view -> {
+            clearBackStack(fm.getBackStackEntryCount());
+            fm.beginTransaction()
+                    .add(R.id.supervisor_nav_bar_fragment, new SupervisorWorkspace())
+                    .addToBackStack("workspace")
+                    .commit();
         });
 
-        btnNotifications.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearBackStack(fm.getBackStackEntryCount());
-            }
+        btnNotifications.setOnClickListener(view -> {
+            clearBackStack(fm.getBackStackEntryCount());
+            fm.beginTransaction()
+                    .add(R.id.supervisor_nav_bar_fragment,
+                            new Notifications("supervisors",
+                                    R.id.supervisor_nav_bar_fragment))
+                    .addToBackStack("workspace")
+                    .commit();
         });
 
-        btnMessages.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearBackStack(fm.getBackStackEntryCount());
-                fm.beginTransaction()
-                        .add(R.id.supervisor_nav_bar_fragment, new SupervisorMessages())
-                        .addToBackStack("supervisor messages")
-                        .commit();
-            }
+        btnMessages.setOnClickListener(view -> {
+            clearBackStack(fm.getBackStackEntryCount());
+            fm.beginTransaction()
+                    .add(R.id.supervisor_nav_bar_fragment, new SupervisorMessages())
+                    .addToBackStack("supervisor messages")
+                    .commit();
         });
 
-        btnProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearBackStack(fm.getBackStackEntryCount());
-                fm.beginTransaction()
-                        .add(R.id.supervisor_nav_bar_fragment, new SupervisorProfile())
-                        .addToBackStack("supervisor profile")
-                        .commit();
-            }
+        btnProfile.setOnClickListener(view -> {
+            clearBackStack(fm.getBackStackEntryCount());
+            fm.beginTransaction()
+                    .add(R.id.supervisor_nav_bar_fragment, new SupervisorProfile())
+                    .addToBackStack("supervisor profile")
+                    .commit();
         });
 
     }
