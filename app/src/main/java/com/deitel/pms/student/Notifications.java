@@ -33,11 +33,19 @@ public class Notifications extends Fragment implements NotificationRecyclerViewA
     User user = new User();
     ArrayList<ArrayList<String>> notifications = new ArrayList<>();
 
+    private final String collection;
+    private final int fragmentId;
+    public Notifications(String collectionPath, int fragmentId) {
+        this.collection = collectionPath;
+        this.fragmentId = fragmentId;
+    }
+
     boolean flag = true;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.frag_notifications, container, false);
     }
 
@@ -54,35 +62,28 @@ public class Notifications extends Fragment implements NotificationRecyclerViewA
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new NotificationRecyclerViewAdapter(context, notifications);
 
-
-        dbInstance.collection(u.getUSER_COLLECTION_PATH())
+        dbInstance.collection(this.collection)
                 .document(user.getUserId(requireActivity()))
                 .collection("notifications")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        QuerySnapshot snapshots = task.getResult();
-                        for (QueryDocumentSnapshot notification : snapshots) {
-                            ArrayList<String> notificationData = new ArrayList<>();
-                            notificationData.add((String) notification.get("title"));
-                            notificationData.add((String) notification.get("description"));
-                            notificationData.add((String) notification.get("sender"));
-                            notificationData.add((String) notification.get("due date"));
-                            notificationData.add((String) notification.getId());
+                .addOnCompleteListener(task -> {
+                    QuerySnapshot snapshots = task.getResult();
+                    for (QueryDocumentSnapshot notification : snapshots) {
+                        ArrayList<String> notificationData = new ArrayList<>();
+                        notificationData.add((String) notification.get("title"));
+                        notificationData.add((String) notification.get("description"));
+                        notificationData.add((String) notification.get("sender"));
+                        notificationData.add((String) notification.get("due date"));
+                        notificationData.add((String) notification.getId());
 
-                            notifications.add(notificationData);
-                        }
-                        adapter.setmData(notifications);
-                        adapter.setClickListener(Notifications.this);
-                        recyclerView.setAdapter(adapter);
+                        notifications.add(notificationData);
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
+                    adapter.setmData(notifications);
+                    adapter.setClickListener(Notifications.this);
+                    recyclerView.setAdapter(adapter);
+                }).addOnFailureListener(e -> {
 
-            }
-        });
+                });
 
     }
 
@@ -99,19 +100,28 @@ public class Notifications extends Fragment implements NotificationRecyclerViewA
             ArrayList<String> notification = adapter.getItem(position);
 
             requireActivity().getSupportFragmentManager().beginTransaction()
-                    .add(R.id.nav_bar_fragment, new ExpandedNotification(notification.get(0),
+                    .add(this.fragmentId, new ExpandedNotification(notification.get(0),
                             notification.get(1),
                             notification.get(2),
                             notification.get(3),
                             notification.get(4),
                             Notifications.this,
-                            position))
+                            position,
+                            getCollection(),
+                            getFragmentId()))
                     .addToBackStack("expanded notification")
                     .commit();
             setFlag(!flag);
         }
     }
 
+    private String getCollection() {
+        return this.collection;
+    }
+
+    private int getFragmentId() {
+        return this.fragmentId;
+    }
     public void setFlag(boolean b) {
         this.flag = b;
     }
