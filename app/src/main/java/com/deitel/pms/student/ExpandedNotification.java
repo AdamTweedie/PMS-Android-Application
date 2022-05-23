@@ -29,11 +29,14 @@ public class ExpandedNotification extends Fragment {
     private final String nDescription;
     private final String nDueDate;
     private final String nSender;
+    private final String collection;
     private final String nId;
     private final Notifications notifications;
     private final int itemPosition;
-
-    ExpandedNotification(String title, String description, String dueDate, String sender, String id, Notifications notif, int position) {
+    private final int fragmentId;
+    ExpandedNotification(String title, String description, String dueDate, String sender,
+                         String id, Notifications notif, int position, String collectionPath,
+                         int fragmentId) {
         this.nTitle = title;
         this.nDescription = description;
         this.nDueDate = dueDate;
@@ -41,6 +44,8 @@ public class ExpandedNotification extends Fragment {
         this.nId = id;
         this.notifications = notif;
         this.itemPosition = position;
+        this.collection = collectionPath;
+        this.fragmentId = fragmentId;
     }
 
     @Nullable
@@ -71,47 +76,42 @@ public class ExpandedNotification extends Fragment {
         tvDueDate.setText(this.nDueDate);
 
 
-        undo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                notifications.setFlag(true);
-                getParentFragmentManager().popBackStack();
-                Fragment fragment = getParentFragmentManager().findFragmentById(R.id.nav_bar_fragment);
-                assert fragment != null;
-                getParentFragmentManager().beginTransaction().detach(fragment).attach(fragment);
-            }
+        undo.setOnClickListener(view12 -> {
+            notifications.setFlag(true);
+            getParentFragmentManager().popBackStack();
+            Fragment fragment = getParentFragmentManager().findFragmentById(R.id.nav_bar_fragment);
+            assert fragment != null;
+            getParentFragmentManager().beginTransaction().detach(fragment).attach(fragment);
         });
 
-        deleteNotification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // delete notification
+        deleteNotification.setOnClickListener(view1 -> {
+            // delete notification
+            dbInstance.collection(getCollection())
+                    .document(user.getUserId(requireActivity()))
+                    .collection("notifications")
+                    .document(getnId())
+                    .delete()
+                    .addOnSuccessListener(unused -> {
+                        Log.w("LOGGER", "Successfully deleted notification with id: " + getnId());
+                        Toast.makeText(getContext(), "Successfully deleted notification", Toast.LENGTH_SHORT).show();
 
-                dbInstance.collection(utils.getUSER_COLLECTION_PATH())
-                        .document(user.getUserId(requireActivity()))
-                        .collection("notifications")
-                        .document(getnId())
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Log.w("LOGGER", "Successfully deleted notification with id: " + getnId());
-                                Toast.makeText(getContext(), "Successfully deleted notification", Toast.LENGTH_SHORT).show();
-
-                                getParentFragmentManager().popBackStack();
-                                Fragment fragment = getParentFragmentManager().findFragmentById(R.id.nav_bar_fragment);
-                                assert fragment != null;
-                                notifications.removeSingleItem(itemPosition);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
+                        getParentFragmentManager().popBackStack();
+                        Fragment fragment = getParentFragmentManager().findFragmentById(getFragmentId());
+                        assert fragment != null;
+                        notifications.removeSingleItem(itemPosition);
+                    }).addOnFailureListener(e -> {
                         Log.w("LOGGER", "Failed to delete notification with id: " + getnId());
                         Toast.makeText(getContext(), "Failed to delete notification", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
+                    });
         });
+    }
+
+    private String getCollection() {
+        return this.collection;
+    }
+
+    private int getFragmentId() {
+        return this.fragmentId;
     }
 
     private String getnId() {

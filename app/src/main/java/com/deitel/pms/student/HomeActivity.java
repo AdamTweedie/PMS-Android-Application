@@ -65,7 +65,8 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 clearBackStack(fm.getBackStackEntryCount());
                 fm.beginTransaction()
-                        .add(R.id.nav_bar_fragment, new Notifications())
+                        .add(R.id.nav_bar_fragment,
+                                new Notifications("users", R.id.nav_bar_fragment))
                         .addToBackStack("notifications")
                         .commit();
             }

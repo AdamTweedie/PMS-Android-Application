@@ -48,98 +48,70 @@ public class CreateNotification extends Fragment {
         Button btnSubmitNotification = (Button) view.findViewById(R.id.btnSubmitNotification);
         ImageButton btnUndo = (ImageButton) view.findViewById(R.id.scnBtnUndo);
 
+        User user = new User();
 
-        btnSubmitNotification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final String title = etTitle.getText().toString();
-                final String description = etDescription.getText().toString();
-                final String dueDate = etDueDate.getText().toString();
+        btnSubmitNotification.setOnClickListener(view1 -> {
+            final String title = etTitle.getText().toString();
+            final String description = etDescription.getText().toString();
+            final String dueDate = etDueDate.getText().toString();
 
-                if (title.length()>10) {
-                    submitNotification(title, description, dueDate);
-                } else {
-                    Toast.makeText(getContext(), "Title insufficient length", Toast.LENGTH_SHORT).show();
-                }
+            if (title.length()>10) {
+                submitNotification(user.getUserId(requireActivity()), title, description, dueDate);
+            } else {
+                Toast.makeText(getContext(), "Title insufficient length", Toast.LENGTH_SHORT).show();
             }
         });
 
-        btnUndo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getParentFragmentManager().popBackStack();
-            }
-        });
+        btnUndo.setOnClickListener(view12 -> getParentFragmentManager().popBackStack());
+
     }
 
-    private void submitNotification(String title, String description, String dueDate) {
+    private void submitNotification(String sender, String title, String description, String dueDate) {
 
         FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
         FirestoreUtils utils = new FirestoreUtils();
-        User user = new User();
 
         Map<String, Object> notification = new HashMap<>();
-        notification.put("sender", user.getUserId(requireActivity()));
+        notification.put("sender", sender);
         notification.put("title", title);
         notification.put("description", description);
         notification.put("due date", dueDate);
 
         dbInstance.collection(utils.getSUPERVISOR_COLLECTION_PATH())
-                .document(user.getUserId(requireActivity()))
+                .document(sender)
                 .collection("created notifications")
                 .add(notification)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.w("LOGGER", "successfully added notification");
-                        Toast.makeText(requireContext(), "Added notification", Toast.LENGTH_SHORT).show();
-                        // add notification to students
-                        dbInstance.collection(utils.getSUPERVISOR_COLLECTION_PATH())
-                                .document(user.getUserId(requireActivity()))
-                                .collection("approved projects")
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        QuerySnapshot snapshot = task.getResult();
-                                        for (QueryDocumentSnapshot document : snapshot) {
-                                            dbInstance.collection(utils.getUSER_COLLECTION_PATH())
-                                                    .document(document.getId())
-                                                    .collection("notifications")
-                                                    .add(notification)
-                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                        @Override
-                                                        public void onSuccess(DocumentReference documentReference) {
-                                                            Log.w("LOGGER", "Added notification to students notifications");
-                                                            try {
-                                                                getParentFragmentManager().popBackStack();
-                                                            } catch (Exception e) {
-                                                                Log.e("LOGGER", "failed with exception: " + e);
-                                                            }
-                                                        }
-                                                    }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.w("LOGGER", "failed to add notification to students notifications");
+                .addOnSuccessListener(documentReference -> {
+                    Log.w("LOGGER", "successfully added notification");
+                    Toast.makeText(requireContext(), "Added notification", Toast.LENGTH_SHORT).show();
+                    // add notification to students
+                    dbInstance.collection(utils.getSUPERVISOR_COLLECTION_PATH())
+                            .document(sender)
+                            .collection("approved projects")
+                            .get()
+                            .addOnCompleteListener(task -> {
+                                QuerySnapshot snapshot = task.getResult();
+                                for (QueryDocumentSnapshot document : snapshot) {
+                                    dbInstance.collection(utils.getUSER_COLLECTION_PATH())
+                                            .document(document.getId())
+                                            .collection("notifications")
+                                            .add(notification)
+                                            .addOnSuccessListener(documentReference1 -> {
+                                                Log.w("LOGGER", "Added notification to students notifications");
+                                                try {
+                                                    getParentFragmentManager().popBackStack();
+                                                } catch (Exception e) {
+                                                    Log.e("LOGGER", "failed with exception: " + e);
                                                 }
-                                            });
-                                        }
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w("LOGGER", "failed to access my students");
-                            }
-                        });
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w("LOGGER", "failed to add new notification");
-                Toast.makeText(requireContext(), "Failed to add notification", Toast.LENGTH_SHORT).show();
-                getParentFragmentManager().popBackStack();
-            }
-        });
+                                            }).addOnFailureListener(e -> Log.w("LOGGER", "failed to add notification to students notifications"));
+                                }
+                            }).addOnFailureListener(e -> Log.w("LOGGER", "failed to access my students"));
+                }).addOnFailureListener(e -> {
+                    Log.w("LOGGER", "failed to add new notification");
+                    Toast.makeText(requireContext(), "Failed to add notification",
+                            Toast.LENGTH_SHORT).show();
+                    getParentFragmentManager().popBackStack();
+                });
 
     }
 }
