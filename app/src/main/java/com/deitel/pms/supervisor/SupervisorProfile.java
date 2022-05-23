@@ -55,37 +55,30 @@ public class SupervisorProfile extends Fragment {
         final Button btnDeleteAccount = (Button) view.findViewById(R.id.btnSupervisorAccountDeleteAccount);
 
 
-        btnSignOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                profile.unsaveUserCredentials(requireActivity());
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                getActivity().finish();
-                startActivity(intent);
-                Toast.makeText(getContext(), "Goodbye!", Toast.LENGTH_SHORT).show();
-                FirebaseAuth.getInstance().signOut();
-            }
+        btnSignOut.setOnClickListener(view1 -> {
+            profile.unsaveUserCredentials(requireActivity());
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            getActivity().finish();
+            startActivity(intent);
+            Toast.makeText(getContext(), "Goodbye!", Toast.LENGTH_SHORT).show();
+            FirebaseAuth.getInstance().signOut();
         });
 
+        setSupervisorGroupCount(sGroupSize, user.getUserId(requireActivity()));
+    }
 
-        dbInstance.collection(u.getSUPERVISOR_COLLECTION_PATH())
-                .document(userId)
+    public static void setSupervisorGroupCount(TextView tv, String supervisorId) {
+        FirebaseFirestore.getInstance()
+                .collection("supervisors")
+                .document(supervisorId)
                 .collection("approved projects")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                int count = 0;
-                for (int i = 0; i < task.getResult().size(); i++) {
-                    count = count + 1;
-                }
-                sGroupSize.setText(String.valueOf(count));
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                sGroupSize.setText("0");
-            }
-        });
+                .addOnCompleteListener(task -> {
+                    int count = 0;
+                    for (int i = 0; i < task.getResult().size(); i++) {
+                        count = count + 1;
+                    }
+                    tv.setText(String.valueOf(count));
+                }).addOnFailureListener(e -> tv.setText("0"));
     }
 }
