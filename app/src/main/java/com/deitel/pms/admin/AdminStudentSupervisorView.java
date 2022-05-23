@@ -60,7 +60,6 @@ public class AdminStudentSupervisorView extends Fragment implements MyStudentsRe
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getContext(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
         if (this.student) {
             FirebaseFirestore.getInstance()
                     .collection("users")
@@ -74,25 +73,15 @@ public class AdminStudentSupervisorView extends Fragment implements MyStudentsRe
                                 .add(R.id.admin_nav_bar_fragment,
                                         new StudentExpandedView(adapter.getItem(position),
                                                 projectTitle, supervisorEmail, projectApproved))
-                                .addToBackStack("expanded notification")
+                                .addToBackStack("expanded_student")
                                 .commit();
                     }).addOnFailureListener(e -> Log.e("LOGGER", "Failed to load student data"));
         } else {
-//            FirebaseFirestore.getInstance()
-//                    .collection("supervisors")
-//                    .document(adapter.getItem(position))
-//                    .get()
-//                    .addOnCompleteListener(task -> {
-//                        String projectTitle = (String) task.getResult().get("project title");
-//                        String supervisorEmail = (String) task.getResult().get("supervisor email");
-//                        Boolean projectApproved = (Boolean) task.getResult().get("approved project");
-//                        requireActivity().getSupportFragmentManager().beginTransaction()
-//                                .add(R.id.nav_bar_fragment,
-//                                        new StudentExpandedView(adapter.getItem(position),
-//                                                projectTitle, supervisorEmail, projectApproved))
-//                                .addToBackStack("expanded notification")
-//                                .commit();
-//                    }).addOnFailureListener(e -> Log.e("LOGGER", "Failed to load student data"));
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .add(R.id.admin_nav_bar_fragment,
+                            new SupervisorExpandedView(adapter.getItem(position)))
+                    .addToBackStack("expanded_supervisor")
+                    .commit();
         }
     }
 }

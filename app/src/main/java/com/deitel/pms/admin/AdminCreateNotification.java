@@ -26,10 +26,10 @@ import java.util.Map;
 
 public class AdminCreateNotification extends Fragment {
 
-        private final String student;
+        private final String user;
         private final String collection;
-        AdminCreateNotification(String studentId, String collectionId) {
-            this.student = studentId;
+        AdminCreateNotification(String userId, String collectionId) {
+            this.user = userId;
             this.collection = collectionId;
         }
 
@@ -58,7 +58,9 @@ public class AdminCreateNotification extends Fragment {
                 final String dueDate = etDueDate.getText().toString();
 
                 if (title.length()>10) {
-                    sendNotification(this.collection, this.student, title, description, dueDate);
+                    sendNotification(this.collection, this.user, title, description, dueDate);
+                    getParentFragmentManager().popBackStack();
+                    Toast.makeText(getContext(), "Notification sent", Toast.LENGTH_SHORT);
                 } else {
                     Toast.makeText(getContext(), "Title insufficient length", Toast.LENGTH_SHORT).show();
                 }

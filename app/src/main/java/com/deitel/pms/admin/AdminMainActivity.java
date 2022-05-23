@@ -18,6 +18,7 @@ public class AdminMainActivity extends AppCompatActivity {
         setContentView(R.layout.admin_home_activity);
 
         Button navWorkspace = findViewById(R.id.btnNavAdminWorkspace);
+        Button navProfile = findViewById(R.id.btnNavAdminProfile);
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
@@ -27,11 +28,20 @@ public class AdminMainActivity extends AppCompatActivity {
 
         User user = new User();
         System.out.println("ADMIN ID" + user.getUserId(this));
+
         navWorkspace.setOnClickListener(view -> {
             clearBackStack(fm.getBackStackEntryCount());
             fm.beginTransaction()
                     .add(R.id.admin_nav_bar_fragment, new AdminWorkspace())
                     .addToBackStack("Admin-Workspace")
+                    .commit();
+        });
+
+        navProfile.setOnClickListener(view1 -> {
+            clearBackStack(fm.getBackStackEntryCount());
+            fm.beginTransaction()
+                    .add(R.id.admin_nav_bar_fragment, new AdminProfile())
+                    .addToBackStack("Admin-Profile")
                     .commit();
         });
     }
