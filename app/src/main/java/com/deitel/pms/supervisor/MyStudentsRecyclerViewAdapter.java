@@ -35,8 +35,8 @@ public class MyStudentsRecyclerViewAdapter extends RecyclerView.Adapter<MyStuden
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(MyStudentsRecyclerViewAdapter.ViewHolder holder, int position) {
-        String animal = getmData().get(position);
-        holder.studentEmail.setText(animal);
+        String student = getmData().get(position);
+        holder.studentEmail.setText(student);
     }
 
     // total number of rows

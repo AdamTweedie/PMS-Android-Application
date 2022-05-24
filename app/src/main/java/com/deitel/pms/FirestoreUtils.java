@@ -1,26 +1,10 @@
 package com.deitel.pms;
 
-import static java.util.Objects.requireNonNull;
-
 import android.app.Activity;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentId;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -42,8 +26,6 @@ public class FirestoreUtils {
     final String SUPERVISOR_COLLECTION_PATH = "supervisors";
     final String FIELD_SUPERVISOR_ACCOUNT_CREATED = "account created";
     final String SUPERVISOR_REQUESTS_COLLECTION_PATH = "project requests";
-    final String SUPERVISOR_REQUESTS_PROJECT_TITLE_FIELD = "project title";
-    final String SUPERVISOR_REQUESTS_PROJECT_DESCRIPTION_FIELD = "project description";
 
 
     public void addUserProject(Activity activity,
@@ -125,12 +107,6 @@ public class FirestoreUtils {
                 .addOnFailureListener(e -> Log.w("LOGGER", "Failed to add notification with exception: " + e));
     }
 
-    public void createAccount() {
-    }
-
-    public void setProjectApproval() {
-    }
-
     public String getUSER_COLLECTION_PATH() {
         return USER_COLLECTION_PATH;
     }
@@ -161,13 +137,5 @@ public class FirestoreUtils {
 
     public String getSUPERVISOR_REQUESTS_COLLECTION_PATH() {
         return SUPERVISOR_REQUESTS_COLLECTION_PATH;
-    }
-
-    public String getSUPERVISOR_REQUESTS_PROJECT_TITLE_FIELD() {
-        return SUPERVISOR_REQUESTS_PROJECT_TITLE_FIELD;
-    }
-
-    public String getSUPERVISOR_REQUESTS_PROJECT_DESCRIPTION_FIELD() {
-        return SUPERVISOR_REQUESTS_PROJECT_DESCRIPTION_FIELD;
     }
 }

@@ -49,12 +49,7 @@ public class CreateNewProject extends Fragment {
         final User user = new User();
 
 
-        collapseProjectForm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getParentFragmentManager().popBackStack();
-            }
-        });
+        collapseProjectForm.setOnClickListener(view1 -> getParentFragmentManager().popBackStack());
 
         // Set supervisorEmail
         try {
@@ -65,41 +60,32 @@ public class CreateNewProject extends Fragment {
 
 
         // Upload project suggestion
-        uploadProjectSuggestion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final String name = supervisorName.getText().toString();
-                final String title = projectTitle.getText().toString();
-                final String description = projectDescription.getText().toString();
-                final String otherInfo = otherUsefulInfo.getText().toString();
+        uploadProjectSuggestion.setOnClickListener(view12 -> {
+            final String name = supervisorName.getText().toString();
+            final String title = projectTitle.getText().toString();
+            final String description = projectDescription.getText().toString();
+            final String otherInfo = otherUsefulInfo.getText().toString();
 
-                if (title.length() > 20) {
-                    Map<String, Object> newProject = new HashMap<>();
-                    newProject.put("supervisor name", name);
-                    newProject.put("supervisor email", user.getUserId(requireActivity()));
-                    newProject.put("project title", title);
-                    newProject.put("project description", description);
-                    newProject.put("other info", otherInfo);
-                    dbInstance.collection("New Projects")
-                            .add(newProject)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    Log.w("LOGGER", "Successfully added new project");
-                                    Toast.makeText(getContext(), "Project successfully added!", Toast.LENGTH_SHORT).show();
-                                    getParentFragmentManager().popBackStack();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
+            if (title.length() > 20) {
+                Map<String, Object> newProject = new HashMap<>();
+                newProject.put("supervisor name", name);
+                newProject.put("supervisor email", user.getUserId(requireActivity()));
+                newProject.put("project title", title);
+                newProject.put("project description", description);
+                newProject.put("other info", otherInfo);
+                dbInstance.collection("New Projects")
+                        .add(newProject)
+                        .addOnSuccessListener(documentReference -> {
+                            Log.w("LOGGER", "Successfully added new project");
+                            Toast.makeText(getContext(), "Project successfully added!", Toast.LENGTH_SHORT).show();
+                            getParentFragmentManager().popBackStack();
+                        }).addOnFailureListener(e -> {
                             Log.w("LOGGER", "Failed to add new project");
                             Toast.makeText(getContext(), "Failed to add project!", Toast.LENGTH_SHORT).show();
                             getParentFragmentManager().popBackStack();
-                        }
-                    });
-                } else {
-                    Toast.makeText(getContext(), "Title insufficient length", Toast.LENGTH_SHORT).show();
-                }
+                        });
+            } else {
+                Toast.makeText(getContext(), "Title insufficient length", Toast.LENGTH_SHORT).show();
             }
         });
     }

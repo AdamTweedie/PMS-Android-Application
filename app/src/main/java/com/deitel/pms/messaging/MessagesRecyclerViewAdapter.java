@@ -35,7 +35,8 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
     }
     @NonNull
     @Override
-    public MessagesRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MessagesRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
+                                                                     int viewType) {
         View view = mInflater.inflate(R.layout.message_row, parent, false);
         return new ViewHolder(view);
     }
@@ -67,10 +68,13 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
             String newMessage = message.replace("R:", "");
             holder.myTextView.setText(newMessage);
             constraintSet.clone(holder.parent);
-            constraintSet.connect(holder.messageConstraint.getId(),ConstraintSet.START,holder.parent.getId(),ConstraintSet.START,0);
-            constraintSet.connect(holder.messageConstraint.getId(),ConstraintSet.TOP,holder.parent.getId(),ConstraintSet.TOP,0);
+            constraintSet.connect(holder.messageConstraint.getId(),
+                    ConstraintSet.START,holder.parent.getId(),ConstraintSet.START,0);
+            constraintSet.connect(holder.messageConstraint.getId(),
+                    ConstraintSet.TOP,holder.parent.getId(),ConstraintSet.TOP,0);
             constraintSet.applyTo(holder.parent);
-            holder.messageConstraint.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#CFD1D3")));
+            holder.messageConstraint.setBackgroundTintList(ColorStateList.valueOf(Color
+                    .parseColor("#CFD1D3")));
 
         }
     }

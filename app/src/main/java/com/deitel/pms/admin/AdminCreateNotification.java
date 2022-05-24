@@ -71,7 +71,7 @@ public class AdminCreateNotification extends Fragment {
         }
 
         public void sendNotification(String collectionId, String documentId, String title, String description, String dueDate) {
-            // TODO - make sure this works
+
             User user = new User();
             String senderEmail = user.getUserId(requireActivity()).split("-"+ ActiveUniAdmin.EXETER_ADMIN.getValue())[0];
 

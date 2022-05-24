@@ -67,71 +67,57 @@ public class SelectedProject extends Fragment {
         supervisorName.setText(getSupervisorName());
         supervisorEmail.setText(getSupervisorEmail());
 
-        btnBackToSuggestions.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fm.popBackStack();
-            }
-        });
+        btnBackToSuggestions.setOnClickListener(view1 -> fm.popBackStack());
 
-        btnRequestProject.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnRequestProject.setOnClickListener(view12 -> {
 
-                User user = new User();
-                final String userId = user.getUserId(requireActivity());
-                final FirestoreUtils utils = new FirestoreUtils();
-                final FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
+            User user = new User();
+            final String userId = user.getUserId(requireActivity());
+            final FirestoreUtils utils = new FirestoreUtils();
+            final FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
 
-                // if student has a current project request
-                // delete request from current supervisor
-                // then
-                // add request to new supervisor
+            // if student has a current project request
+            // delete request from current supervisor
+            // then
+            // add request to new supervisor
 
-                dbInstance.collection(utils.getUSER_COLLECTION_PATH())
-                        .document(userId)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                DocumentSnapshot snapshot = task.getResult();
-                                if (snapshot.get("supervisor email")!=null) { // && project approved != true
-                                    String supervisorId = (String) snapshot.get("supervisor email");
-                                    utils.deleteProjectRequest(supervisorId, userId);
-                                    utils.addUserProject(requireActivity(),
-                                            getSupervisorEmail(),
-                                            getSupervisorName(),
-                                            getProjectTitle(),
-                                            getProjectDescription());
-                                    utils.standardProjectRequest(userId, getSupervisorEmail(), getProjectTitle(), getProjectDescription());
-                                    getParentFragmentManager().popBackStack();
-                                    Intent homeScreen = new Intent(getActivity(), HomeActivity.class);
-                                    startActivity(homeScreen);
-                                } else {
-                                    utils.addUserProject(requireActivity(),
-                                            getSupervisorEmail(),
-                                            getSupervisorName(),
-                                            getProjectTitle(),
-                                            getProjectDescription());
-                                    utils.standardProjectRequest(userId, getSupervisorEmail(), getProjectTitle(), getProjectDescription());
-                                    getParentFragmentManager().popBackStack();
-                                    Intent homeScreen = new Intent(getActivity(), HomeActivity.class);
-                                    startActivity(homeScreen);
-                                }
-                                Toast.makeText(getContext(), "Project selected !", Toast.LENGTH_SHORT).show();
-                                requireActivity().finish();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
+            dbInstance.collection(utils.getUSER_COLLECTION_PATH())
+                    .document(userId)
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        DocumentSnapshot snapshot = task.getResult();
+                        if (snapshot.get("supervisor email")!=null) { // && project approved != true
+                            String supervisorId = (String) snapshot.get("supervisor email");
+                            utils.deleteProjectRequest(supervisorId, userId);
+                            utils.addUserProject(requireActivity(),
+                                    getSupervisorEmail(),
+                                    getSupervisorName(),
+                                    getProjectTitle(),
+                                    getProjectDescription());
+                            utils.standardProjectRequest(userId, getSupervisorEmail(), getProjectTitle(), getProjectDescription());
+                            getParentFragmentManager().popBackStack();
+                            Intent homeScreen = new Intent(getActivity(), HomeActivity.class);
+                            startActivity(homeScreen);
+                        } else {
+                            utils.addUserProject(requireActivity(),
+                                    getSupervisorEmail(),
+                                    getSupervisorName(),
+                                    getProjectTitle(),
+                                    getProjectDescription());
+                            utils.standardProjectRequest(userId, getSupervisorEmail(), getProjectTitle(), getProjectDescription());
+                            getParentFragmentManager().popBackStack();
+                            Intent homeScreen = new Intent(getActivity(), HomeActivity.class);
+                            startActivity(homeScreen);
+                        }
+                        Toast.makeText(getContext(), "Project selected !", Toast.LENGTH_SHORT).show();
+                        requireActivity().finish();
+                    }).addOnFailureListener(e -> {
                         Log.w("LOGGER", "failed to delete project request with exception " + e);
                         Intent homeScreen = new Intent(getActivity(), HomeActivity.class);
                         startActivity(homeScreen);
                         Toast.makeText(getContext(), "Failed to add user project", Toast.LENGTH_SHORT).show();
                         requireActivity().finish();
-                    }
-                });
-            }
+                    });
         });
 
     }

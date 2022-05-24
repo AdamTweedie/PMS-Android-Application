@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/admin_activity_nav_graph"
+    app:startDestination="@id/adminMainActivity">
+
+    <activity
+        android:id="@+id/adminMainActivity"
+        android:name="com.deitel.pms.admin.AdminMainActivity"
+        android:label="AdminMainActivity" />
+    <fragment
+        android:id="@+id/adminProfile"
+        android:name="com.deitel.pms.admin.AdminProfile"
+        android:label="AdminProfile" >
+        <action
+            android:id="@+id/action_adminProfile_to_adminMainActivity"
+            app:destination="@id/adminMainActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminWorkspace"
+        android:name="com.deitel.pms.admin.AdminWorkspace"
+        android:label="AdminWorkspace" >
+        <action
+            android:id="@+id/action_adminWorkspace_to_adminMainActivity"
+            app:destination="@id/adminMainActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/studentExpandedView"
+        android:name="com.deitel.pms.admin.StudentExpandedView"
+        android:label="StudentExpandedView" >
+        <action
+            android:id="@+id/action_studentExpandedView_to_adminStudentSupervisorView2"
+            app:destination="@id/adminStudentSupervisorView2" />
+    </fragment>
+    <fragment
+        android:id="@+id/supervisorExpandedView"
+        android:name="com.deitel.pms.admin.SupervisorExpandedView"
+        android:label="SupervisorExpandedView" >
+        <action
+            android:id="@+id/action_supervisorExpandedView_to_adminStudentSupervisorView2"
+            app:destination="@id/adminStudentSupervisorView2" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminCreateNotification2"
+        android:name="com.deitel.pms.admin.AdminCreateNotification"
+        android:label="AdminCreateNotification" >
+        <action
+            android:id="@+id/action_adminCreateNotification2_to_supervisorExpandedView"
+            app:destination="@id/supervisorExpandedView" />
+        <action
+            android:id="@+id/action_adminCreateNotification2_to_studentExpandedView"
+            app:destination="@id/studentExpandedView" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminStudentSupervisorView2"
+        android:name="com.deitel.pms.admin.AdminStudentSupervisorView"
+        android:label="AdminStudentSupervisorView" >
+        <action
+            android:id="@+id/action_adminStudentSupervisorView2_to_adminWorkspace"
+            app:destination="@id/adminWorkspace" />
+    </fragment>
+</navigation>

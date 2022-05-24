@@ -30,8 +30,8 @@ public class AdminStudentSupervisorView extends Fragment implements MyStudentsRe
 
     MyStudentsRecyclerViewAdapter adapter;
 
-    private boolean student;
-    private ArrayList<String> userData;
+    private final boolean student;
+    private final ArrayList<String> userData;
     AdminStudentSupervisorView(ArrayList<String> data, Boolean isStudent) {
         this.student = isStudent;
         this.userData = data;

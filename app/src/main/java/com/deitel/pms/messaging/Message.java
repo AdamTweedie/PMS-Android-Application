@@ -1,7 +1,5 @@
 package com.deitel.pms.messaging;
 
-import java.util.ArrayList;
-
 public class Message {
 
     private String content;

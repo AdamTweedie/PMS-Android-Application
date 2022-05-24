@@ -51,23 +51,19 @@ public class RecommenderActivity extends AppCompatActivity {
                 .add(R.id.recommenderContainterView, new ProjectSelectionIntro()).addToBackStack("intro");
         signInFragmentTransaction.commit();
 
-        getSupportFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
+        getSupportFragmentManager().setFragmentResultListener("requestKey", this, (requestKey, bundle) -> {
 
-                String result = bundle.getString("bundleKey");
-                System.out.println("this is the result in activity " + result);
+            String result = bundle.getString("bundleKey");
+            System.out.println("this is the result in activity " + result);
 
-                // String cleanEntry = sortResult(result)
+            // String cleanEntry = sortResult(result)
 
-                ArrayList<ArrayList<String>> data = new ArrayList<>();
-                ArrayList<String> resultAsArray = new ArrayList<>();
-                resultAsArray.add(result);
-                data.add(resultAsArray);
-                dbInstance.collection("New Projects")
-                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            ArrayList<ArrayList<String>> data = new ArrayList<>();
+            ArrayList<String> resultAsArray = new ArrayList<>();
+            resultAsArray.add(result);
+            data.add(resultAsArray);
+            dbInstance.collection("New Projects")
+                    .get().addOnCompleteListener(task -> {
 
                         for (QueryDocumentSnapshot snapshot : task.getResult()) {
                             ArrayList<String> project_data_raw = new ArrayList<>();
@@ -81,16 +77,11 @@ public class RecommenderActivity extends AppCompatActivity {
                         Log.w("LOGGER", "Successfully got additional projects from Firestore");
                         new RecommenderThread().execute(data);
                         LoadingSuggestions(true);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
+                    }).addOnFailureListener(e -> {
                         Log.w("LOGGER", "failed to get additional projects from Firestore");
                         new RecommenderThread().execute(data);
                         LoadingSuggestions(true);
-                    }
-                });
-            }
+                    });
         });
     }
 

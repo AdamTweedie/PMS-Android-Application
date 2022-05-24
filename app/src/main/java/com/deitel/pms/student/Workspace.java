@@ -16,8 +16,6 @@ import androidx.fragment.app.Fragment;
 import com.deitel.pms.R;
 import com.deitel.pms.student.kanban.KanbanBoard;
 
-import org.w3c.dom.Text;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -44,32 +42,26 @@ public class Workspace extends Fragment {
         Button btnKanban = (Button) view.findViewById(R.id.btnKanbanBoard);
         Button btnMyProject = (Button) view.findViewById(R.id.btnMyProject);
 
-        btnMyProject.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = getParentFragmentManager()
-                        .findFragmentById(R.id.nav_bar_fragment);
-                if (fragment!=null) {
-                    getParentFragmentManager().beginTransaction()
-                            .add(R.id.nav_bar_fragment, new MyProject())
-                            .addToBackStack("kanban")
-                            .commit();
-                }
+        btnMyProject.setOnClickListener(view1 -> {
+            Fragment fragment = getParentFragmentManager()
+                    .findFragmentById(R.id.nav_bar_fragment);
+            if (fragment!=null) {
+                getParentFragmentManager().beginTransaction()
+                        .add(R.id.nav_bar_fragment, new MyProject())
+                        .addToBackStack("kanban")
+                        .commit();
             }
         });
 
-        btnKanban.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = getParentFragmentManager()
-                        .findFragmentById(R.id.nav_bar_fragment);
-                if (fragment!=null) {
-                    getParentFragmentManager().popBackStack();
-                    getParentFragmentManager().beginTransaction()
-                            .add(R.id.nav_bar_fragment, new KanbanBoard())
-                            .addToBackStack("kanban")
-                            .commit();
-                }
+        btnKanban.setOnClickListener(view12 -> {
+            Fragment fragment = getParentFragmentManager()
+                    .findFragmentById(R.id.nav_bar_fragment);
+            if (fragment!=null) {
+                getParentFragmentManager().popBackStack();
+                getParentFragmentManager().beginTransaction()
+                        .add(R.id.nav_bar_fragment, new KanbanBoard())
+                        .addToBackStack("kanban")
+                        .commit();
             }
         });
 
@@ -82,34 +74,28 @@ public class Workspace extends Fragment {
         } catch (RuntimeException ignored) {}
 
         // functionality
-        btnCalendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = getParentFragmentManager()
-                        .findFragmentById(R.id.nav_bar_fragment);
+        btnCalendar.setOnClickListener(view13 -> {
+            Fragment fragment = getParentFragmentManager()
+                    .findFragmentById(R.id.nav_bar_fragment);
 
-                if (fragment!=null) {
-                    getParentFragmentManager().beginTransaction()
-                            .add(R.id.nav_bar_fragment, new Calendar())
-                            .addToBackStack("calendar")
-                            .commit();
-                }
+            if (fragment!=null) {
+                getParentFragmentManager().beginTransaction()
+                        .add(R.id.nav_bar_fragment, new Calendar())
+                        .addToBackStack("calendar")
+                        .commit();
             }
         });
 
         // functionality
-        btnReferences.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = getParentFragmentManager()
-                        .findFragmentById(R.id.nav_bar_fragment);
+        btnReferences.setOnClickListener(view14 -> {
+            Fragment fragment = getParentFragmentManager()
+                    .findFragmentById(R.id.nav_bar_fragment);
 
-                if (fragment!=null) {
-                    getParentFragmentManager().beginTransaction()
-                            .add(R.id.nav_bar_fragment, new References())
-                            .addToBackStack("references")
-                            .commit();
-                }
+            if (fragment!=null) {
+                getParentFragmentManager().beginTransaction()
+                        .add(R.id.nav_bar_fragment, new References())
+                        .addToBackStack("references")
+                        .commit();
             }
         });
     }

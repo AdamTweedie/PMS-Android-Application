@@ -24,7 +24,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ExpandedNotification extends Fragment {
 
-
     private final String nTitle;
     private final String nDescription;
     private final String nDueDate;
@@ -59,7 +58,6 @@ public class ExpandedNotification extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         final FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
-        final FirestoreUtils utils = new FirestoreUtils();
         final User user = new User();
 
         TextView tvTitle = (TextView) view.findViewById(R.id.expandedNotificationTitle);
@@ -75,13 +73,13 @@ public class ExpandedNotification extends Fragment {
         tvSender.setText(this.nSender);
         tvDueDate.setText(this.nDueDate);
 
-
         undo.setOnClickListener(view12 -> {
             notifications.setFlag(true);
             getParentFragmentManager().popBackStack();
-            Fragment fragment = getParentFragmentManager().findFragmentById(R.id.nav_bar_fragment);
-            assert fragment != null;
-            getParentFragmentManager().beginTransaction().detach(fragment).attach(fragment);
+            try {
+                Fragment fragment = getParentFragmentManager().findFragmentById(this.fragmentId);
+                getParentFragmentManager().beginTransaction().detach(fragment).attach(fragment);
+            } catch (Exception ignored) {}
         });
 
         deleteNotification.setOnClickListener(view1 -> {

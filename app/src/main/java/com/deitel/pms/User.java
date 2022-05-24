@@ -24,7 +24,8 @@ public class User {
     }
 
     public void clearIdPreferences(Activity activity) {
-        SharedPreferences userId = activity.getSharedPreferences(user_id_prefs, Context.MODE_PRIVATE);
+        SharedPreferences userId = activity.getSharedPreferences(user_id_prefs,
+                Context.MODE_PRIVATE);
         userId.edit().clear().commit();
     }
 

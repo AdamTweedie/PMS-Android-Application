@@ -67,7 +67,7 @@
             android:layout_gravity="center|top"
             android:layout_marginTop="10dp"
             android:text="@string/sign_in"
-            android:textColor="@color/black"
+            android:textColor="#808080"
             android:textSize="25sp"
             android:textStyle="bold" />
 
@@ -89,6 +89,7 @@
             android:layout_gravity="top|center"
             android:layout_marginHorizontal="40dp"
             android:layout_marginTop="125dp"
+            android:inputType="textPassword"
             android:hint="@string/password_hint" />
 
         <CheckBox
@@ -100,34 +101,6 @@
             android:text="@string/remember_password"
             android:textSize="16sp"/>
 
-
     </androidx.cardview.widget.CardView>
-
-    <TextView
-        android:id="@+id/tvForgotPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/forgot_password"
-        android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/cardViewSignIn"
-        app:layout_constraintStart_toStartOf="@id/cardViewSignIn"
-        app:layout_constraintEnd_toEndOf="@id/cardViewSignIn"
-        />
-
-    <Button
-        android:id="@+id/btnResetPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/reset_password"
-        android:textAllCaps="false"
-        android:textSize="20sp"
-        style="?android:attr/borderlessButtonStyle"
-        android:textColor="#6247AA"
-        app:backgroundTint="@android:color/transparent"
-        app:layout_constraintEnd_toEndOf="@id/tvForgotPassword"
-        app:layout_constraintStart_toStartOf="@id/tvForgotPassword"
-        app:layout_constraintTop_toBottomOf="@+id/tvForgotPassword"
-        />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

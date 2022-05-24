@@ -121,7 +121,7 @@ def recommender(user_entry, list_data):
     else:
         suggestions_index = list(similar_entries_index)
 
-    while len(suggestions_index) <= 7: # obtain less similar entries and ensure list is <= 7
+    while len(suggestions_index) <= 7: # obtain less similar entries and ensure list is < 8
         if 1 <= user_cluster < df['cluster'].max():
             item1 = random.choice(tuple(get_project_suggestions_index(user_cluster-1, df)))
             item2 = random.choice(tuple(get_project_suggestions_index(user_cluster+1, df)))

@@ -37,36 +37,30 @@ public class ProjectRequestForm extends Fragment {
         Button btnRequestProject = (Button) view.findViewById(R.id.fspBtnRequestProject);
         ImageButton btnPopFragment = (ImageButton) view.findViewById(R.id.fspGoBack);
 
-        btnPopFragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    getParentFragmentManager().popBackStack();
-                } catch (NullPointerException e) {
-                    Log.e("LOGGER", "Failed with exception " + e);
-                }
+        btnPopFragment.setOnClickListener(view12 -> {
+            try {
+                getParentFragmentManager().popBackStack();
+            } catch (NullPointerException e) {
+                Log.e("LOGGER", "Failed with exception " + e);
             }
         });
 
-        btnRequestProject.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final String title = suggestedTitle.getText().toString();
-                final String description = suggestedDescription.getText().toString();
-                final FirestoreUtils firestoreUtils = new FirestoreUtils();
-                final User user = new User();
+        btnRequestProject.setOnClickListener(view1 -> {
+            final String title = suggestedTitle.getText().toString();
+            final String description = suggestedDescription.getText().toString();
+            final FirestoreUtils firestoreUtils = new FirestoreUtils();
+            final User user = new User();
 
-                firestoreUtils.addUserProject(requireActivity(),
-                        null, null, title, description);
-                firestoreUtils.studentSuggestedProjectRequest(user.getUserId(requireActivity()), title, description);
+            firestoreUtils.addUserProject(requireActivity(),
+                    null, null, title, description);
+            firestoreUtils.studentSuggestedProjectRequest(user.getUserId(requireActivity()), title, description);
 
-                getParentFragmentManager().popBackStack();
-                Intent homeScreen = new Intent(getActivity(), HomeActivity.class);
-                startActivity(homeScreen);
-                Toast.makeText(getContext(), "Project request received !", Toast.LENGTH_SHORT).show();
-                requireActivity().finish();
+            getParentFragmentManager().popBackStack();
+            Intent homeScreen = new Intent(getActivity(), HomeActivity.class);
+            startActivity(homeScreen);
+            Toast.makeText(getContext(), "Project request received !", Toast.LENGTH_SHORT).show();
+            requireActivity().finish();
 
-            }
         });
 
     }

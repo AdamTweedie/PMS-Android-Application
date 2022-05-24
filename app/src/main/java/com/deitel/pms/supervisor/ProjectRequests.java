@@ -60,33 +60,25 @@ public class ProjectRequests extends Fragment implements ProjectRequestsRecycler
             recyclerView.setAdapter(adapter);
         }
 
-        viewSupervisorRecommended.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ButtonUtils.tabViewButtonColorChanger(viewStudentSuggested, viewSupervisorRecommended);
-                adapter.setmData(getSupervisorRecommendedProjects());
-                adapter.setClickListener(ProjectRequests.this);
-                recyclerView.setAdapter(adapter);
-                setFlag(true);
-            }
+        viewSupervisorRecommended.setOnClickListener(view12 -> {
+            ButtonUtils.tabViewButtonColorChanger(viewStudentSuggested, viewSupervisorRecommended);
+            adapter.setmData(getSupervisorRecommendedProjects());
+            adapter.setClickListener(ProjectRequests.this);
+            recyclerView.setAdapter(adapter);
+            setFlag(true);
         });
 
-        viewStudentSuggested.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ButtonUtils.tabViewButtonColorChanger(viewSupervisorRecommended, viewStudentSuggested);
-                adapter.setmData(getStudentRecommendedProjects());
-                adapter.setClickListener(ProjectRequests.this);
-                recyclerView.setAdapter(adapter);
-                setFlag(false);
-            }
+        viewStudentSuggested.setOnClickListener(view1 -> {
+            ButtonUtils.tabViewButtonColorChanger(viewSupervisorRecommended, viewStudentSuggested);
+            adapter.setmData(getStudentRecommendedProjects());
+            adapter.setClickListener(ProjectRequests.this);
+            recyclerView.setAdapter(adapter);
+            setFlag(false);
         });
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getContext(), "You clicked on row number " + position,
-                Toast.LENGTH_SHORT).show();
         ArrayList<String> projectRequestData = adapter.getItem(position);
         requireActivity().getSupportFragmentManager().beginTransaction()
                 .add(R.id.supervisor_nav_bar_fragment,

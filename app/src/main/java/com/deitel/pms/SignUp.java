@@ -43,8 +43,6 @@ import java.util.concurrent.Executor;
 
 public class SignUp extends Fragment {
 
-    // TODO - configure this so it will still run without a connection to the internet.
-
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
     User user = new User();
     FirestoreUtils u = new FirestoreUtils();
@@ -145,8 +143,6 @@ public class SignUp extends Fragment {
     }
 
     private boolean validStudentEmailAndAccessCode(String email, String accessCode) {
-
-        // TODO - create user account in User, if user.getEmail = activeuni.getkey .....
 
         String[] parts = email.split("@");
         for (ActiveUnisStudents uni : ActiveUnisStudents.values()) {
@@ -265,7 +261,7 @@ public class SignUp extends Fragment {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
-            // TODO - reload main activity
+            // do nothing
         }
     }
 

@@ -37,7 +37,6 @@ import java.util.Objects;
 
 public class SignIn extends Fragment {
 
-    private Button btnResetPassword;
     private EditText email;
     private EditText password;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -55,8 +54,6 @@ public class SignIn extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // TODO - sort if user account is student or supervisor and add the relevant activity following
-
         Context context = getContext();
         User user = new User();
         if (detailsSaved() && user.getUserId(requireActivity()).contains("supervisor")) {
@@ -67,7 +64,6 @@ public class SignIn extends Fragment {
 
         Button btnSignUp = (Button) view.findViewById(R.id.btnSignUp);
         Button btnSignIn = (Button) view.findViewById(R.id.btnSignIn);
-        btnResetPassword = (Button) view.findViewById(R.id.btnResetPassword);
         CheckBox rememberCredentials = (CheckBox) view.findViewById(R.id.cbRememberLoginCredentials);
         email = (EditText) view.findViewById(R.id.etUserEmail);
         password = (EditText) view.findViewById(R.id.etUserPassword);
@@ -131,11 +127,6 @@ public class SignIn extends Fragment {
             }
         });
 
-        // TODO - add functionality to this
-        btnResetPassword.setOnClickListener(view12 -> {
-            // Change button color onclick
-            ButtonUtils.textButtonColorChange(btnResetPassword);
-        });
     }
 
     private void checkAdminAndSignIn(User currentUser, Context context, String userEmail, boolean rememberDetails) {
@@ -144,28 +135,22 @@ public class SignIn extends Fragment {
         dbInstance.collection("admin")
                 .document(userEmail)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.getResult().get("adminId")==null) {
-                            signInUser(currentUser, context, userEmail, rememberDetails);
-                        } else {
-                            if (task.getResult().get("adminId").toString().equals(ActiveUniAdmin.EXETER_ADMIN.getValue().toString())) {
-                                System.out.println(task.getResult().get("adminId").toString());
-                                currentUser.clearIdPreferences(requireActivity());
-                                currentUser.setUserId(requireActivity(), userEmail+"-"+ActiveUniAdmin.EXETER_ADMIN.getValue());
-                                loadAdminActivity(context);
-                            }
+                .addOnCompleteListener(task -> {
+                    if (task.getResult().get("adminId")==null) {
+                        signInUser(currentUser, context, userEmail, rememberDetails);
+                    } else {
+                        if (task.getResult().get("adminId").toString().equals(ActiveUniAdmin.EXETER_ADMIN.getValue().toString())) {
+                            System.out.println(task.getResult().get("adminId").toString());
+                            currentUser.clearIdPreferences(requireActivity());
+                            currentUser.setUserId(requireActivity(), userEmail+"-"+ActiveUniAdmin.EXETER_ADMIN.getValue());
+                            loadAdminActivity(context);
                         }
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        //signInUser(currentUser, context, userEmail, rememberDetails);
-                        //TODO - create toast
-                        Toast.makeText(context, "Failed to log in.", Toast.LENGTH_SHORT).show();
-                    }
+                .addOnFailureListener(e -> {
+                    //signInUser(currentUser, context, userEmail, rememberDetails);
+
+                    Toast.makeText(context, "Failed to log in.", Toast.LENGTH_SHORT).show();
                 });
     }
     
@@ -192,7 +177,7 @@ public class SignIn extends Fragment {
         if (!validDetails(context, userEmail, userPassword, errorMsg)) {
             Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show();
 
-        } else if (validDetails(context, userEmail, userPassword, errorMsg)) { // TODO - && account created = true
+        } else if (validDetails(context, userEmail, userPassword, errorMsg)) {
             user.clearIdPreferences(requireActivity());
             user.setUserId(requireActivity(), userEmail);
             signInUser(user, context, userEmail, rememberDetails);
@@ -208,7 +193,7 @@ public class SignIn extends Fragment {
     }
 
     private boolean detailsSaved() {
-        // TODO - should probably do this through encrypted credentials
+
         SharedPreferences sharedPreferences = (SharedPreferences) requireActivity()
                 .getSharedPreferences("save_creds", Context.MODE_PRIVATE);
 

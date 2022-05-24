@@ -54,49 +54,39 @@ public class MyProject extends Fragment {
         TextView supervisorEmail = (TextView) view.findViewById(R.id.mpdSupervisorEmail);
         TextView projectApprovalStatus = (TextView) view.findViewById(R.id.mpdProjectApprovalStatus);
 
-        btnPopFragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = getParentFragmentManager().findFragmentById(R.id.nav_bar_fragment);
-                if (fragment != null) {
-                    getParentFragmentManager().popBackStack();
-                }
+        btnPopFragment.setOnClickListener(view12 -> {
+            Fragment fragment = getParentFragmentManager().findFragmentById(R.id.nav_bar_fragment);
+            if (fragment != null) {
+                getParentFragmentManager().popBackStack();
             }
         });
 
         DocumentReference docRef = dbInstance.collection(u.getUSER_COLLECTION_PATH()).document(userId);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                DocumentSnapshot document = task.getResult();
-                try {
-                    projectTitle.setText(document.getString(u.getFIELD_PROJECT_TITLE()));
-                    projectDescription.setText(document.getString(u.getFIELD_PROJECT_DESCRIPTION()));
-                    projectApprovalStatus.setText("Approved: " + document.getBoolean(u.getFIELD_PROJECT_APPROVED()).toString());
-                    if (document.getBoolean(u.getFIELD_PROJECT_APPROVED())==null || !document.getBoolean(u.getFIELD_PROJECT_APPROVED())) {
-                        btnChangeProject.setVisibility(View.VISIBLE);
-                        btnChangeProject.setText("Change project");
-                        btnChangeProject.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                getParentFragmentManager().popBackStack();
-                                Intent recommender = new Intent(getActivity(), RecommenderActivity.class);
-                                startActivity(recommender);
-                                requireActivity().finish();
-                            }
-                        });
-                    }
-                    supervisorEmail.setText(document.getString(u.getFIELD_SUPERVISOR_EMAIL()));
-                } catch (Exception e) {
-                    Log.e("LOGGER", "failed with exception " + e);
+        docRef.get().addOnCompleteListener(task -> {
+            DocumentSnapshot document = task.getResult();
+            try {
+                projectTitle.setText(document.getString(u.getFIELD_PROJECT_TITLE()));
+                projectDescription.setText(document.getString(u.getFIELD_PROJECT_DESCRIPTION()));
+                projectApprovalStatus.setText("Approved: " + document.getBoolean(u.getFIELD_PROJECT_APPROVED()).toString());
+                if (document.getBoolean(u.getFIELD_PROJECT_APPROVED())==null || !document.getBoolean(u.getFIELD_PROJECT_APPROVED())) {
+                    btnChangeProject.setVisibility(View.VISIBLE);
+                    btnChangeProject.setText("Change project");
+
+                    btnChangeProject.setOnClickListener(view1 -> {
+                        getParentFragmentManager().popBackStack();
+                        Intent recommender = new Intent(getActivity(), RecommenderActivity.class);
+                        startActivity(recommender);
+                        requireActivity().finish();
+                    });
                 }
+                supervisorEmail.setText(document.getString(u.getFIELD_SUPERVISOR_EMAIL()));
+            } catch (Exception e) {
+                Log.e("LOGGER", "failed with exception " + e);
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("LOGGER", "get failed with " + e);
-                Toast.makeText(getContext(), "No connection to database !", Toast.LENGTH_SHORT).show();
-            }
+        }).addOnFailureListener(e -> {
+            Log.d("LOGGER", "get failed with " + e);
+            btnChangeProject.setVisibility(View.GONE);
+            Toast.makeText(getContext(), "No connection to database !", Toast.LENGTH_SHORT).show();
         });
     }
 }

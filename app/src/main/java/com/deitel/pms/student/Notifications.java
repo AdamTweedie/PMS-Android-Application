@@ -13,12 +13,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.deitel.pms.FirestoreUtils;
 import com.deitel.pms.R;
 import com.deitel.pms.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -28,7 +24,6 @@ import java.util.ArrayList;
 public class Notifications extends Fragment implements NotificationRecyclerViewAdapter.ItemClickListener {
 
     NotificationRecyclerViewAdapter adapter;
-    FirestoreUtils u = new FirestoreUtils();
     FirebaseFirestore dbInstance = FirebaseFirestore.getInstance();
     User user = new User();
     ArrayList<ArrayList<String>> notifications = new ArrayList<>();
@@ -52,10 +47,6 @@ public class Notifications extends Fragment implements NotificationRecyclerViewA
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // TODO - add better functionality,
-        // TODO - calls to database
-        // TODO - check this fragment runs correctly
 
         Context context = getContext();
         RecyclerView recyclerView = view.findViewById(R.id.rvNotifications);
@@ -96,7 +87,6 @@ public class Notifications extends Fragment implements NotificationRecyclerViewA
     public void onItemClick(View view, int position) {
 
         if (getFlag()) {
-            Toast.makeText(getContext(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
             ArrayList<String> notification = adapter.getItem(position);
 
             requireActivity().getSupportFragmentManager().beginTransaction()

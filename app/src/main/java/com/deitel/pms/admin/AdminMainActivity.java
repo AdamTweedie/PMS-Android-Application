@@ -26,9 +26,6 @@ public class AdminMainActivity extends AppCompatActivity {
             fragmentTransaction.add(R.id.admin_nav_bar_fragment, new AdminWorkspace()).commit();
         }
 
-        User user = new User();
-        System.out.println("ADMIN ID" + user.getUserId(this));
-
         navWorkspace.setOnClickListener(view -> {
             clearBackStack(fm.getBackStackEntryCount());
             fm.beginTransaction()

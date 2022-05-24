@@ -40,7 +40,6 @@ public class AdminProfile extends Fragment {
         User user = new User();
 
         Button signOut = view.findViewById(R.id.btnSupervisorAccountSignOut);
-        Button deleteAccount = view.findViewById(R.id.btnSupervisorAccountDeleteAccount);
 
         TextView adminEmail = view.findViewById(R.id.spTvEmail);
         adminEmail.setText(user.getUserId(requireActivity())

@@ -98,24 +98,20 @@ public class ExpandedProjectRequest extends Fragment {
 
                 dbInstance.collection(utils.getUSER_COLLECTION_PATH())
                         .document(getProjectData().get(0)).update(studentUpdates)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.w("LOGGER", "successfully updated student project data");
+                        .addOnSuccessListener(unused -> {
+                            Log.w("LOGGER", "successfully updated student project data");
 
-                        // Add student to supervisors myStudents collection
-                        Map<String, Object> newMyStudent = new HashMap<>();
-                        newMyStudent.put("project title", getProjectData().get(1));
-                        newMyStudent.put("project description", getProjectData().get(2));
+                            // Add student to supervisors myStudents collection
+                            Map<String, Object> newMyStudent = new HashMap<>();
+                            newMyStudent.put("project title", getProjectData().get(1));
+                            newMyStudent.put("project description", getProjectData().get(2));
 
-                        dbInstance.collection(utils.getSUPERVISOR_COLLECTION_PATH())
-                                .document(user.getUserId(requireActivity()))
-                                .collection("approved projects")
-                                .document(getProjectData().get(0))
-                                .set(newMyStudent)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
+                            dbInstance.collection(utils.getSUPERVISOR_COLLECTION_PATH())
+                                    .document(user.getUserId(requireActivity()))
+                                    .collection("approved projects")
+                                    .document(getProjectData().get(0))
+                                    .set(newMyStudent)
+                                    .addOnCompleteListener(task -> {
                                         // if project request is not attached to specific supervisor
                                         if (getProjectData().get(3)==null) {
                                             // delete student suggested project from requests
@@ -125,24 +121,12 @@ public class ExpandedProjectRequest extends Fragment {
                                             deleteSupervisorRecommendedProject();
                                         }
                                         list.removeProjectRequestFromAdapter(getIndex());
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w("LOGGER", "failed to add student to my projects");
-                            }
-                        });
-                        // send notification to student.
+                                    }).addOnFailureListener(e -> Log.w("LOGGER", "failed to add student to my projects"));
+                            // send notification to student.
 
-                        Toast.makeText(getContext(), "Successfully accepted project request!", Toast.LENGTH_SHORT).show();
-                        sendProjectAcceptedNotification(getProjectData().get(0));
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("LOGGER", "Failed to set project approval to true");
-                    }
-                });
+                            Toast.makeText(getContext(), "Successfully accepted project request!", Toast.LENGTH_SHORT).show();
+                            sendProjectAcceptedNotification(getProjectData().get(0));
+                        }).addOnFailureListener(e -> Log.w("LOGGER", "Failed to set project approval to true"));
             }
         });
 
@@ -150,42 +134,36 @@ public class ExpandedProjectRequest extends Fragment {
         if (this.projectSupervisor==null) {
             btnDeclineRequest.setVisibility(View.GONE);
         }
-        btnDeclineRequest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final String title = "Project Request Update!";
-                final String description = "You project request has been declined by the original supervisor," +
-                        " it has been passed to all other supervisors to review for approval! ";
+        btnDeclineRequest.setOnClickListener(view1 -> {
+            final String title = "Project Request Update!";
+            final String description = "You project request has been declined by the original supervisor," +
+                    " it has been passed to all other supervisors to review for approval! ";
 
+            // Delete Project Request
+            utils.deleteProjectRequest(user.getUserId(requireActivity()), getProjectData().get(0));
+            // add project request to user suggested
+            utils.studentSuggestedProjectRequest(getProjectData().get(0), getProjectData().get(1),
+                    getProjectData().get(2));
+            // send notification to student
+            FirestoreUtils.createNotification(utils.getUSER_COLLECTION_PATH(),
+                    user.getUserId(requireActivity()), getProjectData().get(0), title, description);
 
-                // TODO - check this works
+            // update user current info
+            Map<String, Object> updatesToStudent = new HashMap<>();
+            updatesToStudent.put("supervisor email", null);
+            updatesToStudent.put("supervisor name", null);
+            dbInstance.collection(utils.getUSER_COLLECTION_PATH())
+                    .document(getProjectData().get(0))
+                    .update(updatesToStudent)
+                    .addOnSuccessListener(unused -> {
+                        Log.w("LOGGER", "successfully altered student project supervisor info to null");
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.w("LOGGER", "failed to turn student project info to null: " + e);
+                    });
 
-                // Delete Project Request
-                utils.deleteProjectRequest(user.getUserId(requireActivity()), getProjectData().get(0));
-                // add project request to user suggested
-                utils.studentSuggestedProjectRequest(getProjectData().get(0), getProjectData().get(1),
-                        getProjectData().get(2));
-                // send notification to student
-                FirestoreUtils.createNotification(utils.getUSER_COLLECTION_PATH(),
-                        user.getUserId(requireActivity()), getProjectData().get(0), title, description);
-
-                // update user current info
-                Map<String, Object> updatesToStudent = new HashMap<>();
-                updatesToStudent.put("supervisor email", null);
-                updatesToStudent.put("supervisor name", null);
-                dbInstance.collection(utils.getUSER_COLLECTION_PATH())
-                        .document(getProjectData().get(0))
-                        .update(updatesToStudent)
-                        .addOnSuccessListener(unused -> {
-                            Log.w("LOGGER", "successfully altered student project supervisor info to null");
-                        })
-                        .addOnFailureListener(e -> {
-                            Log.w("LOGGER", "failed to turn student project info to null: " + e);
-                        });
-
-                list.removeProjectRequestFromAdapter(getIndex());
-                Toast.makeText(getContext(), "Project passed to other supervisors", Toast.LENGTH_SHORT);
-            }
+            list.removeProjectRequestFromAdapter(getIndex());
+            Toast.makeText(getContext(), "Project passed to other supervisors", Toast.LENGTH_SHORT);
         });
     }
 
@@ -200,34 +178,16 @@ public class ExpandedProjectRequest extends Fragment {
                 .document(studentId)
                 .collection("notifications")
                 .add(notificationData)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.w("LOGGER", "successfully sent project request update notification");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w("LOGGER", "failed to send project request update notification");
-            }
-        });
+                .addOnSuccessListener(documentReference -> Log.w("LOGGER", "successfully sent project request update notification"))
+                .addOnFailureListener(e -> Log.w("LOGGER", "failed to send project request update notification"));
     }
 
     private void deleteUserSuggestedProject() {
         dbInstance.collection("student suggested projects")
                 .document(projectData.get(0))
                 .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.w("LOGGER", "suggested project deleted");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w("LOGGER", "failed to delete suggested project, may be supervisor recommended.");
-            }
-        });
+                .addOnSuccessListener(unused -> Log.w("LOGGER", "suggested project deleted"))
+                .addOnFailureListener(e -> Log.w("LOGGER", "failed to delete suggested project, may be supervisor recommended."));
     }
 
     private void deleteSupervisorRecommendedProject() {
@@ -236,17 +196,8 @@ public class ExpandedProjectRequest extends Fragment {
                 .collection(utils.getSUPERVISOR_REQUESTS_COLLECTION_PATH())
                 .document(getProjectData().get(0))
                 .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.w("LOGGER", "successfully deleted project request with id " + getProjectData().get(0));
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w("LOGGER", "failed to delete project request with id " + getProjectData().get(0));
-            }
-        });
+                .addOnSuccessListener(unused -> Log.w("LOGGER", "successfully deleted project request with id " + getProjectData().get(0)))
+                .addOnFailureListener(e -> Log.w("LOGGER", "failed to delete project request with id " + getProjectData().get(0)));
     }
 
     public ArrayList<String> getProjectData() {

@@ -10,6 +10,7 @@
         <entry key="..\:/Android Applications/PMS/app/src/main/res/drawable/rounded_square.xml" value="0.2555" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/drawable/spinner_corner_radius.xml" value="0.166" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/activity_home_navbar.xml" value="0.12" />
+        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/activity_main.xml" value="0.2296195652173913" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/activity_recommender.xml" value="0.24947916666666667" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/admin_expanded_student_view.xml" value="0.16" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/admin_expanded_supervisor_view.xml" value="0.16983695652173914" />
@@ -27,7 +28,7 @@
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_recommended_projects.xml" value="0.2" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_references.xml" value="0.1" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_selected_project.xml" value="0.152" />
-        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_sign_in.xml" value="0.1" />
+        <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_sign_in.xml" value="0.2" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_sign_up.xml" value="0.144" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_suggest_project.xml" value="0.25" />
         <entry key="..\:/Android Applications/PMS/app/src/main/res/layout/frag_supervisor.xml" value="0.1" />

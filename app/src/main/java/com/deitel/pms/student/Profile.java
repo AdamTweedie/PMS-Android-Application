@@ -59,34 +59,25 @@ public class Profile extends Fragment {
         userEmail.setText(userId);
 
         DocumentReference docRef = dbInstance.collection(u.getUSER_COLLECTION_PATH()).document(userId);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                DocumentSnapshot document = task.getResult();
-                try {
-                    userSupervisor.setText(document.getString(u.getFIELD_SUPERVISOR_EMAIL()));
-                } catch (Exception e) {
-                    Log.e("LOGGER", "failed with exception " + e);
-                }
+        docRef.get().addOnCompleteListener(task -> {
+            DocumentSnapshot document = task.getResult();
+            try {
+                userSupervisor.setText(document.getString(u.getFIELD_SUPERVISOR_EMAIL()));
+            } catch (Exception e) {
+                Log.e("LOGGER", "failed with exception " + e);
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("LOGGER", "get failed with " + e);
-                Toast.makeText(context, "No connection to database !", Toast.LENGTH_SHORT).show();
-            }
+        }).addOnFailureListener(e -> {
+            Log.d("LOGGER", "get failed with " + e);
+            Toast.makeText(context, "No connection to database !", Toast.LENGTH_SHORT).show();
         });
 
-        signOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                unsaveUserCredentials(requireActivity());
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                getActivity().finish();
-                startActivity(intent);
-                Toast.makeText(context, "Goodbye!", Toast.LENGTH_SHORT).show();
-                FirebaseAuth.getInstance().signOut();
-            }
+        signOut.setOnClickListener(view1 -> {
+            unsaveUserCredentials(requireActivity());
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            getActivity().finish();
+            startActivity(intent);
+            Toast.makeText(context, "Goodbye!", Toast.LENGTH_SHORT).show();
+            FirebaseAuth.getInstance().signOut();
         });
     }
 

@@ -52,8 +52,6 @@ public class SupervisorProfile extends Fragment {
         final TextView sMaintenance = (TextView) view.findViewById(R.id.spTvMaintenance);
 
         final Button btnSignOut = (Button) view.findViewById(R.id.btnSupervisorAccountSignOut);
-        final Button btnDeleteAccount = (Button) view.findViewById(R.id.btnSupervisorAccountDeleteAccount);
-
 
         btnSignOut.setOnClickListener(view1 -> {
             profile.unsaveUserCredentials(requireActivity());

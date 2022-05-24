@@ -76,81 +76,60 @@ public class ProjectSuggestions extends Fragment {
         title5.setText(getProjectTitle(5));
         title6.setText(getProjectTitle(6));
 
-        btnRedoInterests.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fm.clearFragmentResult("bundleKey");
-                fm.popBackStack();
-                fm.beginTransaction()
-                        .add(R.id.recommenderContainterView, new SubjectInterestSpinner())
-                        .addToBackStack("redo interests").commit();
+        btnRedoInterests.setOnClickListener(view1 -> {
+            fm.clearFragmentResult("bundleKey");
+            fm.popBackStack();
+            fm.beginTransaction()
+                    .add(R.id.recommenderContainterView, new UserInterestsInput())
+                    .addToBackStack("redo interests").commit();
+        });
+
+        btnSelectProject1.setOnClickListener(view12 -> {
+            if (!project1.isEmpty()) {
+                createFragment(fm, 1);
+            } else {
+                Toast.makeText(getContext(), "No project !", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+        btnSelectProject2.setOnClickListener(view13 -> {
+            if (!project2.isEmpty()) {
+                createFragment(fm, 2);
+            } else {
+                Toast.makeText(getContext(), "No project !", Toast.LENGTH_SHORT).show();
             }
         });
 
-        btnSelectProject1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!project1.isEmpty()) {
-                    createFragment(fm, 1);
-                } else {
-                    Toast.makeText(getContext(), "No project !", Toast.LENGTH_SHORT).show();
-                }
-
+        btnSelectProject3.setOnClickListener(view14 -> {
+            if (!project3.isEmpty()) {
+                createFragment(fm, 3);
+            } else {
+                Toast.makeText(getContext(), "No project !", Toast.LENGTH_SHORT).show();
             }
         });
 
-        btnSelectProject2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!project2.isEmpty()) {
-                    createFragment(fm, 2);
-                } else {
-                    Toast.makeText(getContext(), "No project !", Toast.LENGTH_SHORT).show();
-                }
+        btnSelectProject4.setOnClickListener(view15 -> {
+            if (!project4.isEmpty()) {
+                createFragment(fm, 4);
+            } else {
+                Toast.makeText(getContext(), "No project !", Toast.LENGTH_SHORT).show();
             }
         });
 
-        btnSelectProject3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!project3.isEmpty()) {
-                    createFragment(fm, 3);
-                } else {
-                    Toast.makeText(getContext(), "No project !", Toast.LENGTH_SHORT).show();
-                }
+        btnSelectProject5.setOnClickListener(view16 -> {
+            if (!project5.isEmpty()) {
+                createFragment(fm, 5);
+            } else {
+                Toast.makeText(getContext(), "No project !", Toast.LENGTH_SHORT).show();
             }
         });
 
-        btnSelectProject4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!project4.isEmpty()) {
-                    createFragment(fm, 4);
-                } else {
-                    Toast.makeText(getContext(), "No project !", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        btnSelectProject5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!project5.isEmpty()) {
-                    createFragment(fm, 5);
-                } else {
-                    Toast.makeText(getContext(), "No project !", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        btnSelectProject6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!project6.isEmpty()) {
-                    createFragment(fm, 6);
-                } else {
-                    Toast.makeText(getContext(), "No project !", Toast.LENGTH_SHORT).show();
-                }
+        btnSelectProject6.setOnClickListener(view17 -> {
+            if (!project6.isEmpty()) {
+                createFragment(fm, 6);
+            } else {
+                Toast.makeText(getContext(), "No project !", Toast.LENGTH_SHORT).show();
             }
         });
     }

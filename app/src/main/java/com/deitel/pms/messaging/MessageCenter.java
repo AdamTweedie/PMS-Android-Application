@@ -1,6 +1,5 @@
 package com.deitel.pms.messaging;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,13 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.deitel.pms.FirestoreUtils;
 import com.deitel.pms.R;
-import com.deitel.pms.User;
-import com.deitel.pms.student.Notifications;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -40,10 +36,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 
 public class MessageCenter extends Fragment implements MessagesRecyclerViewAdapter.ItemClickListener {
@@ -105,28 +99,22 @@ public class MessageCenter extends Fragment implements MessagesRecyclerViewAdapt
         }
 
         // send message
-        sendMessage.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View view) {
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss a");
-                LocalDateTime now = LocalDateTime.now();
-                message.setContent(typedMessage.getText().toString());
-                message.setCreatedAt(dtf.format(now));
-                message.setSenderId(senderId);
-                message.setRecipient(getRecipient());
+        sendMessage.setOnClickListener(view1 -> {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss a");
+            LocalDateTime now = LocalDateTime.now();
+            message.setContent(typedMessage.getText().toString());
+            message.setCreatedAt(dtf.format(now));
+            message.setSenderId(senderId);
+            message.setRecipient(getRecipient());
 
-                insertSingleItem("S: " + message.getContent());
+            insertSingleItem("S: " + message.getContent());
 
-                // TODO - fix this so that when a user is created they have an attribute which
-                // TODO - specifies if they are a supervisor or not
-                if (senderId.contains("supervisor")) {
-                    uploadToFirebase(message, utils.getSUPERVISOR_COLLECTION_PATH());
-                    typedMessage.setText("");
-                } else {
-                    uploadToFirebase(message, utils.getUSER_COLLECTION_PATH());
-                    typedMessage.setText("");
-                }
+            if (senderId.contains("supervisor")) {
+                uploadToFirebase(message, utils.getSUPERVISOR_COLLECTION_PATH());
+                typedMessage.setText("");
+            } else {
+                uploadToFirebase(message, utils.getUSER_COLLECTION_PATH());
+                typedMessage.setText("");
             }
         });
     }
@@ -144,40 +132,26 @@ public class MessageCenter extends Fragment implements MessagesRecyclerViewAdapt
                 .document(senderId)
                 .collection(recipientId + " messages")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        for (QueryDocumentSnapshot snapshot : task.getResult()) {
-                            messages.put(snapshot.getId(), "S: " + snapshot.get("content"));
-                        }
-                        dbInstance.collection(recipientCollectionPath)
-                                .document(recipientId)
-                                .collection(senderId + " messages")
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        for (QueryDocumentSnapshot snapshot : task.getResult()) {
-                                            messages.put(snapshot.getId(), "R: " + snapshot.get("content"));
-                                        }
-                                        sortMessages(messages);
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w("LOGGER", "Messages not found with exception " + e);
-                            }
-                        });
+                .addOnCompleteListener(task -> {
+                    for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                        messages.put(snapshot.getId(), "S: " + snapshot.get("content"));
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
+                    dbInstance.collection(recipientCollectionPath)
+                            .document(recipientId)
+                            .collection(senderId + " messages")
+                            .get()
+                            .addOnCompleteListener(task1 -> {
+                                for (QueryDocumentSnapshot snapshot : task1.getResult()) {
+                                    messages.put(snapshot.getId(), "R: " + snapshot.get("content"));
+                                }
+                                sortMessages(messages);
+                            }).addOnFailureListener(e -> Log.w("LOGGER", "Messages not found with exception " + e));
+                }).addOnFailureListener(e -> {
 
-            }
-        });
+                });
     }
 
-    // maybe make this a thread
+
     private void uploadToFirebase(Message message, String collectionPath) {
 
         Map<String, Object> messageData = new HashMap<>();

@@ -19,35 +19,4 @@ public class TaskListTest {
         FragmentScenario.launchInContainer(TaskList.class);
         onView(withId(R.id.task_recycler_view)).check(matches(isDisplayed()));
     }
-
-    @Test
-    public void onItemClick() {
-    }
-
-    @Test
-    public void fillAdapter() {
-    }
-
-    @Test
-    public void clearAdapter() {
-    }
-
-    @Test
-    public void addNewTask() {
-    }
-
-    @Test
-    public void saveToSharedPrefs() {
-    }
-
-    @Test
-    public void addToPrefs() {
-    }
-
-    @Test
-    public void setTabPosition() {
-
-    }
-
-
 }

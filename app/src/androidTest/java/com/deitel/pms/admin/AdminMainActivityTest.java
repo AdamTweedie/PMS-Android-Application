@@ -1,22 +1,22 @@
-package com.deitel.pms.student;
+package com.deitel.pms.admin;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.junit.Assert.*;
 
-import androidx.fragment.app.testing.FragmentScenario;
+import androidx.test.core.app.ActivityScenario;
 
 import com.deitel.pms.R;
 
 import org.junit.Test;
 
-public class SubReferencesTest {
+public class AdminMainActivityTest {
 
     @Test
-    public void onViewCreated() {
-        FragmentScenario.launchInContainer(SubReferences.class);
-        onView(withId(R.id.child_ref_parent)).check(matches(isDisplayed()));
+    public void onCreate() {
+        ActivityScenario.launch(AdminMainActivity.class);
+        onView(withId(R.id.admin_workspace_fragment_id)).check(matches(isDisplayed()));
     }
+
 }

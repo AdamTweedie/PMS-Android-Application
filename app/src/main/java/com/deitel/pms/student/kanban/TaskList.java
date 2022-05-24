@@ -58,7 +58,6 @@ public class TaskList extends Fragment implements KanbanRecyclerViewAdapter.Item
     @Override
     public void onItemClick(View view, int position) {
         System.out.println("clicky click click");
-        Toast.makeText(getContext(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
     }
 
     public void fillAdapter(ArrayList<String> data) {
@@ -85,8 +84,6 @@ public class TaskList extends Fragment implements KanbanRecyclerViewAdapter.Item
                 .getSharedPreferences(this.user_kanban_prefs_id, Context.MODE_PRIVATE);
         final String key = "KANBAN-" + tabId;
         Set<String> set = new HashSet<>(getTaskListData());
-        System.out.println("data going into set + " + getTaskListData());
-        System.out.println("SET = " + set);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putStringSet(key, set);
         editor.commit();

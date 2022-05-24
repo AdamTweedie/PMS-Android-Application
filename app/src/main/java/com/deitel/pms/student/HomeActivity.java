@@ -49,69 +49,51 @@ public class HomeActivity extends AppCompatActivity {
             fragmentTransaction.add(R.id.nav_bar_fragment, new Workspace()).commit();
         }
 
-        btnWorkspace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearBackStack(fm.getBackStackEntryCount());
-                fm.beginTransaction()
-                        .add(R.id.nav_bar_fragment, new Workspace())
-                        .addToBackStack("workspace")
-                        .commit();
-            }
+        btnWorkspace.setOnClickListener(view -> {
+            clearBackStack(fm.getBackStackEntryCount());
+            fm.beginTransaction()
+                    .add(R.id.nav_bar_fragment, new Workspace())
+                    .addToBackStack("workspace")
+                    .commit();
         });
 
-        btnNotifications.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearBackStack(fm.getBackStackEntryCount());
-                fm.beginTransaction()
-                        .add(R.id.nav_bar_fragment,
-                                new Notifications("users", R.id.nav_bar_fragment))
-                        .addToBackStack("notifications")
-                        .commit();
-            }
+        btnNotifications.setOnClickListener(view -> {
+            clearBackStack(fm.getBackStackEntryCount());
+            fm.beginTransaction()
+                    .add(R.id.nav_bar_fragment,
+                            new Notifications("users", R.id.nav_bar_fragment))
+                    .addToBackStack("notifications")
+                    .commit();
         });
 
-        btnSupervisor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearBackStack(fm.getBackStackEntryCount());
+        btnSupervisor.setOnClickListener(view -> {
+            clearBackStack(fm.getBackStackEntryCount());
 
-                dbInstance.collection(utils.getUSER_COLLECTION_PATH())
-                        .document(user.getUserId(HomeActivity.this))
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (Objects.equals(task.getResult().get("approved project"), true)) {
-                                    fm.beginTransaction()
-                                            .add(R.id.nav_bar_fragment,
-                                                    new MessageCenter((String) task.getResult().get("supervisor email"),
-                                                            user.getUserId(HomeActivity.this),
-                                                            getApplicationContext()))
-                                            .addToBackStack("notifications")
-                                            .commit();
-                                }
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
+            dbInstance.collection(utils.getUSER_COLLECTION_PATH())
+                    .document(user.getUserId(HomeActivity.this))
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (Objects.equals(task.getResult().get("approved project"), true)) {
+                            fm.beginTransaction()
+                                    .add(R.id.nav_bar_fragment,
+                                            new MessageCenter((String) task.getResult().get("supervisor email"),
+                                                    user.getUserId(HomeActivity.this),
+                                                    getApplicationContext()))
+                                    .addToBackStack("notifications")
+                                    .commit();
+                        }
+                    }).addOnFailureListener(e -> {
                         Log.w("LOGGER", "Cannot load messages with exception " + e);
                         Toast.makeText(getApplicationContext(), "cannot access feature yet", Toast.LENGTH_SHORT);
-                    }
-                });
-            }
+                    });
         });
 
-        btnProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearBackStack(fm.getBackStackEntryCount());
-                fm.beginTransaction()
-                        .add(R.id.nav_bar_fragment, new Profile())
-                        .addToBackStack("profile")
-                        .commit();
-            }
+        btnProfile.setOnClickListener(view -> {
+            clearBackStack(fm.getBackStackEntryCount());
+            fm.beginTransaction()
+                    .add(R.id.nav_bar_fragment, new Profile())
+                    .addToBackStack("profile")
+                    .commit();
         });
     }
 

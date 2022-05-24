@@ -2,6 +2,7 @@ package com.deitel.pms.admin;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,6 @@ public class AdminWorkspace extends Fragment {
 
         Button btnStudents = (Button) view.findViewById(R.id.adminBtnViewStudents);
         Button btnSupervisors = (Button) view.findViewById(R.id.adminBtnViewSupervisors);
-        Button btnCreateNotification = (Button) view.findViewById(R.id.adminBtnCreateNotification);
 
         btnStudents.setOnClickListener(view1 -> {
             loadUsersView("users", true);
@@ -43,10 +43,6 @@ public class AdminWorkspace extends Fragment {
 
         btnSupervisors.setOnClickListener(view2 -> {
             loadUsersView("supervisors", false);
-        });
-
-        btnCreateNotification.setOnClickListener(view3 -> {
-
         });
     }
 
@@ -60,16 +56,21 @@ public class AdminWorkspace extends Fragment {
                     for (DocumentSnapshot document : task.getResult()) {
                         data.add(document.getId());
                     }
-                    System.out.println(data);
-                    Fragment fragment = getParentFragmentManager()
-                            .findFragmentById(R.id.admin_nav_bar_fragment);
-                    if (fragment!=null) {
-                        getParentFragmentManager().beginTransaction()
-                                .add(R.id.admin_nav_bar_fragment,
-                                        new AdminStudentSupervisorView(data, isStudent))
-                                .addToBackStack("viewer")
-                                .commit();
-                    }
+                    try {
+                        Fragment fragment = requireActivity().getSupportFragmentManager()
+                                .findFragmentById(R.id.admin_nav_bar_fragment);
+                        if (fragment!=null) {
+                            getParentFragmentManager().beginTransaction()
+                                    .add(R.id.admin_nav_bar_fragment,
+                                            new AdminStudentSupervisorView(data, isStudent))
+                                    .addToBackStack("viewer")
+                                    .commit();
+                        } else {
+                            Log.e("LOGGER", "Null pointer exception");
+                        }
+                    } catch (Exception ignored){}
+
+
                 });
     }
 }

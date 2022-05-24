@@ -16,12 +16,8 @@ public class ButtonUtils {
         v.setEnabled(true);
         Button button = (Button) v;
         button.setTextColor(Color.parseColor("#B185DB"));
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                button.setTextColor(Color.parseColor("#6247AA"));
-            }
-        }, 250); // Millisecond 100 = 0.1 sec
+        new Handler(Looper.getMainLooper()).postDelayed(() ->
+                button.setTextColor(Color.parseColor("#6247AA")), 250); // Millisecond 100 = 0.1 sec
     }
 
     public static void tabViewButtonColorChanger(View btnCurrent, View btnTarget) {

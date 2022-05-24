@@ -51,39 +51,30 @@ public class SupervisorMessages extends Fragment implements MyStudentsRecyclerVi
                 .document(user.getUserId(requireActivity()))
                 .collection("approved projects")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        QuerySnapshot snapshots = task.getResult();
-                        ArrayList<String> myStudentArray = new ArrayList<>();
-                        for (QueryDocumentSnapshot student : snapshots) {
-                            myStudentArray.add(student.getId());
-                        }
-                        System.out.println("My Students " + myStudentArray);
-                        adapter.setmData(myStudentArray);
-                        adapter.setClickListener(SupervisorMessages.this);
-                        recyclerView.setAdapter(adapter);
-                        Log.w("LOGGER", "successfully loaded myStudents to RecyclerView");
+                .addOnCompleteListener(task -> {
+                    QuerySnapshot snapshots = task.getResult();
+                    ArrayList<String> myStudentArray = new ArrayList<>();
+                    for (QueryDocumentSnapshot student : snapshots) {
+                        myStudentArray.add(student.getId());
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w("LOGGER", "failed to upload myStudents to RecyclerView");
-            }
-        });
+                    System.out.println("My Students " + myStudentArray);
+                    adapter.setmData(myStudentArray);
+                    adapter.setClickListener(SupervisorMessages.this);
+                    recyclerView.setAdapter(adapter);
+                    Log.w("LOGGER", "successfully loaded myStudents to RecyclerView");
+                })
+                .addOnFailureListener(e -> Log.w("LOGGER", "failed to upload myStudents to RecyclerView"));
 
     }
     @Override
     public void onItemClick(View view, int position) {
-
-        Toast.makeText(getContext(), "You clicked " + adapter.getItem(position), Toast.LENGTH_SHORT).show();
 
         getChildFragmentManager().popBackStack();
         getChildFragmentManager().beginTransaction()
                 .add(R.id.fragmentForSupervisorMessages,
                         new MessageCenter(adapter.getItem(position),
                                 user.getUserId(requireActivity()),
-                                getContext())).addToBackStack("messages mite")
+                                getContext())).addToBackStack("messages")
                 .commit();
 
 

@@ -42,78 +42,61 @@ public class References extends Fragment {
         FragmentManager fm = getChildFragmentManager();
 
 
-        styleAPA.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                styleOxford.setChecked(false);
-                styleACM.setChecked(false);
-                styleHarvard.setChecked(false);
+        styleAPA.setOnClickListener(view1 -> {
+            styleOxford.setChecked(false);
+            styleACM.setChecked(false);
+            styleHarvard.setChecked(false);
 
-                referenceStyle.setText(R.string.APA);
+            referenceStyle.setText(R.string.APA);
 
-                fm.popBackStack();
-                fm.beginTransaction()
-                        .add(R.id.refStyleFragment, new SubReferences("APA"))
-                        .addToBackStack(null).commit();
+            fm.popBackStack();
+            fm.beginTransaction()
+                    .add(R.id.refStyleFragment, new SubReferences("APA"))
+                    .addToBackStack(null).commit();
 
-            }
         });
 
-        styleOxford.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                styleAPA.setChecked(false);
-                styleACM.setChecked(false);
-                styleHarvard.setChecked(false);
+        styleOxford.setOnClickListener(view12 -> {
+            styleAPA.setChecked(false);
+            styleACM.setChecked(false);
+            styleHarvard.setChecked(false);
 
-                referenceStyle.setText(R.string.oxford);
+            referenceStyle.setText(R.string.oxford);
 
-                fm.popBackStack();
-                fm.beginTransaction()
-                        .add(R.id.refStyleFragment, new SubReferences("Oxford"))
-                        .addToBackStack(null).commit();
+            fm.popBackStack();
+            fm.beginTransaction()
+                    .add(R.id.refStyleFragment, new SubReferences("Oxford"))
+                    .addToBackStack(null).commit();
 
-            }
         });
 
-        styleACM.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                styleOxford.setChecked(false);
-                styleAPA.setChecked(false);
-                styleHarvard.setChecked(false);
+        styleACM.setOnClickListener(view13 -> {
+            styleOxford.setChecked(false);
+            styleAPA.setChecked(false);
+            styleHarvard.setChecked(false);
 
-                referenceStyle.setText(R.string.acm);
+            referenceStyle.setText(R.string.acm);
 
-                fm.popBackStack();
-                fm.beginTransaction()
-                        .add(R.id.refStyleFragment, new SubReferences("ACM"))
-                        .addToBackStack(null).commit();
-            }
+            fm.popBackStack();
+            fm.beginTransaction()
+                    .add(R.id.refStyleFragment, new SubReferences("ACM"))
+                    .addToBackStack(null).commit();
         });
 
-        styleHarvard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                styleOxford.setChecked(false);
-                styleACM.setChecked(false);
-                styleAPA.setChecked(false);
+        styleHarvard.setOnClickListener(view14 -> {
+            styleOxford.setChecked(false);
+            styleACM.setChecked(false);
+            styleAPA.setChecked(false);
 
-                referenceStyle.setText(R.string.harvard);
+            referenceStyle.setText(R.string.harvard);
 
-                fm.popBackStack();
-                fm.beginTransaction()
-                        .add(R.id.refStyleFragment, new SubReferences("Harvard"))
-                        .addToBackStack(null).commit();
-            }
+            fm.popBackStack();
+            fm.beginTransaction()
+                    .add(R.id.refStyleFragment, new SubReferences("Harvard"))
+                    .addToBackStack(null).commit();
         });
 
 
-        btnGoBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getParentFragmentManager().popBackStack();
-            }
-        });
+        btnGoBack.setOnClickListener(view15 -> getParentFragmentManager().popBackStack());
     }
 }

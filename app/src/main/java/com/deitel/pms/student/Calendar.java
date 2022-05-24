@@ -69,12 +69,7 @@ public class Calendar extends Fragment {
         Log.d("marked dates:-","" + calendarView.getMarkedDates()); //get all marked dates.
 
 
-        btnGoBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getParentFragmentManager().popBackStack();
-            }
-        });
+        btnGoBack.setOnClickListener(view12 -> getParentFragmentManager().popBackStack());
     }
 
 }
